@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Portfolio of EMTYPYIE â€” student portfolio site.">
-<meta property="og:title" content="Portfolio â€” emtypyie.in">
+<meta name="description" content="Portfolio of EMTYPYIE Ã¢â‚¬â€ student portfolio site.">
+<meta property="og:title" content="Portfolio Ã¢â‚¬â€ emtypyie.in">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://emtypyie.in/portfolio">
-<title>Portfolio â€” emtypyie.in</title>
+<title>Portfolio Ã¢â‚¬â€ emtypyie.in</title>
 <link rel="icon" type="image/jpeg" href="https://cdn.emtypyie.in/assets/favicon.jpg">
 
 
 <style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* â”€â”€ CLEAN MINIMALISM TOKENS â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ CLEAN MINIMALISM TOKENS Ã¢â€â‚¬Ã¢â€â‚¬ */
 :root, [data-theme="light"], [data-theme="white"] {
   --canvas: #F9FAFB;
   --canvas2: #F3F4F6;
@@ -109,7 +109,7 @@ body {
   text-size-adjust: 100%;
 }
 
-/* â”€â”€ SUNSET BACKGROUND (fixed, opacity 0.6) â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ SUNSET BACKGROUND (fixed, opacity 0.6) Ã¢â€â‚¬Ã¢â€â‚¬ */
 body::before {
   content: '';
   position: fixed; inset: 0;
@@ -128,7 +128,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--ink) var(--canvas2); }
 *::-webkit-scrollbar-thumb:hover { background: var(--red); }
 
 
-/* â”€â”€ SKY FX: falling rain â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ SKY FX: falling rain Ã¢â€â‚¬Ã¢â€â‚¬ */
 .sky-fx { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
 .sky-fx::after {
   content: '';
@@ -145,7 +145,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--ink) var(--canvas2); }
 @media (prefers-reduced-motion: reduce) {
   .sky-fx::after { animation: none; }
 }
-/* â”€â”€ NAV â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ NAV Ã¢â€â‚¬Ã¢â€â‚¬ */
 nav {
   position: sticky; top: 0; z-index: 50;
   background: var(--canvas);
@@ -185,7 +185,7 @@ nav {
 .nav-links a.active { background: var(--ink); color: var(--canvas); }
 .nav-links a.active:hover { background: var(--ink); color: var(--canvas); }
 
-/* â”€â”€ THEME TOGGLE â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ THEME TOGGLE Ã¢â€â‚¬Ã¢â€â‚¬ */
 .theme-toggle {
   position: relative; width: 52px; height: 26px;
   background: var(--card); border: 2px solid var(--line);
@@ -212,7 +212,7 @@ nav {
 [data-theme="light"] .icon-moon, [data-theme="white"] .icon-moon { opacity: 0.4; }
 [data-theme="dark"] .icon-sun, [data-theme="violet"] .icon-sun { opacity: 0.4; }
 
-/* â”€â”€ CURSOR BLINK (terminal prompts) â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ CURSOR BLINK (terminal prompts) Ã¢â€â‚¬Ã¢â€â‚¬ */
 .cursor {
   display: inline-block;
   width: 7px; height: 1em;
@@ -223,7 +223,7 @@ nav {
 }
 @keyframes cursor-blink { 50% { opacity: 0; } }
 
-/* â”€â”€ FLOATING SUPPORT BUTTON â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ FLOATING SUPPORT BUTTON Ã¢â€â‚¬Ã¢â€â‚¬ */
 .support-fab {
   position: fixed; top: 72px; right: 24px; z-index: 60;
   display: inline-flex; align-items: center; gap: 0.42rem;
@@ -239,7 +239,7 @@ nav {
 .support-fab:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 0 var(--shadow-c); }
 .support-fab:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 0 var(--shadow-c); }
 
-/* â”€â”€ SOCIAL RAIL (desktop only) â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ SOCIAL RAIL (desktop only) Ã¢â€â‚¬Ã¢â€â‚¬ */
 .social-rail {
   position: fixed; left: 0.75rem; top: 50%;
   transform: translateY(-50%); z-index: 40;
@@ -272,7 +272,7 @@ nav {
   .share-toast { bottom: 5.1rem; }
 }
 
-/* â”€â”€ SHARE TOAST â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ SHARE TOAST Ã¢â€â‚¬Ã¢â€â‚¬ */
 .share-toast {
   position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(8px);
   background: var(--ink); color: var(--canvas);
@@ -285,7 +285,7 @@ nav {
 }
 .share-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* â”€â”€ SECTION LABEL â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ SECTION LABEL Ã¢â€â‚¬Ã¢â€â‚¬ */
 .section-label {
   font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--ink); margin-bottom: 2rem;
@@ -293,7 +293,7 @@ nav {
 }
 .section-label::after { content: ''; flex: 1; height: 2px; background: var(--line); }
 
-/* â”€â”€ BUTTONS (generic) â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ BUTTONS (generic) Ã¢â€â‚¬Ã¢â€â‚¬ */
 .promo-cta, .cli-cta, .book-read-btn, .support-continue,
 .upi-app-btn, .load-more-btn, .blog-view-all, .download-btn, .btn-add, .btn-ghost, .install-copy {
   display: inline-flex; align-items: center; gap: 0.5rem;
@@ -313,7 +313,7 @@ nav {
 }
 .promo-cta:active, .cli-cta:active, .book-read-btn:active, .support-continue:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 0 var(--shadow-c); }
 
-/* â”€â”€ FOOTER â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ FOOTER Ã¢â€â‚¬Ã¢â€â‚¬ */
 footer { border-top: 2px solid var(--line); background: var(--canvas); transition: background 0.3s; flex-shrink: 0; }
 .footer-inner {
   max-width: 1200px; margin: 0 auto; padding: 1.6rem 3rem 1.2rem;
@@ -360,7 +360,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 }
 .footer-top:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 0 var(--shadow-c); color: var(--red); }
 
-/* â”€â”€ MODAL â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ MODAL Ã¢â€â‚¬Ã¢â€â‚¬ */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100; align-items: center; justify-content: center; padding: 1.5rem; }
 .modal-overlay.open { display: flex; }
 .modal {
@@ -383,7 +383,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 }
 .modal-close:hover { color: var(--red); transform: translate(-1px,-1px); box-shadow: 3px 3px 0 0 var(--shadow-c); }
 
-/* â”€â”€ SUPPORT MODAL â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ SUPPORT MODAL Ã¢â€â‚¬Ã¢â€â‚¬ */
 .support-modal { max-width: 400px; }
 .support-sub { font-size: 0.78rem; color: var(--ink2); margin-bottom: 1.3rem; line-height: 1.65; }
 .amount-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 0.9rem; }
@@ -425,7 +425,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 .support-back { display: block; margin: 0 auto; background: none; border: none; font-family: var(--mono); font-size: 0.66rem; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; cursor: pointer; padding: 0.35rem; }
 .support-back:hover { color: var(--red); }
 
-/* â”€â”€ HAMBURGER / MOBILE MENU â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ HAMBURGER / MOBILE MENU Ã¢â€â‚¬Ã¢â€â‚¬ */
 .nav-hamburger {
   display: none; flex-direction: column; gap: 4px;
   background: none; border: 2px solid var(--line); cursor: pointer; padding: 5px;
@@ -451,7 +451,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 .nav-mobile-menu a:last-child { border-bottom: none; }
 .nav-mobile-menu a:hover { color: var(--red); }
 
-/* â”€â”€ RESPONSIVE BASE â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ RESPONSIVE BASE Ã¢â€â‚¬Ã¢â€â‚¬ */
 @media (max-width: 900px) {
   nav { padding: 0 1.5rem; }
   .nav-links { display: none; }
@@ -470,7 +470,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
   .modal { padding: 1.5rem; }
 }
 
-/* â”€â”€ PORTFOLIO PAGE â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ PORTFOLIO PAGE Ã¢â€â‚¬Ã¢â€â‚¬ */
 main { flex: 1 0 auto; }
 
 /* Hero */
@@ -522,7 +522,7 @@ main { flex: 1 0 auto; }
   display: inline-flex; align-items: center; gap: 0.45rem;
   padding: 0.3rem 0.65rem; margin-bottom: 1.4rem;
 }
-.pf-badge::before { content: 'â—'; font-size: 0.5rem; color: var(--red); }
+.pf-badge::before { content: 'Ã¢â€”Â'; font-size: 0.5rem; color: var(--red); }
 .pf-hero-name {
   font-family: var(--sans); font-size: clamp(2.6rem, 5.6vw, 4.4rem);
   font-weight: 800; color: var(--ink); letter-spacing: -0.02em;
@@ -704,7 +704,7 @@ main { flex: 1 0 auto; }
   background: var(--ink); color: var(--canvas);
 }
 
-/* â”€â”€ RESPONSIVE PORTFOLIO â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ RESPONSIVE PORTFOLIO Ã¢â€â‚¬Ã¢â€â‚¬ */
 @media (max-width: 768px) {
   .pf-hero { padding: 6vh 1.4rem 4vh; }
   .pf-hero-row { grid-template-columns: 1fr; gap: 1.6rem; align-items: start; margin-bottom: 1.8rem; }
@@ -810,14 +810,14 @@ main { flex: 1 0 auto; }
   <section class="pf-hero">
     <div class="pf-hero-row">
       <div class="pf-hero-left">
-        <p class="pf-eyebrow">file 01 Â· portfolio</p>
-        <div class="pf-badge" id="hero-badge">Loadingâ€¦</div>
+        <p class="pf-eyebrow">file 01 Ã‚Â· portfolio</p>
+        <div class="pf-badge" id="hero-badge">LoadingÃ¢â‚¬Â¦</div>
         <h1 class="pf-hero-name" id="hero-name">EMTYPYIE<span class="dot">.</span></h1>
       </div>
       <div class="pf-hero-right">
-        <div class="pf-hero-tagline-card" id="hero-tagline">Loadingâ€¦</div>
+        <div class="pf-hero-tagline-card" id="hero-tagline">LoadingÃ¢â‚¬Â¦</div>
         <div class="pf-cta-row">
-          <a href="#projects" class="pf-cta">See My Work â†’</a>
+          <a href="#projects" class="pf-cta">See My Work Ã¢â€ â€™</a>
           <a href="#contact" class="pf-cta ghost">Get in Touch</a>
         </div>
       </div>
@@ -835,7 +835,7 @@ main { flex: 1 0 auto; }
         </div>
         <span class="pf-num mono" id="about-num">01</span>
       </div>
-      <p class="pf-about-text" id="about-paragraph">Loadingâ€¦</p>
+      <p class="pf-about-text" id="about-paragraph">LoadingÃ¢â‚¬Â¦</p>
       <div class="pf-facts" id="about-facts"></div>
     </div>
   </section>
@@ -902,7 +902,7 @@ main { flex: 1 0 auto; }
           <h3>wiki.emtypyie<span class="dot">.</span>in</h3>
           <p>All my project write-ups, notes, and build logs live on my wiki. Head over there for the full archive.</p>
         </div>
-        <a class="promo-cta" href="https://wiki.emtypyie.in" target="_blank" rel="noopener">Visit Wiki â†’</a>
+        <a class="promo-cta" href="https://wiki.emtypyie.in" target="_blank" rel="noopener">Visit Wiki Ã¢â€ â€™</a>
       </div>
     </div>
   </section>
@@ -929,7 +929,7 @@ main { flex: 1 0 auto; }
   <div class="footer-inner">
     <div>
       <p class="footer-brand">emtypyie<span>.</span>in</p>
-      <p class="footer-tagline">Research &amp; Development Â· Engineering<br>Made From Scratch Personally</p>
+      <p class="footer-tagline">Research &amp; Development Ã‚Â· Engineering<br>Made From Scratch Personally</p>
     </div>
     <div class="footer-links">
       <span class="footer-links-label">legal</span>
@@ -950,7 +950,7 @@ main { flex: 1 0 auto; }
 <!-- MODAL: PRIVACY -->
 <div class="modal-overlay" id="modal-privacy" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">close Ã—</button>
+    <button class="modal-close" onclick="closeModal()">close Ãƒâ€”</button>
     <h2>Privacy Policy</h2>
     <p>This site does not collect, store, or sell any personal data. There are no tracking scripts, analytics beacons, or third-party data brokers lurking here.</p>
     <p>If you contact me directly (email, GitHub, etc.), I'll have your message. That's it. I'm not doing anything weird with it.</p>
@@ -963,9 +963,9 @@ main { flex: 1 0 auto; }
 <!-- MODAL: DISCLAIMER -->
 <div class="modal-overlay" id="modal-disclaimer" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">close Ã—</button>
+    <button class="modal-close" onclick="closeModal()">close Ãƒâ€”</button>
     <h2>Disclaimer</h2>
-    <p>Everything on this site and its subdomains is personal work, opinion, and experimentation. Nothing here constitutes professional advice â€” legal, financial, medical, or otherwise.</p>
+    <p>Everything on this site and its subdomains is personal work, opinion, and experimentation. Nothing here constitutes professional advice Ã¢â‚¬â€ legal, financial, medical, or otherwise.</p>
     <p>Any references to political figures, historical events, governments, organisations, or public personalities are intended as memes and satire only. No endorsement, political alignment, or serious commentary is implied or should be inferred.</p>
     <p>Projects described here may be incomplete, broken, or abandoned. That's kind of the whole thing.</p>
     <p>If you have a concern, open a GitHub issue or send a message. I'm reasonable.</p>
@@ -975,21 +975,21 @@ main { flex: 1 0 auto; }
 <!-- MODAL: SUPPORT -->
 <div class="modal-overlay" id="modal-support" onclick="if(event.target===this)closeModal()">
   <div class="modal support-modal">
-    <button class="modal-close" onclick="closeModal()">close Ã—</button>
+    <button class="modal-close" onclick="closeModal()">close Ãƒâ€”</button>
     <div id="support-view-amount">
       <h2>Support emty so we can keep building</h2>
       <p class="support-sub">Pick an amount, or set your own. It all goes straight back into whatever's next in the queue.</p>
       <div class="amount-grid">
-        <button class="amount-option" data-amount="10" type="button">â‚¹10</button>
-        <button class="amount-option" data-amount="20" type="button">â‚¹20</button>
-        <button class="amount-option" data-amount="50" type="button">â‚¹50</button>
-        <button class="amount-option" data-amount="100" type="button">â‚¹100</button>
+        <button class="amount-option" data-amount="10" type="button">Ã¢â€šÂ¹10</button>
+        <button class="amount-option" data-amount="20" type="button">Ã¢â€šÂ¹20</button>
+        <button class="amount-option" data-amount="50" type="button">Ã¢â€šÂ¹50</button>
+        <button class="amount-option" data-amount="100" type="button">Ã¢â€šÂ¹100</button>
       </div>
       <div class="custom-amount-row">
-        <span class="custom-amount-prefix">â‚¹</span>
+        <span class="custom-amount-prefix">Ã¢â€šÂ¹</span>
         <input type="number" id="custom-amount-input" placeholder="Custom amount" min="1" inputmode="numeric">
       </div>
-      <button class="support-continue" id="support-continue-btn" type="button" disabled>Continue â†’</button>
+      <button class="support-continue" id="support-continue-btn" type="button" disabled>Continue Ã¢â€ â€™</button>
     </div>
     <div id="support-view-qr" style="display:none;">
       <h2 id="support-qr-heading">Scan to pay</h2>
@@ -1000,8 +1000,8 @@ main { flex: 1 0 auto; }
       <div class="qr-wrap">
         <canvas id="upi-qr-canvas"></canvas>
       </div>
-      <a class="upi-app-btn" id="upi-app-link" href="#">Open in UPI app â†’</a>
-      <button class="support-back" id="support-back-btn" type="button">â† change amount</button>
+      <a class="upi-app-btn" id="upi-app-link" href="#">Open in UPI app Ã¢â€ â€™</a>
+      <button class="support-back" id="support-back-btn" type="button">Ã¢â€ Â change amount</button>
     </div>
   </div>
 </div>
@@ -1037,7 +1037,7 @@ function closeModal() {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 document.getElementById('rail-discord').addEventListener('click', () => {
-  navigator.clipboard.writeText('myrachane').then(() => showToast('Discord username copied â€” @myrachane'));
+  navigator.clipboard.writeText('myrachane').then(() => showToast('Discord username copied Ã¢â‚¬â€ @myrachane'));
 });
 
 function showToast(msg) {
@@ -1073,7 +1073,7 @@ function renderEntryList(container, items, subtitleKey) {
 
 async function init() {
   // About Me
-  const about = await loadJSON('../../data/aboutme.json');
+  const about = await loadJSON('../data/aboutme.json');
   if (about) {
     document.getElementById('hero-badge').textContent = about.badge || '';
     document.getElementById('hero-name').textContent = about.name || 'EMTYPYIE';
@@ -1089,25 +1089,25 @@ async function init() {
   }
 
   // Education
-  const edu = await loadJSON('../../data/edu.json');
+  const edu = await loadJSON('../data/edu.json');
   if (edu) renderEntryList(document.getElementById('education-list'), edu, 'school');
 
   // Work (only shown if entries exist)
-  const work = await loadJSON('../../data/work.json');
+  const work = await loadJSON('../data/work.json');
   if (work && work.length > 0) {
     renderEntryList(document.getElementById('work-list'), work, 'company');
     document.getElementById('work').hidden = false;
   }
 
   // Skills
-  const skills = await loadJSON('../../data/skills.json');
+  const skills = await loadJSON('../data/skills.json');
   if (skills) {
     document.getElementById('skills-list').innerHTML =
       skills.map(s => `<span class="pf-skill">${s}</span>`).join('');
   }
 
   // Social links
-  const links = await loadJSON('../../data/sociallinks.json');
+  const links = await loadJSON('../data/sociallinks.json');
   if (links) {
     document.getElementById('contact-links').innerHTML =
       links.map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
@@ -1123,7 +1123,7 @@ async function init() {
 
 init();
 
-/* â”€â”€ SUPPORT â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ SUPPORT Ã¢â€â‚¬Ã¢â€â‚¬ */
 const UPI_ID = 'workforemty@oksbi';
 const UPI_NAME = 'SUBHADEEP DAS';
 let supportAmount = null;
@@ -1159,7 +1159,7 @@ document.getElementById('custom-amount-input').addEventListener('input', e => {
 document.getElementById('support-continue-btn').addEventListener('click', () => {
   if (!supportAmount) return;
   const upiUrl = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_NAME)}&am=${supportAmount}&cu=INR&tn=${encodeURIComponent('Support for Emty')}`;
-  document.getElementById('support-qr-heading').textContent = `Scan to pay â‚¹${supportAmount}`;
+  document.getElementById('support-qr-heading').textContent = `Scan to pay Ã¢â€šÂ¹${supportAmount}`;
   document.getElementById('support-view-amount').style.display = 'none';
   document.getElementById('support-view-qr').style.display = 'block';
   generateUpiQr(upiUrl);
@@ -1167,7 +1167,7 @@ document.getElementById('support-continue-btn').addEventListener('click', () => 
 });
 function generateUpiQr(upiUrl) {
   const wrap = document.querySelector('.qr-wrap');
-  wrap.innerHTML = `<div class="qr-loading"><span class="qr-spinner"></span><span class="qr-loading-text">Generating QRâ€¦</span></div>`;
+  wrap.innerHTML = `<div class="qr-loading"><span class="qr-spinner"></span><span class="qr-loading-text">Generating QRÃ¢â‚¬Â¦</span></div>`;
   let attempts = 0;
   const MAX_ATTEMPTS = 40;
   function tryRender() {
@@ -1197,7 +1197,7 @@ document.getElementById('upi-id-line').addEventListener('click', () => {
   const el = document.getElementById('upi-id-line');
   navigator.clipboard.writeText(UPI_ID).then(() => {
     const original = el.textContent;
-    el.textContent = 'Copied âœ“';
+    el.textContent = 'Copied Ã¢Å“â€œ';
     el.classList.add('copied');
     setTimeout(() => { el.textContent = original; el.classList.remove('copied'); }, 1500);
   });
