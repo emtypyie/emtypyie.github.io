@@ -54,6 +54,12 @@
   --display: var(--sans);
   --font: var(--sans);
   --glow: none;
+
+  /* glass tokens */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.8);
+  --glass-line: rgba(17, 24, 39, 0.22);
+  --glass-blur: 14px;
 }
 
 [data-theme="dark"], [data-theme="violet"] {
@@ -88,6 +94,12 @@
   --danger: var(--red2);
   --btn-ink: var(--canvas);
   --glow: none;
+
+  /* glass tokens */
+  --glass-bg: rgba(13, 18, 28, 0.55);
+  --glass-bg-strong: rgba(13, 18, 28, 0.74);
+  --glass-line: rgba(147, 165, 186, 0.32);
+  --glass-blur: 14px;
 }
 
 html {
@@ -437,7 +449,6 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 }
 .cli-hero {
   border-bottom: 2px solid var(--line);
-  background: var(--canvas);
   padding: 6vh 3rem 7vh;
   text-align: center;
   position: relative;
@@ -475,6 +486,53 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
   margin-top: 1.4rem;
   font-family: var(--mono); font-size: 0.6rem; color: var(--muted);
   letter-spacing: 0.06em; font-weight: 700;
+}
+
+/* ── TERMINAL MOCKUP ── */
+.cli-term {
+  margin: 2.6rem auto 0;
+  max-width: 620px;
+  text-align: left;
+  background: var(--glass-bg-strong);
+  border: 2px solid var(--glass-line);
+  box-shadow: 6px 6px 0 0 var(--shadow-c);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+}
+.cli-term-bar {
+  display: flex; align-items: center; gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 2px solid var(--glass-line);
+}
+.cli-term-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--line);
+}
+.cli-term-dot.red { background: var(--red); }
+.cli-term-dot.yellow { background: #F59E0B; }
+.cli-term-dot.green { background: var(--green); }
+.cli-term-title {
+  margin-left: auto;
+  font-family: var(--mono); font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+.cli-term-body {
+  font-family: var(--mono);
+  font-size: 0.74rem; line-height: 1.8;
+  color: var(--ink2);
+  padding: 1.1rem 1.2rem 1.3rem;
+  overflow-x: auto;
+  text-align: left;
+}
+.cli-term-body p { white-space: nowrap; }
+.cli-term-body .t-prompt { color: var(--green2); font-weight: 700; }
+.cli-term-body .t-cmd { color: var(--ink); font-weight: 700; }
+.cli-term-body .t-ok { color: var(--green2); }
+.cli-term-body .t-run { color: var(--blue); }
+.cli-term-body .t-dim { color: var(--muted); }
+.cli-term-gap { margin-top: 0.75rem; }
+@media (max-width: 768px) {
+  .cli-term-body { font-size: 0.66rem; padding: 0.95rem 0.95rem 1.1rem; }
 }
 
 /* ── GENERIC SECTION (cli page) ── */
@@ -618,6 +676,19 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 }
 @media (max-width: 960px) and (min-width: 769px) {
   .section-inner { padding: 3.5rem 2rem; }
+}
+
+/* ── GLASS CARDS (cli page) ── */
+.cli-hero-badge, .cmd-card, .faq-item {
+  background: var(--glass-bg);
+  border-color: var(--glass-line);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+}
+.install-pending-note {
+  background: color-mix(in srgb, var(--canvas3) 55%, transparent);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
 }</style>
 </head>
 <body>
@@ -667,6 +738,28 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
     <p>Run emtypyie projects from your terminal with ease &mdash; the future runtime engine.</p>
     <div class="cli-hero-meta">
       <span id="cli-build">Build: detecting...</span>
+    </div>
+
+    <div class="cli-term" aria-hidden="true">
+      <div class="cli-term-bar">
+        <span class="cli-term-dot red"></span>
+        <span class="cli-term-dot yellow"></span>
+        <span class="cli-term-dot green"></span>
+        <span class="cli-term-title">emtypyie &mdash; bash</span>
+      </div>
+      <div class="cli-term-body">
+        <p><span class="t-prompt">~</span> <span class="t-cmd">emtypyie</span></p>
+        <p class="t-dim">emtypyie-cli &mdash; code. create. conquer.</p>
+        <p class="t-dim">type /help to list all commands</p>
+        <p class="cli-term-gap"><span class="t-prompt">~</span> <span class="t-cmd">/get kepler</span></p>
+        <p><span class="t-ok">&#10003;</span> fetching kepler from cdn.emtypyie.in/dev</p>
+        <p><span class="t-ok">&#10003;</span> installed kepler (latest)</p>
+        <p class="cli-term-gap"><span class="t-prompt">~</span> <span class="t-cmd">/list</span></p>
+        <p><span class="t-run">kepler</span>  <span class="t-dim">orbit visualizer</span></p>
+        <p><span class="t-run">slyr</span>   <span class="t-dim">slyr.cpp toolkit</span></p>
+        <p><span class="t-run">cli</span>    <span class="t-dim">emtypyie-cli</span></p>
+        <p class="cli-term-gap"><span class="t-prompt">~</span> <span class="t-cmd">/theme amber</span><span class="cursor"></span></p>
+      </div>
     </div>
   </div>
 </section>
