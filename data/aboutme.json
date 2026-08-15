@@ -1,0 +1,24 @@
+{
+  "badge": "Bachelor's Student · Open to Opportunities",
+  "name": "EMTYPYIE",
+  "tagline": "Bachelor's student exploring aerospace, systems programming, networking, distributed systems, and machine learning through hands-on engineering projects.",
+  "paragraph": "I'm a Bachelor's student at iitm with a passion for understanding how complex systems work. I enjoy learning by building—experimenting with ideas, breaking things, and creating projects that span systems programming, backend engineering, AI, networking, and distributed systems. Beyond software, I'm deeply interested in aerospace engineering, simulation, and computational analysis, using tools like MATLAB to explore engineering concepts and solve technical problems. I'm continuously strengthening my knowledge of data structures, operating systems, databases, scalable architectures, and artificial intelligence while building practical, research-driven projects.",
+  "facts": [
+    {
+      "label": "Location",
+      "value": "Kolkata, India"
+    },
+    {
+      "label": "Focus",
+      "value": "Systems Programming, AI & Aerospace"
+    },
+    {
+      "label": "Status",
+      "value": "Bachelor's Student · Open to Opportunities"
+    },
+    {
+      "label": "Interests",
+      "value": "Networking, Distributed Systems, Open Source, Machine Learning"
+    }
+  ]
+}

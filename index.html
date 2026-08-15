@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EMTYPYIE </title>
-<meta name="description" content="Portfolio of EMTYPYIE â€” student portfolio site." />
+<meta name="description" content="Portfolio of EMTYPYIE — student portfolio site." />
 <link rel="canonical" href="https://emtypyie.in" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -155,7 +155,7 @@
     transform: rotate(-2deg);
   }
 
-  .hero .badge::before { content: "â—"; font-size: 0.55rem; color: var(--pink); }
+  .hero .badge::before { content: "●"; font-size: 0.55rem; color: var(--pink); }
 
   .hero h1 {
     font-family: 'Bungee', cursive;
@@ -484,13 +484,13 @@
   <main>
 
     <div class="hero">
-      <div class="index-tag mono">FILE â€” 01 / PORTFOLIO</div>
+      <div class="index-tag mono">FILE — 01 / PORTFOLIO</div>
       <div>
-        <div class="badge" id="hero-badge">Loadingâ€¦</div>
+        <div class="badge" id="hero-badge">Loading…</div>
         <h1 id="hero-name">EMTYPYIE</h1>
-        <p class="tagline" id="hero-tagline">Loadingâ€¦</p>
+        <p class="tagline" id="hero-tagline">Loading…</p>
         <div class="cta-row">
-          <a href="#elsewhere" class="btn primary">See My Work â†’</a>
+          <a href="#elsewhere" class="btn primary">See My Work →</a>
           <a href="#contact" class="btn ghost">Get in Touch</a>
         </div>
       </div>
@@ -502,7 +502,7 @@
         <h2>About Me</h2>
       </div>
       <div class="about-grid">
-        <p id="about-paragraph">Loadingâ€¦</p>
+        <p id="about-paragraph">Loading…</p>
         <div class="about-facts" id="about-facts"></div>
       </div>
     </section>
@@ -542,7 +542,7 @@
           <h3>wiki.emtypyie.in</h3>
           <p>All my project write-ups, notes, and build logs live on my wiki. Head over there for the full archive.</p>
         </div>
-        <a class="go" href="https://wiki.emtypyie.in" target="_blank" rel="noopener">Visit Wiki â†’</a>
+        <a class="go" href="https://wiki.emtypyie.in" target="_blank" rel="noopener">Visit Wiki →</a>
       </div>
     </section>
 
@@ -559,7 +559,7 @@
 
   </main>
 
-  <footer>Â© 2026 EMTYPYIE. FILE 01 / PORTFOLIO â€” END.</footer>
+  <footer>© 2026 EMTYPYIE. FILE 01 / PORTFOLIO — END.</footer>
 
 </div>
 
@@ -590,7 +590,7 @@
 
   async function init() {
     // About Me
-    const about = await loadJSON('sites/main/data/aboutme.json');
+    const about = await loadJSON('data/aboutme.json');
     if (about) {
       document.getElementById('hero-badge').textContent = about.badge || '';
       document.getElementById('hero-name').textContent = about.name || 'EMTYPYIE';
@@ -606,11 +606,11 @@
     }
 
     // Education
-    const edu = await loadJSON('sites/main/data/edu.json');
+    const edu = await loadJSON('data/edu.json');
     if (edu) renderEntryList(document.getElementById('education-list'), edu, 'school');
 
     // Work (only shown if entries exist)
-    const work = await loadJSON('sites/main/data/work.json');
+    const work = await loadJSON('data/work.json');
     if (work && work.length > 0) {
       renderEntryList(document.getElementById('work-list'), work, 'company');
       document.getElementById('work').hidden = false;
@@ -618,14 +618,14 @@
     }
 
     // Skills
-    const skills = await loadJSON('sites/main/data/skills.json');
+    const skills = await loadJSON('data/skills.json');
     if (skills) {
       document.getElementById('skills-list').innerHTML =
         skills.map(s => `<span>${s}</span>`).join('');
     }
 
     // Social links
-    const links = await loadJSON('sites/main/data/sociallinks.json');
+    const links = await loadJSON('data/sociallinks.json');
     if (links) {
       document.getElementById('contact-links').innerHTML =
         links.map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
