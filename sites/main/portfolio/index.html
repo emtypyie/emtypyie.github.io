@@ -57,6 +57,12 @@
   --display: var(--sans);
   --font: var(--sans);
   --glow: none;
+
+  /* glass tokens */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.8);
+  --glass-line: rgba(17, 24, 39, 0.22);
+  --glass-blur: 14px;
 }
 
 [data-theme="dark"], [data-theme="violet"] {
@@ -91,6 +97,12 @@
   --danger: var(--red2);
   --btn-ink: var(--canvas);
   --glow: none;
+
+  /* glass tokens */
+  --glass-bg: rgba(13, 18, 28, 0.55);
+  --glass-bg-strong: rgba(13, 18, 28, 0.74);
+  --glass-line: rgba(147, 165, 186, 0.32);
+  --glass-blur: 14px;
 }
 
 html {
@@ -715,7 +727,35 @@ main { flex: 1 0 auto; }
   .pf-facts { grid-template-columns: 1fr; }
   .pf-entry { grid-template-columns: 1fr; gap: 0.6rem; }
   .pf-projects-card { padding: 1.8rem 1.4rem; }
-}</style>
+}
+
+/* ── GLASS CARDS (replaces solid black/white fills) ── */
+.pf-badge, .pf-hero-tagline-card, .pf-num, .pf-fact, .pf-entry,
+.pf-projects-card, .pf-projects-eyebrow, .pf-contact a, .pf-cta.ghost {
+  background: var(--glass-bg);
+  border-color: var(--glass-line);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+}
+.pf-about-card {
+  background: var(--glass-bg-strong);
+  border: 2px solid var(--glass-line);
+  box-shadow: 4px 4px 0 0 var(--shadow-c);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+  padding: 1.5rem 1.7rem;
+  margin-bottom: 2rem;
+  max-width: 780px;
+}
+.pf-about-card .pf-about-text { margin-bottom: 0; }
+.pf-skill {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.55);
+}
+.pf-skill:nth-child(4n+2) { background: color-mix(in srgb, var(--canvas3) 50%, transparent); }
+.pf-skill:nth-child(4n+3) { background: color-mix(in srgb, var(--green2) 60%, transparent); }
+.pf-skill:nth-child(4n+4) { background: color-mix(in srgb, var(--red2) 75%, transparent); color: #fff; }</style>
 </head>
 <body>
 <div class="sky-fx" aria-hidden="true"></div>
@@ -835,7 +875,9 @@ main { flex: 1 0 auto; }
         </div>
         <span class="pf-num mono" id="about-num">01</span>
       </div>
-      <p class="pf-about-text" id="about-paragraph">Loading…</p>
+      <div class="pf-about-card">
+        <p class="pf-about-text" id="about-paragraph">Loading…</p>
+      </div>
       <div class="pf-facts" id="about-facts"></div>
     </div>
   </section>
