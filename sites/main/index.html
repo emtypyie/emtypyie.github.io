@@ -81,7 +81,7 @@
   --green: #22C88A;
   --green2: #34D399;
   --blue: #60A5FA;
-  --shadow-c: #000000;
+  --shadow-c: #EDF2F9;
 
   --bg: var(--canvas);
   --bg2: var(--canvas2);
@@ -1016,7 +1016,25 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 }
 @media (max-width: 400px) {
   .promo-prompt, .cli-card-prompt { display: none; }
-}</style>
+}
+
+/* ── SCRAMBLE TEXT (use-scramble style) ── */
+.scramble-char {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── EASTER EGG MODAL ── */
+.egg-modal { text-align: center; }
+.egg-mark {
+  font-family: var(--mono); font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--red);
+  margin-bottom: 1rem;
+}
+.egg-modal h2 { text-transform: none; letter-spacing: -0.01em; }
+.egg-sub { font-size: 0.78rem; color: var(--ink2); margin-bottom: 1.4rem; }
+.egg-cta { margin: 0 auto; }
+</style>
 </head>
 <body>
 <div class="sky-fx" aria-hidden="true"></div>
@@ -1024,7 +1042,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 
 <!-- NAV -->
 <nav>
-  <a class="nav-brand" href="/">emtypyie<span>.</span>in</a>
+  <a class="nav-brand" href="/" data-scramble="hover">emtypyie<span>.</span>in</a>
   <div class="nav-right">
     <ul class="nav-links">
       <li>
@@ -1129,7 +1147,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
   <div class="hero-headline-row">
     <div class="hero-name-col">
       <p class="eyebrow">emtypyie.in</p>
-      <h1 class="hero-site-name">EMTYPYIE<span class="dot">.</span>IN</h1>
+      <h1 class="hero-site-name" data-scramble="load">EMTYPYIE<span class="dot">.</span>IN</h1>
     </div>
     <div class="hero-side-col">
       <p class="hero-tagline">Alright so, u may call me Emty and yeah dont forget to get popcorns</p>
@@ -1208,7 +1226,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
   <div class="writing-inner">
     <p class="section-label">well you know I am an author sometimes</p>
     <div class="writing-header">
-      <h2>Featured Writing</h2>
+      <h2 data-scramble="hover">Featured Writing</h2>
       <p>Something worth your time</p>
     </div>
 
@@ -1256,7 +1274,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 
     <div class="blog-page-header">
       <div>
-        <h2>From the Blog</h2>
+        <h2 data-scramble="hover">From the Blog</h2>
         <p>Latest notes and updates</p>
       </div>
       <a class="blog-view-all" href="/blogs/index.html">View all posts →</a>
@@ -1275,7 +1293,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 
     <div class="blog-page-header">
       <div>
-        <h2>The Gallery</h2>
+        <h2 data-scramble="hover">The Gallery</h2>
         <p>Moments I actually remembered to photograph</p>
       </div>
       <a class="blog-view-all" href="/gallery/index.html">View all snaps →</a>
@@ -1291,7 +1309,7 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
 <footer>
   <div class="footer-inner">
     <div>
-      <p class="footer-brand">emtypyie<span>.</span>in</p>
+      <p class="footer-brand" data-scramble="hover">emtypyie<span>.</span>in</p>
       <p class="footer-tagline">Research &amp; Development · Engineering<br>Made From Scratch Personally</p>
     </div>
     <div class="footer-links">
@@ -1366,6 +1384,17 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
       <a class="upi-app-btn" id="upi-app-link" href="#">Open in UPI app →</a>
       <button class="support-back" id="support-back-btn" type="button">← change amount</button>
     </div>
+  </div>
+</div>
+
+<!-- EASTER EGG: SIDEQUEST -->
+<div class="modal-overlay" id="modal-sidequest" onclick="if(event.target===this)closeModal()">
+  <div class="modal egg-modal">
+    <button class="modal-close" onclick="closeModal()">close ×</button>
+    <p class="egg-mark">you typed the forbidden word</p>
+    <h2>Damn it bro, I got u</h2>
+    <p class="egg-sub">Since u found this, u deserve something special...</p>
+    <button class="promo-cta egg-cta" onclick="window.location.href='https://emtypyie.in/sidequest'" type="button">Take me to the side quest →</button>
   </div>
 </div>
 
@@ -1799,6 +1828,174 @@ document.getElementById('upi-id-line').addEventListener('click', function() {
 });
 
 document.getElementById('support-back-btn').addEventListener('click', openSupportModal);
+
+/* ── SCRAMBLE TEXT (use-scramble style, vanilla, no deps) ── */
+const SCRAMBLE_POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{};:,.?";
+const SCRAMBLE_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SCRAMBLE_FINE_POINTER = window.matchMedia('(pointer: fine)').matches;
+
+let SCRAMBLE_CTX = null;
+let SCRAMBLE_GAIN = null;
+let SCRAMBLE_BUFFER = null;
+let SCRAMBLE_SRC = null;
+
+function ensureScrambleAudio() {
+  if (!SCRAMBLE_CTX) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    SCRAMBLE_CTX = new AC();
+    SCRAMBLE_GAIN = SCRAMBLE_CTX.createGain();
+    SCRAMBLE_GAIN.gain.value = 0.4;
+    SCRAMBLE_GAIN.connect(SCRAMBLE_CTX.destination);
+  }
+  return true;
+}
+
+function trimSilence(buffer, threshold = 0.002) {
+  const ch = buffer.getChannelData(0);
+  const n = buffer.length;
+  let start = 0, end = n;
+  for (let i = 0; i < n; i++) if (Math.abs(ch[i]) > threshold) { start = i; break; }
+  for (let i = n - 1; i > start; i--) if (Math.abs(ch[i]) > threshold) { end = i + 1; break; }
+  if (start >= end) return buffer;
+  const trimmed = SCRAMBLE_CTX.createBuffer(buffer.numberOfChannels, end - start, buffer.sampleRate);
+  for (let c = 0; c < buffer.numberOfChannels; c++) {
+    trimmed.copyToChannel(buffer.getChannelData(c).subarray(start, end), c);
+  }
+  return trimmed;
+}
+
+async function loadScrambleBuffer() {
+  try {
+    if (!ensureScrambleAudio()) return;
+    const r = await fetch('/assets/effecto.mp3');
+    if (!r.ok) return;
+    const decoded = await SCRAMBLE_CTX.decodeAudioData(await r.arrayBuffer());
+    SCRAMBLE_BUFFER = trimSilence(decoded);
+  } catch (e) { /* audio stays silent */ }
+}
+
+function playScrambleSound() {
+  if (SCRAMBLE_REDUCED || !SCRAMBLE_BUFFER) return;
+  if (SCRAMBLE_CTX.state === 'suspended') SCRAMBLE_CTX.resume();
+  stopScrambleSound();
+  SCRAMBLE_SRC = SCRAMBLE_CTX.createBufferSource();
+  SCRAMBLE_SRC.buffer = SCRAMBLE_BUFFER;
+  SCRAMBLE_SRC.loop = true;
+  SCRAMBLE_SRC.connect(SCRAMBLE_GAIN);
+  SCRAMBLE_SRC.start(0);
+}
+
+function stopScrambleSound() {
+  if (SCRAMBLE_SRC) {
+    try { SCRAMBLE_SRC.stop(); } catch (e) {}
+    SCRAMBLE_SRC.disconnect();
+    SCRAMBLE_SRC = null;
+  }
+}
+
+loadScrambleBuffer();
+
+function setupScramble(el, mode) {
+  const spans = [];
+  const wrapChars = (text, extraClass) => {
+    const frag = document.createDocumentFragment();
+    [...text].forEach(ch => {
+      const s = document.createElement('span');
+      s.className = 'scramble-char' + (extraClass ? ' ' + extraClass : '');
+      s.textContent = ch;
+      frag.appendChild(s);
+      spans.push(s);
+    });
+    return frag;
+  };
+
+  [...el.childNodes].forEach(child => {
+    if (child.nodeType === Node.TEXT_NODE) {
+      if (!child.textContent) return;
+      el.replaceChild(wrapChars(child.textContent), child);
+    } else if (child.nodeType === Node.ELEMENT_NODE) {
+      if (!child.textContent || child.querySelector('img,svg,input,button')) return;
+      el.replaceChild(wrapChars(child.textContent, child.className || ''), child);
+    }
+  });
+
+  const targets = spans.map(s => s.textContent);
+  if (!spans.length) return;
+
+  let rafId = null;
+  const stop = () => { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } };
+  const randomChar = () => SCRAMBLE_POOL[Math.floor(Math.random() * SCRAMBLE_POOL.length)];
+
+  const sustain = () => {
+    if (SCRAMBLE_REDUCED) return;
+    stop();
+    playScrambleSound();
+    const tick = () => {
+      spans.forEach((s, i) => {
+        const target = targets[i];
+        s.textContent = (target === ' ') ? target : randomChar();
+      });
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+  };
+
+  const settle = (fast) => {
+    if (SCRAMBLE_REDUCED) return;
+    stop();
+    if (fast) stopScrambleSound(); else playScrambleSound();
+    const duration = fast ? 260 : 900 + Math.min(600, spans.length * 28);
+    const start = performance.now();
+    const n = spans.length;
+    const frame = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      spans.forEach((s, i) => {
+        const target = targets[i];
+        const resolveAt = n <= 1 ? 0.5 : (fast ? 0.4 : 0.12) + (fast ? 0.6 : 0.78) * (i / (n - 1));
+        if (target === ' ' || t >= resolveAt) {
+          s.textContent = target;
+        } else {
+          s.textContent = randomChar();
+        }
+      });
+      if (t < 1) rafId = requestAnimationFrame(frame);
+      else rafId = null;
+    };
+    rafId = requestAnimationFrame(frame);
+  };
+
+  if (mode === 'load') settle(false);
+  if (SCRAMBLE_FINE_POINTER) {
+    el.addEventListener('mouseenter', sustain);
+    el.addEventListener('mouseleave', () => settle(true));
+    el.addEventListener('focus', sustain);
+    el.addEventListener('blur', () => settle(true));
+  }
+}
+
+document.querySelectorAll('[data-scramble]').forEach(el => {
+  setupScramble(el, el.dataset.scramble || 'hover');
+});
+
+/* ── EASTER EGG: type HENTAI ── */
+(() => {
+  const EGG_KEY = 'hentai';
+  let eggBuffer = '';
+  const typingInField = () => {
+    const el = document.activeElement;
+    const tag = el && (el.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || tag === 'select' || (el && el.isContentEditable);
+  };
+  document.addEventListener('keydown', (e) => {
+    if (e.key.length !== 1 || typingInField()) return;
+    eggBuffer = (eggBuffer + e.key.toLowerCase()).slice(-EGG_KEY.length);
+    if (eggBuffer === EGG_KEY) {
+      eggBuffer = '';
+      openModal('sidequest');
+    }
+  });
+})();
 </script>
 </body>
 </html>
