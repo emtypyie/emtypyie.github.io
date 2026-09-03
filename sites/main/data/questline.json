@@ -1,0 +1,47 @@
+[
+  {
+    "id": "kohlrausch",
+    "name": "Kohlrausch",
+    "tagline": "Simple Macro Keypad using rp2040 and mechanical switches",
+    "description": "Simple Macro Keypad using rp2040 and mechanical switches though i plan to connect it with esp32s3 later as addon module to make it wireless and connect it with my other cool projects :D",
+    "status": "In Development",
+    "statusClass": "building",
+    "tags": ["rp2040", "mechanical-switches", "esp32s3", "wireless"],
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/emtypyie/kohlrausch", "icon": "github" },
+      { "label": "Devlog", "url": "https://wiki.emtypyie.in/devlogs/kohlrausch", "icon": "book" }
+    ],
+    "skillsNeeded": ["Embedded C", "PCB Design", "Bluetooth/BLE"],
+    "timeline": "Ongoing"
+  },
+  {
+    "id": "pyielink",
+    "name": "Pyielink Framework",
+    "tagline": "P2P connection framework with dedicated data layer for remote computing",
+    "description": "Pyielink Framework work as the peer to peer connection framework which connects with two peers and now you can do remote computing the connection string is similar to openSSH protocol but it ads dedicated datalayer using which u can build and connect apps over it like a code ide which runs on your host peer it also has the virtual machine and targets to get <30ms latency in video streams",
+    "status": "In Development",
+    "statusClass": "building",
+    "tags": ["p2p", "remote-computing", "websocket", "virtual-machine", "low-latency"],
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/emtypyie/pyielink", "icon": "github" },
+      { "label": "NPM", "url": "https://www.npmjs.com/package/pyielink", "icon": "npm" },
+      { "label": "Devlog", "url": "https://wiki.emtypyie.in/devlogs/pyielink", "icon": "book" }
+    ],
+    "skillsNeeded": ["TypeScript/Rust", "WebRTC", "Distributed Systems", "Video Codecs"],
+    "timeline": "Ongoing"
+  },
+  {
+    "id": "d-atp3",
+    "name": "D-ATP3",
+    "tagline": "Directed Audio Transmission Protocol 3 - Laser-based audio transmission",
+    "description": "(Directed Audio Transmission Protocol 3) Aims to transmit digital audio data using guided laser to achive minimal latency and some cool invensions",
+    "status": "Planning",
+    "statusClass": "planning",
+    "tags": ["optical-comm", "laser", "audio", "protocol-design"],
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/emtypyie/D-ATP3", "icon": "github" }
+    ],
+    "skillsNeeded": ["Optical Engineering", "DSP", "FPGA", "Protocol Design"],
+    "timeline": "Research Phase"
+  }
+]
