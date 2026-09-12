@@ -1,10 +1,9 @@
 {
   "cleanUrls": true,
-  "routes": [
+  "rewrites": [
     {
-      "src": "^/(?!503\\.html$).*",
-      "status": 503,
-      "dest": "/503.html"
+      "source": "/((?!503\\.html$).*)",
+      "destination": "/503.html"
     }
   ]
 }
