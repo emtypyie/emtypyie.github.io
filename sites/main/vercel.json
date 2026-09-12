@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/:path((?!503\\.html$).*)",
+      "source": "/:path*",
       "destination": "/503.html"
     }
   ]
