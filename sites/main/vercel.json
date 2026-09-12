@@ -1,3 +1,11 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/((?!503\\.html$).*)",
+      "destination": "/503.html",
+      "permanent": false,
+      "statusCode": 503
+    }
+  ]
 }
