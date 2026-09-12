@@ -1,351 +1,302 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Resume — Emtypyie">
-<title>Resume — Emtypyie</title>
-
+<meta name="description" content="Resume — emtypyie.in">
+<title>Resume — emtypyie.in</title>
+<link rel="icon" type="image/jpeg" href="https://cdn.emtypyie.in/assets/favicon.jpg">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --bg: #f8f8f6;
-  --text: #171717;
-  --muted: #5f6368;
-  --line: #d2d2ce;
-  --red: #d94343;
+:root, [data-theme="light"] {
+  --canvas: #F9FAFB;
+  --canvas2: #F3F4F6;
+  --card: #FFFFFF;
+  --ink: #111827;
+  --ink2: #374151;
+  --muted: #6B7280;
+  --line: #000000;
+  --red: #DC2626;
+  --red2: #EF4444;
+  --green: #059669;
+  --shadow-c: #000000;
+  --sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, 'Cascadia Mono', 'SF Mono', 'Segoe UI Mono', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
-* {
-  box-sizing: border-box;
+[data-theme="dark"] {
+  --canvas: #0E1420;
+  --canvas2: #161E2C;
+  --card: #121A26;
+  --ink: #EDF2F9;
+  --ink2: #C3CFDF;
+  --muted: #8398AF;
+  --line: #93A5BA;
+  --red: #FF5252;
+  --red2: #FF7A70;
+  --green: #34D399;
+  --shadow-c: #EDF2F9;
 }
 
-html,
+html { background: var(--canvas); }
 body {
-  margin: 0;
-  min-height: 100%;
-}
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: "JetBrains Mono", monospace;
-  -webkit-font-smoothing: antialiased;
-}
-
-a {
-  color: inherit;
-}
-
-.site-header {
-  height: 62px;
-  padding: 0 38px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--sans);
+  min-height: 100vh;
+  transition: color 0.3s ease;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--line);
+  flex-direction: column;
 }
 
-.logo {
-  color: var(--red);
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 1px;
+/* ── SUNSET BACKGROUND (fixed, opacity 0.6) ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIwIDEwODAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIHNsaWNlIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2t5R3JhZCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjN0MxMTA4IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjI1JSIgc3RvcC1jb2xvcj0iI0MyMkEwQiIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI1NSUiIHN0b3AtY29sb3I9IiNFQTU4MEMiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iODAlIiBzdG9wLWNvbG9yPSIjRjk3MzE2IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9Ijk1JSIgc3RvcC1jb2xvcj0iI0ZCQkYyNCIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkVGMDhBIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KCiAgICA8cmFkaWFsR3JhZGllbnQgaWQ9InN1bkdsb3ciIGN4PSI2OCUiIGN5PSI3MiUiIHI9IjM1JSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRkZGRkYiIHN0b3Atb3BhY2l0eT0iMC45NSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxNSUiIHN0b3AtY29sb3I9IiNGRUYwOEEiIHN0b3Atb3BhY2l0eT0iMC44IiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjQwJSIgc3RvcC1jb2xvcj0iI0Y5NzMxNiIgc3RvcC1vcGFjaXR5PSIwLjQiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0VBNTgwQyIgc3RvcC1vcGFjaXR5PSIwIiAvPgogICAgPC9yYWRpYWxHcmFkaWVudD4KCiAgICA8bGluZWFyR3JhZGllbnQgaWQ9Imhvcml6b25IYXplIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRUYwOEEiIHN0b3Atb3BhY2l0eT0iMCIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRjk3MzE2IiBzdG9wLW9wYWNpdHk9IjAuMzUiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KCiAgPHJlY3Qgd2lkdGg9IjE5MjAiIGhlaWdodD0iMTA4MCIgZmlsbD0idXJsKCNza3lHcmFkKSIgLz4KICA8Y2lyY2xlIGN4PSIxMzAwIiBjeT0iNzgwIiByPSIyNjAiIGZpbGw9InVybCgjc3VuR2xvdykiIC8+CiAgPGNpcmNsZSBjeD0iMTMwMCIgY3k9Ijc4MCIgcj0iMTQwIiBmaWxsPSIjRkZGQkVCIiBvcGFjaXR5PSIwLjkiIC8+CgogIDxnIG9wYWNpdHk9IjAuMTUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI0Ij4KICAgIDxsaW5lIHgxPSIxMzAwIiB5MT0iNzgwIiB4Mj0iMjAwIiB5Mj0iMCIgLz4KICAgIDxsaW5lIHgxPSIxMzAwIiB5MT0iNzgwIiB4Mj0iNjAwIiB5Mj0iMCIgLz4KICAgIDxsaW5lIHgxPSIxMzAwIiB5MT0iNzgwIiB4Mj0iMTAwMCIgeTI9IjAiIC8+CiAgICA8bGluZSB4MT0iMTMwMCIgeTE9Ijc4MCIgeDI9IjE1MDAiIHkyPSIwIiAvPgogICAgPGxpbmUgeDE9IjEzMDAiIHkxPSI3ODAiIHgyPSIxOTIwIiB5Mj0iMjAwIiAvPgogICAgPGxpbmUgeDE9IjEzMDAiIHkxPSI3ODAiIHgyPSIwIiB5Mj0iNDAwIiAvPgogIDwvZz4KCiAgPHBhdGggZD0iTTAgMTA4MCBMMCA4ODAgTDEyMCA4ODAgTDEyMCA4NDAgTDE4MCA4NDAgTDE4MCA4ODAgTDI5MCA4ODAgTDI5MCA4MTAgTDM1MCA4MTAgTDM1MCA4ODAgTDUyMCA4ODAgTDUyMCA3OTAgTDU4MCA3OTAgTDY0MCA4MzAgTDc4MCA4MzAgTDc4MCA3NzAgTDg2MCA3NzAgTDg2MCA4MzAgTDEwMjAgODMwIEwxMDIwIDc1MCBMMTExMCA3NTAgTDExMTAgODMwIEwxMzUwIDgzMCBMMTM1MCA4NjAgTDE1MDAgODYwIEwxNTAwIDgwMCBMMTYwMCA4MDAgTDE2MDAgODYwIEwxOTIwIDg2MCBMMTkyMCAxMDgwIFoiIGZpbGw9IiMzQjBBMDQiIG9wYWNpdHk9IjAuNjUiIC8+CgogIDxnIGZpbGw9IiMxRjA1MDMiPgogICAgPHJlY3QgeD0iODAiIHk9IjYyMCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSI0NjAiIC8+CiAgICA8cG9seWdvbiBwb2ludHM9IjE1MCw1NjAgMTQ1LDYyMCAxNTUsNjIwIiAvPgogICAgPHJlY3QgeD0iMjYwIiB5PSI1MjAiIHdpZHRoPSIyMjAiIGhlaWdodD0iNTYwIiAvPgogICAgPHJlY3QgeD0iMjkwIiB5PSI0NjAiIHdpZHRoPSIxNjAiIGhlaWdodD0iNjAiIC8+CiAgICA8cmVjdCB4PSIzMzAiIHk9IjQxMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjUwIiAvPgogICAgPGxpbmUgeDE9IjM3MCIgeTE9IjQxMCIgeDI9IjM3MCIgeTI9IjMxMCIgc3Ryb2tlPSIjMUYwNTAzIiBzdHJva2Utd2lkdGg9IjYiIC8+CiAgICA8cmVjdCB4PSI1MjAiIHk9IjcwMCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIzODAiIC8+CiAgICA8cmVjdCB4PSI1NjAiIHk9IjY1MCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSI1MCIgLz4KICAgIDxyZWN0IHg9Ijk0MCIgeT0iNDgwIiB3aWR0aD0iMTkwIiBoZWlnaHQ9IjYwMCIgLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTAzNSwzOTAgMTAyNSw0ODAgMTA0NSw0ODAiIC8+CiAgICA8cmVjdCB4PSIxMTgwIiB5PSI1ODAiIHdpZHRoPSIxNjAiIGhlaWdodD0iNTAwIiAvPgogICAgPHJlY3QgeD0iMTU2MCIgeT0iNTAwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjU4MCIgLz4KICAgIDxyZWN0IHg9IjE2MDAiIHk9IjQ0MCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI2MCIgLz4KICA8L2c+CgogIDxnIGZpbGw9IiMwQjBGMTkiPgogICAgPHJlY3QgeD0iNjgwIiB5PSIzMjAiIHdpZHRoPSIyMzAiIGhlaWdodD0iNzYwIiAvPgogICAgPHJlY3QgeD0iNzEwIiB5PSIyNjAiIHdpZHRoPSIxNzAiIGhlaWdodD0iNjAiIC8+CiAgICA8cmVjdCB4PSI3NDAiIHk9IjIxMCIgd2lkdGg9IjExMCIgaGVpZ2h0PSI1MCIgLz4KICAgIDxyZWN0IHg9Ijc3MCIgeT0iMTYwIiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIC8+CiAgICA8bGluZSB4MT0iNzk1IiB5MT0iMTYwIiB4Mj0iNzk1IiB5Mj0iNzAiIHN0cm9rZT0iIzBCMEYxOSIgc3Ryb2tlLXdpZHRoPSI4IiAvPgogICAgPHJlY3QgeD0iMCIgeT0iNDkwIiB3aWR0aD0iMjEwIiBoZWlnaHQ9IjU5MCIgLz4KICAgIDxyZWN0IHg9IjMwIiB5PSI0MzAiIHdpZHRoPSIxMjAiIGhlaWdodD0iNjAiIC8+CiAgICA8cmVjdCB4PSIxMzgwIiB5PSIzODAiIHdpZHRoPSIyODAiIGhlaWdodD0iNzAwIiAvPgogICAgPHBvbHlnb24gcG9pbnRzPSIxNTIwLDI5MCAxNTEwLDM4MCAxNTMwLDM4MCIgLz4KICAgIDxyZWN0IHg9IjE3MDAiIHk9IjYwMCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSI0ODAiIC8+CiAgPC9nPgoKICA8ZyBmaWxsPSIjRkRFMDQ3IiBvcGFjaXR5PSIwLjg1Ij4KICAgIDxyZWN0IHg9IjcxMCIgeT0iMzYwIiB3aWR0aD0iMjAiIGhlaWdodD0iMzAiIC8+CiAgICA8cmVjdCB4PSI3NTAiIHk9IjM2MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjMwIiAvPgogICAgPHJlY3QgeD0iODMwIiB5PSIzNjAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIzMCIgLz4KICAgIDxyZWN0IHg9Ijg3MCIgeT0iMzYwIiB3aWR0aD0iMjAiIGhlaWdodD0iMzAiIC8+CiAgICA8cmVjdCB4PSI3MTAiIHk9IjQyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjRjk3MzE2IiAvPgogICAgPHJlY3QgeD0iNzkwIiB5PSI0MjAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIzMCIgLz4KICAgIDxyZWN0IHg9IjgzMCIgeT0iNDIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMzAiIC8+CiAgICA8cmVjdCB4PSI3NTAiIHk9IjQ4MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjMwIiAvPgogICAgPHJlY3QgeD0iODcwIiB5PSI0ODAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIzMCIgZmlsbD0iI0ZFRjA4QSIgLz4KICAgIDxyZWN0IHg9IjcxMCIgeT0iNTQwIiB3aWR0aD0iMjAiIGhlaWdodD0iMzAiIC8+CiAgICA8cmVjdCB4PSI3OTAiIHk9IjU0MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjRjk3MzE2IiAvPgogICAgPHJlY3QgeD0iODMwIiB5PSI1NDAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIzMCIgLz4KICAgIDxyZWN0IHg9Ijc1MCIgeT0iNjAwIiB3aWR0aD0iMjAiIGhlaWdodD0iMzAiIC8+CiAgICA8cmVjdCB4PSI4NzAiIHk9IjYwMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjMwIiAvPgogICAgPHJlY3QgeD0iNDAiIHk9IjUzMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjIyIiAvPgogICAgPHJlY3QgeD0iNzAiIHk9IjUzMCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjIyIiBmaWxsPSIjRjk3MzE2IiAvPgogICAgPHJlY3QgeD0iMTMwIiB5PSI1MzAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIyMiIgLz4KICAgIDxyZWN0IHg9IjQwIiB5PSI1ODAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIyMiIgLz4KICAgIDxyZWN0IHg9IjEwMCIgeT0iNTgwIiB3aWR0aD0iMTUiIGhlaWdodD0iMjIiIC8+CiAgICA8cmVjdCB4PSIxNDIwIiB5PSI0MzAiIHdpZHRoPSIyNSIgaGVpZ2h0PSIxNSIgLz4KICAgIDxyZWN0IHg9IjE0NjAiIHk9IjQzMCIgd2lkdGg9IjI1IiBoZWlnaHQ9IjE1IiBmaWxsPSIjRjk3MzE2IiAvPgogICAgPHJlY3QgeD0iMTU0MCIgeT0iNDMwIiB3aWR0aD0iMjUiIGhlaWdodD0iMTUiIC8+CiAgICA8cmVjdCB4PSIxNDIwIiB5PSI0ODAiIHdpZHRoPSIyNSIgaGVpZ2h0PSIxNSIgLz4KICAgIDxyZWN0IHg9IjE1MDAiIHk9IjQ4MCIgd2lkdGg9IjI1IiBoZWlnaHQ9IjE1IiAvPgogICAgPHJlY3QgeD0iMTQ2MCIgeT0iNTMwIiB3aWR0aD0iMjUiIGhlaWdodD0iMTUiIC8+CiAgICA8cmVjdCB4PSIxNTgwIiB5PSI1MzAiIHdpZHRoPSIyNSIgaGVpZ2h0PSIxNSIgZmlsbD0iI0ZFRjA4QSIgLz4KICA8L2c+CgogIDxnIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjciPgogICAgPHBhdGggZD0iTSAwLDY4MCBRIDM1MCw3MjAgNzAwLDY5MCIgLz4KICAgIDxwYXRoIGQ9Ik0gMCw3MDAgUSAzNTAsNzQwIDcwMCw3MTAiIC8+CiAgICA8cGF0aCBkPSJNIDcwMCw2OTAgUSAxMzAwLDczMCAxOTIwLDY3MCIgLz4KICAgIDxwYXRoIGQ9Ik0gNzAwLDcxMCBRIDEzMDAsNzUwIDE5MjAsNjkwIiAvPgogIDwvZz4KCiAgPHJlY3QgeT0iODIwIiB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIyNjAiIGZpbGw9InVybCgjaG9yaXpvbkhhemUpIiAvPgo8L3N2Zz4=");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.6;
+  pointer-events: none;
 }
 
-.nav {
-  display: flex;
-  gap: 22px;
+/* ── NAV ── */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem; height: 56px;
+  border-bottom: 2px solid var(--line);
+}
+.nav-brand {
+  font-family: var(--mono); font-size: 1.3rem; font-weight: 700;
+  color: var(--ink); text-decoration: none; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.nav-brand span { color: var(--red); }
+.nav-links {
+  display: flex; align-items: center; gap: 1.6rem;
+}
+.nav-links a {
+  color: var(--ink2); text-decoration: none;
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+.nav-links a:hover { color: var(--red); }
+
+.theme-toggle {
+  position: relative; width: 52px; height: 26px;
+  background: var(--card); border: 2px solid var(--line);
+  cursor: pointer; overflow: hidden;
+  box-shadow: 2px 2px 0 0 var(--shadow-c);
+}
+.theme-toggle-thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px;
+  background: var(--red);
+  border: 2px solid var(--line);
+  transition: transform 0.3s cubic-bezier(.65,0,.35,1);
+}
+[data-theme="dark"] .theme-toggle-thumb { transform: translateX(25px); }
+
+/* ── MAIN ── */
+main {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  padding: 4rem 1.5rem;
+}
+.page-card {
+  max-width: 780px; width: 100%;
+  background: color-mix(in srgb, var(--card) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 2px solid var(--line);
+  box-shadow: 8px 8px 0 0 var(--shadow-c);
+  padding: 2.6rem;
+  text-align: left;
 }
 
-.nav a {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 10px;
-  transition: color .15s ease;
-}
-
-.nav a:hover {
-  color: var(--text);
-}
-
-.page {
-  width: min(980px, calc(100% - 48px));
-  margin: 0 auto;
-  padding: 86px 0 90px;
-}
-
+/* ── INTRO ── */
 .intro {
-  padding-bottom: 46px;
-  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.8rem;
+  border-bottom: 2px dashed var(--muted);
+  margin-bottom: 1.8rem;
 }
-
 .eyebrow {
-  margin: 0 0 16px;
-  color: var(--red);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.8px;
+  font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--red); margin-bottom: 0.9rem;
 }
-
 h1 {
-  margin: 0;
-  font-size: clamp(52px, 8vw, 82px);
-  line-height: .95;
-  letter-spacing: -5px;
+  font-family: var(--sans);
+  font-size: clamp(2.6rem, 7vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
   font-weight: 800;
+  color: var(--ink);
 }
-
 .description {
   max-width: 540px;
-  margin: 24px 0 0;
-  color: var(--muted);
-  font-size: 11px;
+  margin-top: 1rem;
+  color: var(--ink2);
+  font-size: 0.85rem;
   line-height: 1.8;
 }
 
-.Resume {
-  padding: 32px 0 0;
+/* ── RESUME FILE ROW ── */
+.resume-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.6rem;
+  padding: 1.4rem;
+  margin-bottom: 1.2rem;
+  border: 2px solid var(--line);
+  background: color-mix(in srgb, var(--canvas2) 65%, transparent);
+  backdrop-filter: blur(6px);
+  box-shadow: 3px 3px 0 0 var(--shadow-c);
 }
-
-.Resume-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-  padding: 25px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.file {
-  min-width: 0;
-}
-
+.file { min-width: 0; }
 .file-name {
-  margin: 0 0 7px;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 0.95rem; font-weight: 700;
+  margin-bottom: 0.35rem; color: var(--ink);
 }
-
 .file-info {
-  margin: 0;
-  color: var(--muted);
-  font-size: 9px;
-  line-height: 1.6;
+  color: var(--muted); font-size: 0.68rem;
+  letter-spacing: 0.04em; text-transform: uppercase;
 }
 
 .actions {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
+  display: flex; gap: 0.7rem; flex-shrink: 0;
 }
-
-.button {
-  display: inline-block;
-  padding: 9px 14px;
-  border: 1px solid var(--line);
-  text-decoration: none;
-  font-size: 9px;
-  font-weight: 600;
-  transition: .15s ease;
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--ink); color: var(--canvas);
+  font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 0.65rem 1.1rem; text-decoration: none;
+  border: 2px solid var(--line); cursor: pointer;
+  box-shadow: 4px 4px 0 0 var(--shadow-c);
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background 0.15s, color 0.15s;
 }
-
-.button:hover {
-  border-color: var(--text);
-}
-
-.button.primary {
-  color: #101722;
-  background: var(--red);
-  border-color: var(--red);
-}
-
-.button.primary:hover {
-  background: #ff6868;
-  border-color: #ff6868;
-}
+.btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 0 var(--shadow-c); background: var(--red); color: #fff; }
+.btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 0 var(--shadow-c); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: var(--canvas); }
 
 .updated {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding-top: 18px;
+  display: flex; justify-content: space-between; gap: 1.2rem;
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--muted);
-  font-size: 9px;
 }
+.updated span:last-child { color: var(--ink2); }
 
-.updated span:last-child {
-  color: #36393d;
+/* ── FOOTER ── */
+.page-footer {
+  margin-top: 2.4rem;
+  padding-top: 1.4rem;
+  border-top: 2px dashed var(--muted);
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1.6rem;
+  font-family: var(--mono); font-size: 0.65rem; line-height: 1.7;
+  color: var(--muted);
 }
+.footer-left, .footer-right {
+  display: flex; flex-direction: column; gap: 0.25rem;
+}
+.footer-left strong {
+  color: var(--ink); font-size: 0.75rem; letter-spacing: 0.05em;
+}
+.footer-right { text-align: right; }
+.footer-right a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--muted); }
+.footer-right a:hover { color: var(--red); text-decoration-color: var(--red); }
 
 footer.site-footer {
-  margin-top: 96px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 30px;
-  color: var(--muted);
-  font-size: 9px;
-  line-height: 1.7;
+  border-top: 2px solid var(--line);
+  padding: 1.1rem 2.5rem;
+  text-align: center;
+  font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700;
+  letter-spacing: 0.05em;
 }
 
-.footer-left,
-.footer-right {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.footer-left strong {
-  color: var(--text);
-  font-size: 10px;
-  letter-spacing: .6px;
-}
-
-.footer-right {
-  text-align: right;
-}
-
-.footer-right a {
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.footer-right a:hover {
-  color: var(--text);
-}
-
-@media (max-width: 600px) {
-  .site-header {
-    height: 56px;
-    padding: 0 20px;
-  }
-
-  .nav {
-    gap: 13px;
-  }
-
-  .nav a {
-    font-size: 9px;
-  }
-
-  .page {
-    width: calc(100% - 40px);
-    padding: 58px 0 60px;
-  }
-
-  .intro {
-    padding-bottom: 35px;
-  }
-
-  h1 {
-    letter-spacing: -3px;
-  }
-
-  .Resume-row {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .actions {
-    width: 100%;
-  }
-
-  .button {
-    flex: 1;
-    text-align: center;
-  }
-
-  .updated {
-    flex-direction: column;
-    gap: 7px;
-  }
-
-  footer.site-footer {
-    margin-top: 70px;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .footer-right {
-    text-align: left;
-  }
+@media (max-width: 640px) {
+  nav { padding: 0 1.2rem; }
+  .page-card { padding: 2rem 1.4rem; }
+  .resume-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .actions { width: 100%; }
+  .btn { flex: 1; justify-content: center; }
+  .updated { flex-direction: column; gap: 0.4rem; }
+  .page-footer { flex-direction: column; gap: 1rem; }
+  .footer-right { text-align: left; }
+  footer.site-footer { padding: 1rem 1.2rem; }
 }
 </style>
 </head>
-
 <body>
 
-<header class="site-header">
-  <a class="logo" href="/">EMTYPYIE.IN</a>
+<nav>
+  <a class="nav-brand" href="/">emtypyie<span>.</span>in</a>
+  <div class="nav-links">
+    <a href="/wiki">Wiki</a>
+    <a href="/blog">Blog</a>
+    <a href="https://github.com/emtypyie" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+    <div class="theme-toggle-thumb"></div>
+  </button>
+</nav>
 
-  <nav class="nav">
-    <a href="/wiki">WIKI</a>
-    <a href="/blog">BLOG</a>
-    <a href="https://github.com/emtypyie" target="_blank" rel="noopener">GITHUB ↗</a>
-  </nav>
-</header>
+<main>
+  <div class="page-card">
 
-<main class="page">
+    <div class="intro">
+      <p class="eyebrow">emtypyie.in</p>
+      <h1>Resume</h1>
+      <p class="description">
+        A concise overview of my background, technical work, projects, and current areas of focus.
+      </p>
+    </div>
 
-  <section class="intro">
-    <p class="eyebrow">EMTYPYIE.IN</p>
-    <h1>Resume</h1>
-    <p class="description">
-      A concise overview of my background, technical work,
-      projects, and current areas of focus.
-    </p>
-  </section>
-
-  <section class="Resume">
-    <div class="Resume-row">
+    <div class="resume-row">
       <div class="file">
         <p class="file-name">Resume.pdf</p>
-        <p class="file-info">PDF · CURRENT VERSION</p>
+        <p class="file-info">PDF · Current Version</p>
       </div>
-
       <div class="actions">
-        <a
-          class="button primary"
-          href="/assets/Resume.pdf"
-          target="_blank"
-          rel="noopener">
-          OPEN
-        </a>
-
-        <a
-          class="button"
-          href="/assets/Resume.pdf"
-          download>
-          DOWNLOAD
-        </a>
+        <a class="btn" href="/assets/Resume.pdf" target="_blank" rel="noopener">Open</a>
+        <a class="btn ghost" href="/assets/Resume.pdf" download>Download</a>
       </div>
     </div>
 
     <div class="updated">
-      <span>LAST UPDATED</span>
-      <span>12 SEPTEMBER 2026</span>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <div class="footer-left">
-      <strong>EMTYPYIE.IN</strong>
-      <span>Resume &amp; Professional Profile</span>
+      <span>Last updated</span>
+      <span>12 September 2026</span>
     </div>
 
-    <div class="footer-right">
-      <span>Last updated: 12 September 2026</span>
-      <a href="/">emtypyie.in</a>
+    <div class="page-footer">
+      <div class="footer-left">
+        <strong>EMTYPYIE.IN</strong>
+        <span>Resume &amp; Professional Profile</span>
+      </div>
+      <div class="footer-right">
+        <span>Last updated: 12 September 2026</span>
+        <a href="/">emtypyie.in</a>
+      </div>
     </div>
-  </footer>
 
+  </div>
 </main>
 
+<footer class="site-footer">&copy; 2026 emtypyie.in &middot; back soon</footer>
+
+<script>
+const html = document.documentElement;
+const toggle = document.getElementById('theme-toggle');
+function applyTheme(t) { html.setAttribute('data-theme', t); localStorage.setItem('emty-theme', t); }
+applyTheme(localStorage.getItem('emty-theme') || 'light');
+toggle.addEventListener('click', () => {
+  applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+</script>
 </body>
 </html>
