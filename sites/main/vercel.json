@@ -2,8 +2,8 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/((?!sites/main/503\\.html$).*)",
-      "destination": "sites/main/503.html"
+      "source": "/((503\\.html$).*)",
+      "destination": "503.html"
     }
   ]
 }
