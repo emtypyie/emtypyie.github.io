@@ -1,9 +1,10 @@
 {
   "cleanUrls": true,
-  "routes": [
+  "redirects": [
     {
-      "src": "^/(?!503\\.html$).*",
-      "dest": "503.html"
+      "source": "/:path((?!503\\.html$).*)",
+      "destination": "/503.html",
+      "permanent": false
     }
   ]
 }
