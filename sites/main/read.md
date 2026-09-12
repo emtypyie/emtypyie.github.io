@@ -1,7 +1,0 @@
-"redirects": [
-    {
-      "source": "/:path((?!503$).*)",
-      "destination": "/503",
-      "permanent": false
-    }
-  ]
