@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Resume — Emtypyie">
+<title>Resume | EMtypyie.in</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+:root{
+  --navy:#0d1422;
+  --navy2:#111a2a;
+  --red:#ff5757;
+  --red-dark:#7e211a;
+  --cream:#edf0f1;
+  --muted:#9aa7b8;
+  --line:#c8d4df;
+  --black:#080d16;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:var(--navy);
+  color:var(--cream);
+  font-family:"Space Mono","Courier New",monospace;
+}
+
+body{
+  overflow-x:hidden;
+  background:
+    linear-gradient(115deg,transparent 0 49.7%,rgba(255,255,255,.045) 50%,transparent 50.3%) 0 0/340px 340px,
+    linear-gradient(75deg,transparent 0 49.7%,rgba(255,255,255,.025) 50%,transparent 50.3%) 0 0/420px 420px,
+    var(--navy);
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.22;
+  background-image:
+    repeating-linear-gradient(75deg,transparent 0 110px,rgba(255,255,255,.06) 111px,transparent 112px 180px);
+  animation:rain 14s linear infinite;
+}
+
+@keyframes rain{
+  from{transform:translateY(-80px)}
+  to{transform:translateY(80px)}
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  min-height:74px;
+  padding:12px 42px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  background:#0d1422;
+  border-bottom:2px solid var(--line);
+  box-shadow:0 5px 0 rgba(0,0,0,.22);
+}
+
+.logo{
+  color:var(--red);
+  font-size:25px;
+  font-weight:800;
+  letter-spacing:2px;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.logo:before{
+  content:"";
+  display:inline-block;
+  width:12px;
+  height:12px;
+  margin-right:10px;
+  background:var(--red);
+  box-shadow:5px 5px 0 var(--navy);
+}
+
+.nav{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.nav a,.action{
+  color:var(--cream);
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+  padding:9px 13px;
+  border:2px solid var(--line);
+  background:var(--navy2);
+  box-shadow:3px 3px 0 #657384;
+  transition:.15s ease;
+}
+
+.nav a:hover,.action:hover{
+  transform:translate(2px,2px);
+  box-shadow:0 0 0 #657384;
+  background:#182336;
+}
+
+main{
+  position:relative;
+  z-index:1;
+  width:min(1240px,calc(100% - 36px));
+  margin:34px auto 50px;
+}
+
+.hero{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:30px;
+  margin:0 0 20px;
+}
+
+.kicker{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--red);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+
+.kicker:before{
+  content:"";
+  width:27px;
+  height:4px;
+  background:var(--red);
+}
+
+h1{
+  margin:0;
+  font-family:"JetBrains Mono","Courier New",monospace;
+  font-size:clamp(42px,7vw,88px);
+  line-height:.88;
+  letter-spacing:-6px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.intro{
+  max-width:430px;
+  padding:15px 18px;
+  border:2px solid var(--line);
+  background:var(--navy2);
+  box-shadow:5px 5px 0 rgba(130,145,160,.65);
+  color:#bdc8d5;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.viewer-shell{
+  position:relative;
+  border:2px solid var(--line);
+  background:#0a101a;
+  padding:12px;
+  box-shadow:7px 7px 0 #05080d;
+}
+
+.viewer-shell:before{
+  content:"";
+  position:absolute;
+  top:-11px;
+  left:24px;
+  width:110px;
+  height:9px;
+  background:var(--red);
+  border:2px solid var(--line);
+  border-bottom:0;
+}
+
+.viewer-bar{
+  height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:0 12px;
+  border:2px solid #596a7c;
+  border-bottom:0;
+  background:#111a28;
+}
+
+.viewer-title{
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+.status{
+  color:var(--red);
+  font-size:10px;
+  font-weight:700;
+}
+
+.pdf-frame{
+  position:relative;
+  width:100%;
+  height:min(78vh,1050px);
+  min-height:650px;
+  background:#242424;
+  border:2px solid #596a7c;
+  overflow:hidden;
+}
+
+.pdf-frame iframe{
+  width:100%;
+  height:100%;
+  display:block;
+  border:0;
+  background:#242424;
+}
+
+.fallback{
+  display:none;
+  position:absolute;
+  inset:0;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+  background:var(--navy2);
+  color:var(--muted);
+}
+
+.bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding-top:22px;
+  border-top:2px solid #596a7c;
+  margin-top:36px;
+}
+
+.meta{
+  color:#778598;
+  font-size:10px;
+  line-height:1.7;
+}
+
+.actions{
+  display:flex;
+  gap:9px;
+}
+
+.action.primary{
+  background:var(--red);
+  color:#fff;
+  border-color:#fff;
+  box-shadow:3px 3px 0 #7c2424;
+}
+
+@media(max-width:800px){
+  header{padding:12px 18px}
+  .logo{font-size:19px}
+  .nav a:nth-child(n+3){display:none}
+  main{width:calc(100% - 20px);margin-top:25px}
+  .hero{display:block}
+  .intro{margin-top:22px;max-width:none}
+  h1{letter-spacing:-3px}
+  .pdf-frame{height:78vh;min-height:520px}
+  .bottom{align-items:flex-start;flex-direction:column}
+}
+
+@media(max-width:500px){
+  .nav{display:none}
+  .viewer-shell{padding:7px}
+  .viewer-bar{padding:0 8px}
+  .status{display:none}
+  .actions{width:100%}
+  .action{flex:1;text-align:center}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a class="logo" href="/">EMTYPYIE.IN</a>
+  <nav class="nav" aria-label="Main navigation">
+    <a href="/wiki">▣ WIKI</a>
+    <a href="/dosa">◉ DOSA</a>
+    <a href="/portfolio">▣ PORTFOLIO</a>
+    <a href="/blog">▤ BLOG</a>
+    <a href="https://github.com/" target="_blank" rel="noopener">⑂ GITHUB</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="kicker">EMTYPYIE.IN / DOCUMENT</div>
+      <h1>RESUME</h1>
+    </div>
+    <div class="intro">
+      Alright, so you may call me Emty.<br>
+      Here is the current version of my resume.
+    </div>
+  </section>
+
+  <section class="viewer-shell">
+    <div class="viewer-bar">
+      <span class="viewer-title">RESUME.PDF</span>
+      <span class="status">● DOCUMENT ONLINE</span>
+    </div>
+
+    <div class="pdf-frame">
+      <iframe
+        src="/resume.pdf#view=FitH"
+        title="Emtypyie Resume">
+      </iframe>
+
+      <div class="fallback">
+        <div>
+          <p>PDF VIEWER UNAVAILABLE</p>
+          <a class="action primary" href="/resume.pdf">OPEN RESUME.PDF</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bottom">
+    <div class="meta">
+      EMTYPYIE.IN / RESUME<br>
+      LAST DOCUMENT — RESUME.PDF
+    </div>
+    <div class="actions">
+      <a class="action primary" href="/resume.pdf" target="_blank" rel="noopener">OPEN PDF ↗</a>
+      <a class="action" href="/resume.pdf" download>DOWNLOAD ↓</a>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
