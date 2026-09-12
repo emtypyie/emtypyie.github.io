@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Resume — Emtypyie">
-<title>Resume | EMtypyie.in</title>
+<title>Resume</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap');
@@ -13,11 +13,9 @@
   --navy:#0d1422;
   --navy2:#111a2a;
   --red:#ff5757;
-  --red-dark:#7e211a;
   --cream:#edf0f1;
   --muted:#9aa7b8;
   --line:#c8d4df;
-  --black:#080d16;
 }
 
 *{box-sizing:border-box}
@@ -44,8 +42,12 @@ body:before{
   inset:0;
   pointer-events:none;
   opacity:.22;
-  background-image:
-    repeating-linear-gradient(75deg,transparent 0 110px,rgba(255,255,255,.06) 111px,transparent 112px 180px);
+  background-image:repeating-linear-gradient(
+    75deg,
+    transparent 0 110px,
+    rgba(255,255,255,.06) 111px,
+    transparent 112px 180px
+  );
   animation:rain 14s linear infinite;
 }
 
@@ -229,18 +231,6 @@ h1{
   background:#242424;
 }
 
-.fallback{
-  display:none;
-  position:absolute;
-  inset:0;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:30px;
-  background:var(--navy2);
-  color:var(--muted);
-}
-
 .bottom{
   display:flex;
   align-items:center;
@@ -296,58 +286,69 @@ h1{
 
 <header>
   <a class="logo" href="/">EMTYPYIE.IN</a>
+
   <nav class="nav" aria-label="Main navigation">
-    <a href="/wiki">▣ WIKI</a>
-    <a href="/dosa">◉ DOSA</a>
-    <a href="/portfolio">▣ PORTFOLIO</a>
-    <a href="/blog">▤ BLOG</a>
-    <a href="https://github.com/" target="_blank" rel="noopener">⑂ GITHUB</a>
+    <a href="/wiki">WIKI</a>
+    <a href="/blog">BLOG</a>
+    <a href="https://github.com/emtypyie" target="_blank" rel="noopener">⑂ GITHUB</a>
   </nav>
 </header>
 
 <main>
+
   <section class="hero">
     <div>
-      <div class="kicker">EMTYPYIE.IN / DOCUMENT</div>
+      <div class="kicker">EMTYPYIE.IN</div>
       <h1>RESUME</h1>
     </div>
+
     <div class="intro">
-      Alright, so you may call me Emty.<br>
       Here is the current version of my resume.
     </div>
   </section>
 
   <section class="viewer-shell">
+
     <div class="viewer-bar">
       <span class="viewer-title">RESUME.PDF</span>
-      <span class="status">● DOCUMENT ONLINE</span>
+      <span class="status">DOCUMENT ONLINE</span>
     </div>
 
     <div class="pdf-frame">
       <iframe
-        src="/resume.pdf#view=FitH"
+        src="/assets/resume.pdf#view=FitH"
         title="Emtypyie Resume">
       </iframe>
-
-      <div class="fallback">
-        <div>
-          <p>PDF VIEWER UNAVAILABLE</p>
-          <a class="action primary" href="/resume.pdf">OPEN RESUME.PDF</a>
-        </div>
-      </div>
     </div>
+
   </section>
 
   <section class="bottom">
+
     <div class="meta">
       EMTYPYIE.IN / RESUME<br>
       LAST DOCUMENT — RESUME.PDF
     </div>
+
     <div class="actions">
-      <a class="action primary" href="/resume.pdf" target="_blank" rel="noopener">OPEN PDF ↗</a>
-      <a class="action" href="/resume.pdf" download>DOWNLOAD ↓</a>
+      <a
+        class="action primary"
+        href="/assets/resume.pdf"
+        target="_blank"
+        rel="noopener">
+        OPEN PDF ↗
+      </a>
+
+      <a
+        class="action"
+        href="/assets/resume.pdf"
+        download>
+        DOWNLOAD ↓
+      </a>
     </div>
+
   </section>
+
 </main>
 
 </body>
