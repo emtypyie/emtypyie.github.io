@@ -1,6 +1,13 @@
 {
-  "updated_at": "2026-09-14T18:00:00+00:00",
+  "updated_at": "2026-09-14T16:05:00+00:00",
   "notices": [
+    {
+      "id": 7,
+      "severity": "outage",
+      "title": "kepler.emtypyie.in down",
+      "body": "kepler.emtypyie.in is currently unreachable — the deployment could not be found on the hosting side. Work is in progress; a resolution notice will be posted once it is back up.",
+      "date": "2026-09-14"
+    },
     {
       "id": 6,
       "severity": "info",
