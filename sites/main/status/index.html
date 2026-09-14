@@ -126,7 +126,7 @@ nav {
 
 /* ── MAIN ── */
 main { flex: 1; padding: 2.6rem 1.5rem 3rem; }
-.wrap { max-width: 760px; margin: 0 auto; }
+.wrap { max-width: 980px; margin: 0 auto; }
 
 /* ── PAGE HEAD ── */
 .eyebrow {
@@ -196,19 +196,21 @@ main { flex: 1; padding: 2.6rem 1.5rem 3rem; }
 .btn[disabled]:hover { background: var(--ink); color: var(--canvas); }
 .last-check { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.04em; }
 
-/* ── TOP GRID: SUMMARY + NOTICES ── */
+/* ── TOP GRID: STATUS (LEFT) + NOTICES (RIGHT) ── */
 .top-grid {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
-  gap: 1.2rem;
-  margin: 2rem 0 2.4rem;
+  gap: 1.6rem;
   align-items: start;
 }
-.top-grid .summary { margin: 0; }
-.top-grid:has(section[hidden]) { grid-template-columns: 1fr; }
+.status-col { min-width: 0; }
+.status-col .summary { margin: 0 0 2.4rem; }
+.notices-col { min-width: 0; }
+.top-grid:has(#notices-section[hidden]) { grid-template-columns: 1fr; }
+.top-grid:has(#notices-section[hidden]) .notices-col { display: none; }
 
 /* ── GROUP LABELS ── */
-section + section { margin-top: 2.6rem; }
+.status-col section + section { margin-top: 2.6rem; }
 .section-label {
   display: flex; align-items: center; gap: 1rem;
   font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em;
@@ -287,7 +289,7 @@ section + section { margin-top: 2.6rem; }
   border-bottom: 2px solid var(--line);
 }
 .notice:last-child { border-bottom: none; }
-.notice-head { display: flex; align-items: center; gap: 0.7rem; }
+.notice-head { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
 .notice-dot {
   width: 10px; height: 10px; flex: none;
   border: 1.5px solid var(--line);
@@ -355,8 +357,9 @@ footer {
   transition: background 0.3s;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .top-grid { grid-template-columns: 1fr; }
+  .notices-col { margin-top: 2.6rem; }
 }
 
 @media (max-width: 560px) {
@@ -408,36 +411,40 @@ footer {
     </header>
 
     <div class="top-grid">
-      <div class="summary">
-        <div class="summary-dot" id="summary-dot"></div>
-        <div class="summary-main" aria-live="polite">
-          <div class="summary-title" id="summary-title">Checking services…</div>
-          <div class="summary-sub" id="summary-sub">probing 8 endpoints from your browser</div>
+      <div class="status-col">
+        <div class="summary">
+          <div class="summary-dot" id="summary-dot"></div>
+          <div class="summary-main" aria-live="polite">
+            <div class="summary-title" id="summary-title">Checking services…</div>
+            <div class="summary-sub" id="summary-sub">probing 8 endpoints from your browser</div>
+          </div>
+          <div class="summary-actions">
+            <button class="btn" id="refresh">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 7a5.5 5.5 0 1 1-1.6-3.9"/><path d="M12.6 1.2v3.3H9.3"/></svg>
+              Recheck
+            </button>
+            <span class="last-check" id="last-check">last check —</span>
+          </div>
         </div>
-        <div class="summary-actions">
-          <button class="btn" id="refresh">
-            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 7a5.5 5.5 0 1 1-1.6-3.9"/><path d="M12.6 1.2v3.3H9.3"/></svg>
-            Recheck
-          </button>
-          <span class="last-check" id="last-check">last check —</span>
-        </div>
+
+        <section>
+          <h2 class="section-label">Backend <span class="count" id="count-backend"></span></h2>
+          <div class="svc-list" id="svc-backend"></div>
+        </section>
+
+        <section>
+          <h2 class="section-label">Sites <span class="count" id="count-sites"></span></h2>
+          <div class="svc-list" id="svc-sites"></div>
+        </section>
       </div>
 
-      <section id="notices-section" hidden>
-        <h2 class="section-label">Notices <span class="count" id="count-notices"></span></h2>
-        <div class="notice-list" id="notice-list"></div>
-      </section>
+      <div class="notices-col">
+        <section id="notices-section" hidden>
+          <h2 class="section-label">Notices <span class="count" id="count-notices"></span></h2>
+          <div class="notice-list" id="notice-list"></div>
+        </section>
+      </div>
     </div>
-
-    <section>
-      <h2 class="section-label">Backend <span class="count" id="count-backend"></span></h2>
-      <div class="svc-list" id="svc-backend"></div>
-    </section>
-
-    <section>
-      <h2 class="section-label">Sites <span class="count" id="count-sites"></span></h2>
-      <div class="svc-list" id="svc-sites"></div>
-    </section>
 
     <div class="legend">
       <span class="legend-item"><span class="legend-dot ok"></span><code>200</code> → operational</span>
