@@ -1,6 +1,10 @@
-{
-  "cleanUrls": true,
-  "redirects": [
-    { "source": "/status", "destination": "/status/", "permanent": true }
-  ]
+{ 
+  "cleanUrls": true, 
+  "redirects": [ 
+    { 
+      "source": "/:path((?!(503$|status/)).*)", 
+      "destination": "/503", 
+      "permanent": false 
+    } 
+  ] 
 }
