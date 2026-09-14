@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Emtypyie &amp; Co.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #14181C;
+  --ink-soft: #3B4148;
+  --paper: #E7E2D3;
+  --paper-deep: #DCD5C0;
+  --paper-panel: #F1EDE1;
+  --verdigris: #2F6F62;
+  --verdigris-deep: #205046;
+  --rule: rgba(20,24,28,0.16);
+  --rule-strong: rgba(20,24,28,0.32);
+  --serif: "Source Serif 4", Georgia, serif;
+  --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--verdigris); color: var(--paper); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ── MASTHEAD ── */
+header.masthead {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule-strong);
+}
+.masthead-inner {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 28px; gap: 24px;
+}
+.wordmark {
+  font-family: var(--serif); font-weight: 600; font-size: 1.18rem;
+  letter-spacing: -0.01em; white-space: nowrap;
+}
+.wordmark span { color: var(--verdigris); }
+nav.mainnav { display: flex; gap: 2px; }
+nav.mainnav a {
+  font-size: 0.88rem; padding: 7px 14px; color: var(--ink-soft);
+  border-radius: 3px; transition: color 0.15s;
+}
+nav.mainnav a:hover { color: var(--ink); }
+
+/* ── 404 ── */
+.error-main {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 56px 28px 96px;
+}
+.error-box {
+  max-width: 520px; width: 100%;
+  background: var(--paper-panel);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  padding: 3.2rem 2.4rem;
+  text-align: center;
+  animation: fadeUp 0.5s ease both;
+}
+.error-code {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 10vw, 4.8rem);
+  font-weight: 700; line-height: 1;
+  color: var(--verdigris);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+.error-label {
+  font-family: var(--sans);
+  font-size: 0.82rem; font-weight: 600;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 1.2rem;
+}
+.error-desc {
+  font-size: 0.88rem; color: var(--ink-soft);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+}
+.error-path {
+  display: inline-block;
+  font-family: var(--sans); font-size: 0.78rem; font-weight: 500;
+  color: var(--ink-soft);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.5rem 0.9rem;
+  margin-bottom: 2rem;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.error-path strong { color: var(--verdigris); font-weight: 600; }
+.error-actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+.error-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-size: 0.78rem; font-weight: 600;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+  padding: 0.55rem 1.1rem;
+  background: var(--paper-panel);
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.error-btn:hover {
+  color: var(--verdigris-deep);
+  border-color: var(--verdigris);
+  background: var(--paper);
+}
+.error-btn.primary {
+  background: var(--verdigris); color: var(--paper);
+  border-color: var(--verdigris);
+}
+.error-btn.primary:hover {
+  background: var(--verdigris-deep);
+  color: var(--paper);
+}
+
+/* ── FOOTER ── */
+footer.sitefoot {
+  border-top: 1px solid var(--rule-strong);
+  padding: 28px 28px 34px;
+}
+.sitefoot-inner {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; justify-content: space-between; flex-wrap: wrap;
+  gap: 14px 28px;
+  font-size: 0.78rem; color: var(--ink-soft);
+}
+.sitefoot-links { display: flex; gap: 18px; flex-wrap: wrap; }
+.sitefoot-links a { color: var(--ink-soft); }
+.sitefoot-links a:hover { color: var(--ink); border-bottom: 1px solid var(--rule-strong); }
+
+@media (max-width: 480px) {
+  .error-box { padding: 2.2rem 1.4rem; }
+  .sitefoot-inner { flex-direction: column; gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="../" class="wordmark">Emtypyie <span>&amp;</span> Co.</a>
+    <nav class="mainnav">
+      <a href="../">Home</a>
+      <a href="../papers/">Papers</a>
+      <a href="../team/">Team</a>
+      <a href="../about/">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="error-main">
+  <div class="error-box">
+    <div class="error-code">404</div>
+    <div class="error-label">Page not found</div>
+    <p class="error-desc">
+      The requested page does not exist, may have been moved, or is not yet published.
+    </p>
+    <div class="error-path" id="error-path">
+      Requested path:
+    </div>
+    <div class="error-actions">
+      <a href="../" class="error-btn primary">Return home</a>
+      <a href="../papers/" class="error-btn">Browse papers</a>
+    </div>
+  </div>
+</main>
+
+<footer class="sitefoot">
+  <div class="sitefoot-inner">
+    <span>&copy; 2026 Emtypyie &amp; Co. — independent research and development.</span>
+    <div class="sitefoot-links">
+      <a href="../privacy/">Privacy Policy</a>
+      <a href="../terms/">Terms &amp; Conditions</a>
+      <a href="../copyright/">Copyright</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById("error-path").innerHTML =
+  "Requested path: <strong>" + window.location.pathname + "</strong>";
+</script>
+</body>
+</html>
