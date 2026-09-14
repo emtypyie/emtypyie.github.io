@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-09-14T11:34:40+00:00",
+  "services": [
+    {
+      "name": "cluster0",
+      "group": "backend",
+      "url": "https://cluster0.emtypyie.in/ping",
+      "state": "maint",
+      "code": "404"
+    },
+    {
+      "name": "cluster1",
+      "group": "backend",
+      "url": "https://cluster1.emtypyie.in/ping",
+      "state": "maint",
+      "code": "404"
+    },
+    {
+      "name": "wiki",
+      "group": "sites",
+      "url": "https://wiki.emtypyie.in",
+      "state": "ok",
+      "code": "200"
+    },
+    {
+      "name": "research",
+      "group": "sites",
+      "url": "https://research.emtypyie.in",
+      "state": "maint",
+      "code": "404"
+    },
+    {
+      "name": "emtypyie",
+      "group": "sites",
+      "url": "https://emtypyie.in",
+      "state": "maint",
+      "code": "307"
+    },
+    {
+      "name": "cdn",
+      "group": "sites",
+      "url": "https://cdn.emtypyie.in",
+      "state": "maint",
+      "code": "404"
+    },
+    {
+      "name": "kepler",
+      "group": "sites",
+      "url": "https://kepler.emtypyie.in",
+      "state": "ok",
+      "code": "200"
+    },
+    {
+      "name": "auth",
+      "group": "sites",
+      "url": "https://auth.emtypyie.in",
+      "state": "maint",
+      "code": "404"
+    }
+  ]
+}

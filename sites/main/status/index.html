@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Live status of emtypyie.in infrastructure — backend clusters and affiliated sites.">
+<meta name="robots" content="noindex">
+<title>Status — emtypyie.in</title>
+<link rel="icon" type="image/jpeg" href="https://cdn.emtypyie.in/assets/favicon.jpg">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root, [data-theme="light"] {
+  --canvas: #F9FAFB;
+  --canvas2: #F3F4F6;
+  --card: #FFFFFF;
+  --ink: #111827;
+  --ink2: #374151;
+  --muted: #6B7280;
+  --line: #000000;
+  --red: #DC2626;
+  --amber: #D97706;
+  --green: #059669;
+  --blue: #2563EB;
+  --shadow-c: #000000;
+  --mono: ui-monospace, 'Cascadia Mono', 'SF Mono', 'Segoe UI Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+[data-theme="dark"] {
+  --canvas: #0E1420;
+  --canvas2: #161E2C;
+  --card: #121A26;
+  --ink: #EDF2F9;
+  --ink2: #C3CFDF;
+  --muted: #8398AF;
+  --line: #93A5BA;
+  --red: #FF5252;
+  --amber: #FBBF24;
+  --green: #22C88A;
+  --blue: #60A5FA;
+  --shadow-c: #EDF2F9;
+}
+
+html { background: var(--canvas); }
+body {
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--sans);
+  min-height: 100vh;
+  transition: color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── NAV ── */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem; height: 56px;
+  border-bottom: 2px solid var(--line);
+}
+.nav-brand {
+  font-family: var(--mono); font-size: 1.3rem; font-weight: 700;
+  color: var(--ink); text-decoration: none; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.nav-brand span { color: var(--red); }
+.nav-home {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink2); text-decoration: none;
+  border: 2px solid var(--line); padding: 0.45rem 0.8rem;
+  box-shadow: 3px 3px 0 0 var(--shadow-c);
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, color 0.15s;
+}
+.nav-home:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--shadow-c); color: var(--red); }
+.nav-right { display: flex; align-items: center; gap: 0.9rem; }
+
+.theme-toggle {
+  position: relative; width: 52px; height: 26px;
+  background: var(--card); border: 2px solid var(--line);
+  cursor: pointer; overflow: hidden;
+  box-shadow: 2px 2px 0 0 var(--shadow-c);
+}
+.theme-toggle-thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px;
+  background: var(--red);
+  border: 2px solid var(--line);
+  transition: transform 0.3s cubic-bezier(.65,0,.35,1);
+}
+[data-theme="dark"] .theme-toggle-thumb { transform: translateX(25px); }
+
+/* ── MAIN ── */
+main { flex: 1; padding: 2.2rem 1.5rem 3rem; }
+.wrap { max-width: 800px; margin: 0 auto; }
+
+.summary {
+  display: flex; align-items: center; gap: 1.2rem;
+  border: 2px solid var(--line);
+  box-shadow: 6px 6px 0 0 var(--shadow-c);
+  background: var(--card);
+  padding: 1.6rem 1.7rem;
+  margin-bottom: 2.4rem;
+  flex-wrap: wrap;
+}
+.summary-dot {
+  width: 22px; height: 22px; flex: none;
+  border: 2px solid var(--line);
+  background: var(--muted);
+}
+.summary-dot.ok { background: var(--green); }
+.summary-dot.warn { background: var(--amber); }
+.summary-dot.bad { background: var(--red); }
+.summary-main { flex: 1 1 auto; min-width: 0; }
+.summary-title {
+  font-family: var(--mono); font-weight: 800;
+  font-size: 1.15rem; letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
+}
+.summary-sub { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.summary-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; flex: none; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--ink); color: var(--canvas);
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 0.62rem 1.05rem; text-decoration: none;
+  border: 2px solid var(--line); cursor: pointer;
+  box-shadow: 4px 4px 0 0 var(--shadow-c);
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background 0.15s, color 0.15s;
+}
+.btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 0 var(--shadow-c); background: var(--red); color: #fff; }
+.btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 0 var(--shadow-c); }
+.btn[disabled] { opacity: 0.5; cursor: default; transform: none; box-shadow: 4px 4px 0 0 var(--shadow-c); }
+.btn[disabled]:hover { background: var(--ink); color: var(--canvas); }
+.last-check { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.group-label {
+  font-family: var(--mono); font-size: 0.78rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ink2);
+  margin: 0 0 0.7rem 0.2rem;
+}
+.group-label:not(:first-of-type) { margin-top: 2.2rem; }
+.group-label .count { color: var(--muted); }
+
+.svc-list { border: 2px solid var(--line); background: var(--card); box-shadow: 4px 4px 0 0 var(--shadow-c); }
+
+.svc {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.3rem;
+  color: inherit; text-decoration: none;
+  border-bottom: 2px solid var(--line);
+  transition: background 0.12s ease;
+}
+.svc:last-child { border-bottom: none; }
+.svc:hover { background: color-mix(in srgb, var(--canvas2) 60%, transparent); }
+
+.svc-dot {
+  width: 12px; height: 12px; flex: none;
+  border: 1.5px solid var(--line);
+}
+.svc-dot.ok { background: var(--green); }
+.svc-dot.warn { background: var(--amber); }
+.svc-dot.bad { background: var(--red); }
+
+.svc-name-block { flex: 1 1 auto; min-width: 0; }
+.svc-name { font-family: var(--mono); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.01em; }
+.svc-host {
+  display: block; font-family: var(--mono); font-size: 0.68rem;
+  color: var(--muted); font-weight: 600; margin-top: 0.18rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.svc-meta { flex: none; display: flex; align-items: center; gap: 0.8rem; }
+.svc-state {
+  font-family: var(--mono); font-size: 0.64rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  border: 2px solid var(--line);
+  padding: 0.32rem 0.6rem;
+  white-space: nowrap;
+}
+.svc-state.ok { color: var(--green); }
+.svc-state.warn { color: var(--amber); }
+.svc-state.bad { color: var(--red); }
+
+.note {
+  margin-top: 2rem;
+  border: 2px dashed var(--line);
+  padding: 0.9rem 1.1rem;
+  font-family: var(--mono); font-size: 0.68rem; color: var(--muted);
+  font-weight: 700; line-height: 1.7;
+}
+.note code { background: var(--canvas2); border: 1px solid var(--line); padding: 0 0.3em; }
+
+.empty-note {
+  padding: 1.4rem 1.3rem;
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted);
+}
+
+footer {
+  border-top: 2px solid var(--line);
+  padding: 1.1rem 2.5rem;
+  text-align: center;
+  font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 560px) {
+  nav { padding: 0 1.2rem; }
+  main { padding: 1.4rem 0.9rem 2.4rem; }
+  footer { padding: 1rem 1.2rem; }
+  .summary { padding: 1.2rem 1.1rem; }
+  .svc { gap: 0.7rem; padding: 0.85rem 0.9rem; }
+  .svc-meta { gap: 0.5rem; }
+  .summary-actions { align-items: flex-start; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="https://emtypyie.in">emtypyie<span>.</span>in</a>
+  <div class="nav-right">
+    <a class="nav-home" href="https://emtypyie.in">← home</a>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+      <div class="theme-toggle-thumb"></div>
+    </button>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="summary">
+      <div class="summary-dot" id="summary-dot"></div>
+      <div class="summary-main">
+        <div class="summary-title" id="summary-title">Loading…</div>
+        <div class="summary-sub" id="summary-sub">fetching status data</div>
+      </div>
+      <div class="summary-actions">
+        <button class="btn" id="refresh">⟳ Refresh</button>
+        <span class="last-check" id="last-check">updated: —</span>
+      </div>
+    </div>
+
+    <h2 class="group-label">Backend <span class="count" id="count-backend"></span></h2>
+    <div class="svc-list" id="svc-backend"></div>
+
+    <h2 class="group-label">Sites <span class="count" id="count-sites"></span></h2>
+    <div class="svc-list" id="svc-sites"></div>
+
+    <p class="note">
+      Health checks run server-side via GitHub Actions every 4 minutes —
+      <code>200</code> → operational · <code>redirect</code> / <code>404</code> → maintenance or not yet public ·
+      <code>error</code> / other status → down.
+    </p>
+  </div>
+</main>
+
+<footer>&copy; 2026 emtypyie.in &middot; automated checks via GitHub Actions</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var html = document.documentElement;
+  var toggle = document.getElementById("theme-toggle");
+  function applyTheme(t) { html.setAttribute("data-theme", t); localStorage.setItem("emty-theme", t); }
+  applyTheme(localStorage.getItem("emty-theme") || "light");
+  toggle.addEventListener("click", function () {
+    applyTheme(html.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+
+  var lists = {
+    backend: document.getElementById("svc-backend"),
+    sites: document.getElementById("svc-sites")
+  };
+  var groupCount = {
+    backend: document.getElementById("count-backend"),
+    sites: document.getElementById("count-sites")
+  };
+  var summaryTitle = document.getElementById("summary-title");
+  var summarySub = document.getElementById("summary-sub");
+  var summaryDot = document.getElementById("summary-dot");
+  var lastCheck = document.getElementById("last-check");
+  var refresh = document.getElementById("refresh");
+
+  var LABELS = { ok: "operational", maint: "maintenance", down: "down" };
+
+  function svcRow(svc) {
+    var el = document.createElement("a");
+    el.className = "svc";
+    el.href = svc.url;
+    el.target = "_blank";
+    el.rel = "noopener";
+    var cls = (svc.state === "ok") ? "ok" : (svc.state === "maint") ? "warn" : "bad";
+    var label = LABELS[svc.state] || svc.state;
+    if (svc.code) label += " · " + svc.code;
+    el.innerHTML =
+      '<span class="svc-dot ' + cls + '"></span>' +
+      '<span class="svc-name-block">' +
+        '<span class="svc-name"></span>' +
+        '<span class="svc-host"></span>' +
+      '</span>' +
+      '<span class="svc-meta"><span class="svc-state ' + cls + '"></span></span>';
+    el.querySelector(".svc-name").textContent = svc.name;
+    var host = svc.url.replace(/^https?:\/\//, "");
+    el.querySelector(".svc-host").textContent = host;
+    el.querySelector(".svc-state").textContent = label;
+    return el;
+  }
+
+  function render(data) {
+    var svcs = data.services || [];
+
+    var byGroup = { backend: [], sites: [] };
+    var counts = { ok: 0, maint: 0, down: 0 };
+    svcs.forEach(function (s) {
+      (byGroup[s.group] || (byGroup[s.group] = [])).push(s);
+      if (counts[s.state] !== undefined) counts[s.state]++;
+    });
+
+    ["backend", "sites"].forEach(function (g) {
+      lists[g].innerHTML = "";
+      var rows = byGroup[g] || [];
+      groupCount[g].textContent = "· " + rows.length + " service" + (rows.length === 1 ? "" : "s");
+      if (!rows.length) {
+        lists[g].innerHTML = '<div class="empty-note">no services in this group</div>';
+        return;
+      }
+      rows.forEach(function (s) { lists[g].appendChild(svcRow(s)); });
+    });
+
+    var total = svcs.length;
+    if (!total) {
+      summaryDot.className = "summary-dot";
+      summaryTitle.textContent = "No status data yet";
+      summarySub.textContent = "awaiting first automated check";
+      return;
+    }
+
+    if (counts.down > 0) {
+      summaryDot.className = "summary-dot bad";
+      summaryTitle.textContent = counts.down + " service" + (counts.down > 1 ? "s" : "") + " down";
+      summarySub.textContent = counts.ok + "/" + total + " operational · " + counts.maint + " in maintenance";
+    } else if (counts.maint > 0) {
+      summaryDot.className = "summary-dot warn";
+      summaryTitle.textContent = "Maintenance in progress";
+      summarySub.textContent = counts.ok + "/" + total + " operational · " + counts.maint + " in maintenance";
+    } else {
+      summaryDot.className = "summary-dot ok";
+      summaryTitle.textContent = "All systems operational";
+      summarySub.textContent = counts.ok + "/" + total + " services operational";
+    }
+  }
+
+  function fmtTime(s) {
+    var d = new Date(s);
+    if (isNaN(d.getTime())) return s;
+    return d.toLocaleString();
+  }
+
+  function load() {
+    refresh.disabled = true;
+    fetch("status.json", { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("status.json " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        render(data);
+        lastCheck.textContent = "updated: " + (data.generated_at ? fmtTime(data.generated_at) : "—");
+      })
+      .catch(function () {
+        summaryDot.className = "summary-dot";
+        summaryTitle.textContent = "Status unavailable";
+        summarySub.textContent = "could not load status data";
+        lastCheck.textContent = "updated: —";
+      })
+      .then(function () { refresh.disabled = false; });
+  }
+
+  refresh.addEventListener("click", load);
+  load();
+  setInterval(load, 60000);
+})();
+</script>
+</body>
+</html>
