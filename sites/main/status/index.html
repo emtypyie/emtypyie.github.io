@@ -164,6 +164,8 @@ main { flex: 1; padding: 2.2rem 1.5rem 3rem; }
 .svc-dot.ok { background: var(--green); }
 .svc-dot.warn { background: var(--amber); }
 .svc-dot.bad { background: var(--red); }
+.svc-dot.chk { background: var(--muted); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.25; } }
 
 .svc-name-block { flex: 1 1 auto; min-width: 0; }
 .svc-name { font-family: var(--mono); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.01em; }
@@ -184,6 +186,11 @@ main { flex: 1; padding: 2.2rem 1.5rem 3rem; }
 .svc-state.ok { color: var(--green); }
 .svc-state.warn { color: var(--amber); }
 .svc-state.bad { color: var(--red); }
+.svc-state.chk { color: var(--muted); }
+.svc-lat {
+  font-family: var(--mono); font-size: 0.66rem; color: var(--muted);
+  min-width: 4.2em; text-align: right; font-weight: 700;
+}
 
 .note {
   margin-top: 2rem;
@@ -215,6 +222,7 @@ footer {
   .summary { padding: 1.2rem 1.1rem; }
   .svc { gap: 0.7rem; padding: 0.85rem 0.9rem; }
   .svc-meta { gap: 0.5rem; }
+  .svc-lat { min-width: 3.4em; }
   .summary-actions { align-items: flex-start; width: 100%; }
 }
 </style>
@@ -236,12 +244,12 @@ footer {
     <div class="summary">
       <div class="summary-dot" id="summary-dot"></div>
       <div class="summary-main">
-        <div class="summary-title" id="summary-title">Loading…</div>
-        <div class="summary-sub" id="summary-sub">fetching status data</div>
+        <div class="summary-title" id="summary-title">Checking services…</div>
+        <div class="summary-sub" id="summary-sub">pinging 8 endpoints from your browser</div>
       </div>
       <div class="summary-actions">
-        <button class="btn" id="refresh">⟳ Refresh</button>
-        <span class="last-check" id="last-check">updated: —</span>
+        <button class="btn" id="refresh">⟳ Recheck now</button>
+        <span class="last-check" id="last-check">last check: —</span>
       </div>
     </div>
 
@@ -252,14 +260,14 @@ footer {
     <div class="svc-list" id="svc-sites"></div>
 
     <p class="note">
-      Health checks run server-side via GitHub Actions every 4 minutes —
+      Live checks from your browser every 30s —
       <code>200</code> → operational · <code>redirect</code> / <code>404</code> → maintenance or not yet public ·
-      <code>error</code> / other status → down.
+      <code>error</code> / other status → down. Automated server checks run via GitHub Actions every 4 min and keep a record in <code>status.json</code>.
     </p>
   </div>
 </main>
 
-<footer>&copy; 2026 emtypyie.in &middot; automated checks via GitHub Actions</footer>
+<footer>&copy; 2026 emtypyie.in &middot; live checks in your browser</footer>
 
 <script>
 (function () {
@@ -273,6 +281,17 @@ footer {
     applyTheme(html.getAttribute("data-theme") === "dark" ? "light" : "dark");
   });
 
+  var SERVICES = [
+    { group: "backend", name: "cluster0", url: "https://cluster0.emtypyie.in/ping" },
+    { group: "backend", name: "cluster1", url: "https://cluster1.emtypyie.in/ping" },
+    { group: "sites",   name: "wiki",     url: "https://wiki.emtypyie.in" },
+    { group: "sites",   name: "research", url: "https://research.emtypyie.in" },
+    { group: "sites",   name: "emtypyie", url: "https://emtypyie.in" },
+    { group: "sites",   name: "cdn",      url: "https://cdn.emtypyie.in" },
+    { group: "sites",   name: "kepler",   url: "https://kepler.emtypyie.in" },
+    { group: "sites",   name: "auth",     url: "https://auth.emtypyie.in" }
+  ];
+
   var lists = {
     backend: document.getElementById("svc-backend"),
     sites: document.getElementById("svc-sites")
@@ -281,6 +300,7 @@ footer {
     backend: document.getElementById("count-backend"),
     sites: document.getElementById("count-sites")
   };
+
   var summaryTitle = document.getElementById("summary-title");
   var summarySub = document.getElementById("summary-sub");
   var summaryDot = document.getElementById("summary-dot");
@@ -289,102 +309,129 @@ footer {
 
   var LABELS = { ok: "operational", maint: "maintenance", down: "down" };
 
-  function svcRow(svc) {
+  SERVICES.forEach(function (svc) {
     var el = document.createElement("a");
     el.className = "svc";
     el.href = svc.url;
     el.target = "_blank";
     el.rel = "noopener";
-    var cls = (svc.state === "ok") ? "ok" : (svc.state === "maint") ? "warn" : "bad";
-    var label = LABELS[svc.state] || svc.state;
-    if (svc.code) label += " · " + svc.code;
     el.innerHTML =
-      '<span class="svc-dot ' + cls + '"></span>' +
+      '<span class="svc-dot" data-dot></span>' +
       '<span class="svc-name-block">' +
         '<span class="svc-name"></span>' +
         '<span class="svc-host"></span>' +
       '</span>' +
-      '<span class="svc-meta"><span class="svc-state ' + cls + '"></span></span>';
+      '<span class="svc-meta">' +
+        '<span class="svc-state" data-state></span>' +
+        '<span class="svc-lat" data-lat>—</span>' +
+      '</span>';
     el.querySelector(".svc-name").textContent = svc.name;
-    var host = svc.url.replace(/^https?:\/\//, "");
-    el.querySelector(".svc-host").textContent = host;
-    el.querySelector(".svc-state").textContent = label;
-    return el;
+    el.querySelector(".svc-host").textContent = svc.url.replace(/^https?:\/\//, "");
+    lists[svc.group].appendChild(el);
+    svc.el = el;
+  });
+
+  ["backend", "sites"].forEach(function (g) {
+    groupCount[g].textContent = "· " + SERVICES.filter(function (s) { return s.group === g; }).length + " services";
+  });
+
+  var TIMEOUT = 12000;
+  var REFRESH_MS = 30000;
+  var running = false;
+
+  function check(svc) {
+    return new Promise(function (resolve) {
+      var t0 = performance.now();
+      var signal = (typeof AbortSignal !== "undefined" && AbortSignal.timeout) ? AbortSignal.timeout(TIMEOUT) : null;
+      fetch(svc.url, { redirect: "manual", cache: "no-store", signal: signal }).then(function (res) {
+        var ms = Math.round(performance.now() - t0);
+        if (res.type === "opaqueredirect" || (res.status >= 300 && res.status < 400)) resolve({ state: "maint", ms: ms, code: res.status });
+        else if (res.status === 200) resolve({ state: "ok", ms: ms, code: 200 });
+        else if (res.status === 404) resolve({ state: "maint", ms: ms, code: 404 });
+        else resolve({ state: "down", ms: ms, code: res.status || null });
+      }).catch(function () {
+        resolve({ state: "down", ms: Math.round(performance.now() - t0), code: null });
+      });
+    });
   }
 
-  function render(data) {
-    var svcs = data.services || [];
+  function renderSvc(svc, st) {
+    var dot = svc.el.querySelector("[data-dot]");
+    var state = svc.el.querySelector("[data-state]");
+    var lat = svc.el.querySelector("[data-lat]");
 
-    var byGroup = { backend: [], sites: [] };
-    var counts = { ok: 0, maint: 0, down: 0 };
-    svcs.forEach(function (s) {
-      (byGroup[s.group] || (byGroup[s.group] = [])).push(s);
-      if (counts[s.state] !== undefined) counts[s.state]++;
-    });
+    var cls = st.state === "ok" ? "ok" : st.state === "maint" ? "warn" : "bad";
+    dot.className = "svc-dot " + cls;
+    state.className = "svc-state " + cls;
+    state.textContent = LABELS[st.state] + (st.code ? " · " + st.code : "");
+    lat.textContent = st.ms + "ms";
+  }
 
-    ["backend", "sites"].forEach(function (g) {
-      lists[g].innerHTML = "";
-      var rows = byGroup[g] || [];
-      groupCount[g].textContent = "· " + rows.length + " service" + (rows.length === 1 ? "" : "s");
-      if (!rows.length) {
-        lists[g].innerHTML = '<div class="empty-note">no services in this group</div>';
-        return;
-      }
-      rows.forEach(function (s) { lists[g].appendChild(svcRow(s)); });
-    });
+  function renderSummary(results) {
+    var ok = results.filter(function (r) { return r.state === "ok"; }).length;
+    var maint = results.filter(function (r) { return r.state === "maint"; }).length;
+    var down = results.filter(function (r) { return r.state === "down"; }).length;
+    var total = results.length;
 
-    var total = svcs.length;
-    if (!total) {
-      summaryDot.className = "summary-dot";
-      summaryTitle.textContent = "No status data yet";
-      summarySub.textContent = "awaiting first automated check";
-      return;
-    }
-
-    if (counts.down > 0) {
+    if (down > 0) {
       summaryDot.className = "summary-dot bad";
-      summaryTitle.textContent = counts.down + " service" + (counts.down > 1 ? "s" : "") + " down";
-      summarySub.textContent = counts.ok + "/" + total + " operational · " + counts.maint + " in maintenance";
-    } else if (counts.maint > 0) {
+      summaryTitle.textContent = down + " service" + (down > 1 ? "s" : "") + " down";
+      summarySub.textContent = ok + "/" + total + " operational · " + maint + " in maintenance";
+    } else if (maint > 0) {
       summaryDot.className = "summary-dot warn";
       summaryTitle.textContent = "Maintenance in progress";
-      summarySub.textContent = counts.ok + "/" + total + " operational · " + counts.maint + " in maintenance";
+      summarySub.textContent = ok + "/" + total + " operational · " + maint + " in maintenance";
     } else {
       summaryDot.className = "summary-dot ok";
       summaryTitle.textContent = "All systems operational";
-      summarySub.textContent = counts.ok + "/" + total + " services operational";
+      summarySub.textContent = ok + "/" + total + " services operational";
     }
   }
 
-  function fmtTime(s) {
-    var d = new Date(s);
-    if (isNaN(d.getTime())) return s;
-    return d.toLocaleString();
+  function refetchAutomatedRecord() {
+    fetch("status.json", { cache: "no-store" }).then(function (r) {
+      if (!r.ok) return;
+      return r.json();
+    }).then(function (data) {
+      if (data && data.generated_at) {
+        var d = new Date(data.generated_at);
+        lastCheck.textContent = "server record: " + (isNaN(d.getTime()) ? data.generated_at : d.toLocaleString());
+      }
+    }).catch(function () {});
   }
 
-  function load() {
+  function run() {
+    if (running) return;
+    running = true;
     refresh.disabled = true;
-    fetch("status.json", { cache: "no-store" })
-      .then(function (r) {
-        if (!r.ok) throw new Error("status.json " + r.status);
-        return r.json();
-      })
-      .then(function (data) {
-        render(data);
-        lastCheck.textContent = "updated: " + (data.generated_at ? fmtTime(data.generated_at) : "—");
-      })
-      .catch(function () {
-        summaryDot.className = "summary-dot";
-        summaryTitle.textContent = "Status unavailable";
-        summarySub.textContent = "could not load status data";
-        lastCheck.textContent = "updated: —";
-      })
-      .then(function () { refresh.disabled = false; });
+    lastCheck.textContent = "checking…";
+    SERVICES.forEach(function (svc) {
+      svc.el.querySelector("[data-dot]").className = "svc-dot chk";
+      var state = svc.el.querySelector("[data-state]");
+      state.className = "svc-state chk";
+      state.textContent = "checking";
+    });
+
+    var results = [];
+    SERVICES.forEach(function (svc) {
+      check(svc).then(function (st) {
+        results.push(st);
+        renderSvc(svc, st);
+        if (results.length === SERVICES.length) {
+          renderSummary(results);
+          lastCheck.textContent = "last check: " + new Date().toLocaleTimeString();
+          refetchAutomatedRecord();
+          running = false;
+          refresh.disabled = false;
+        }
+      });
+    });
   }
 
-  refresh.addEventListener("click", load);
-  load();
-  setInterval(load, 60000);
+  refresh.addEventListener("click", run);
+  run();
+  setInterval(run, REFRESH_MS);
+  refetchAutomatedRecord();
 })();
 </script>
 </body>
