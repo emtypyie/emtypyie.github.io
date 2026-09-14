@@ -16,6 +16,7 @@ TMP="$OUT.new"
 SERVICES=(
   "backend|cluster0|https://cluster0.emtypyie.in/ping"
   "backend|cluster1|https://cluster1.emtypyie.in/ping"
+  "backend|auth|https://auth.emtypyie.in/ping"
   "sites|wiki|https://wiki.emtypyie.in"
   "sites|research|https://research.emtypyie.in"
   "sites|emtypyie|https://emtypyie.in"
