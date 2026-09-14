@@ -348,12 +348,14 @@ main { flex: 1; padding: 2.6rem 2rem 3rem; }
 footer {
   border-top: 2px solid var(--line);
   background: var(--canvas);
-  padding: 1.1rem 2rem;
+  padding: 1.1rem 2.5rem;
   text-align: center;
   font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.04em;
   line-height: 1.8;
   transition: background 0.3s;
 }
+.footer-email { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--line); transition: color 0.15s; }
+.footer-email:hover { color: var(--red); }
 
 @media (max-width: 900px) {
   .top-grid { grid-template-columns: 1fr; }
@@ -456,7 +458,8 @@ footer {
 
 <footer>
   &copy; 2026 emtypyie.in &middot; live checks from your browser every 30s<br>
-  automated record from GitHub Actions every 4 min
+  automated record from GitHub Actions every 4 min<br>
+  questions? <a class="footer-email" href="mailto:contact@emtypyie.in">contact@emtypyie.in</a>
 </footer>
 
 <script>
