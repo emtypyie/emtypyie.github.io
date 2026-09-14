@@ -88,14 +88,6 @@ header.topbar .brand .brand-text{
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
-header.topbar .brand .brand-logo{
-  width:26px; height:26px;
-  display:flex; align-items:center; justify-content:center;
-  background: rgba(255,255,255,0.16);
-  border-radius:6px;
-  font-family: var(--font-mono);
-  font-weight:700; font-size:13px;
-}
 header.topbar .mainnav{ display:flex; align-items:center; gap:2px; }
 header.topbar .mainnav a{
   color: rgba(255,255,255,0.85);
@@ -307,10 +299,13 @@ footer.site-footer{
   main.content{ padding: calc(var(--header-h) + 24px) 20px 60px; }
 }
 @media (max-width: 480px){
-  header.topbar .brand .brand-logo{ display:none; }
-  header.topbar .mainnav a{ padding:6px 6px; }
+  header.topbar .brand .brand-text{ font-size: 10px; letter-spacing: 0; }
+  header.topbar .mainnav a{ padding:6px 5px; }
   main.content h1{ font-size: 18px; }
   .card-grid{ grid-template-columns: 1fr; }
   footer.site-footer{ padding: 24px 20px 0; }
   .footer-inner, .footer-bottom{ justify-content:center; text-align:center; }
+}
+@media (max-width: 380px){
+  header.topbar .brand-text{ display:none; }
 }
