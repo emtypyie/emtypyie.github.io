@@ -9,13 +9,6 @@
       "date": "2026-09-15"
     },
     {
-      "id": 4,
-      "severity": "info",
-      "title": "dosa.emtypyie.in permanently redirects to emtypyie.in/dosa",
-      "body": "The dosa.emtypyie.in subdomain now permanently redirects to emtypyie.in/dosa. Update any bookmarks or links pointing to the old address.",
-      "date": "2026-05-15"
-    },
-    {
       "id": 3,
       "severity": "maintenance",
       "title": "Backend clusters under maintenance",
@@ -35,6 +28,13 @@
       "title": "Status page goes live",
       "body": "This page now runs live browser checks every 30 seconds and keeps a server-side record from GitHub Actions every 4 minutes. Notices will be posted here as things change.",
       "date": "2026-09-12"
+    },
+    {
+      "id": 4,
+      "severity": "info",
+      "title": "dosa.emtypyie.in permanently redirects to emtypyie.in/dosa",
+      "body": "The dosa.emtypyie.in subdomain now permanently redirects to emtypyie.in/dosa. Update any bookmarks or links pointing to the old address.",
+      "date": "2026-05-15"
     }
   ]
 }
