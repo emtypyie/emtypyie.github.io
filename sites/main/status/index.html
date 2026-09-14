@@ -280,6 +280,10 @@ main { flex: 1; padding: 2.6rem 2rem 3rem; }
 .notice-list {
   border: 2px solid var(--line); background: var(--card);
   box-shadow: 4px 4px 0 0 var(--shadow-c);
+  max-height: min(28rem, 62vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: var(--ink) var(--canvas2);
   transition: background 0.3s;
 }
 .notice {
