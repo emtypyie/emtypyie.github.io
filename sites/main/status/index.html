@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <meta name="description" content="Live status of emtypyie.in infrastructure — backend clusters and affiliated sites.">
 <meta name="robots" content="noindex">
 <title>Status — emtypyie.in</title>
@@ -13,14 +14,18 @@
 :root, [data-theme="light"] {
   --canvas: #F9FAFB;
   --canvas2: #F3F4F6;
+  --canvas3: #EEF2FF;
   --card: #FFFFFF;
   --ink: #111827;
   --ink2: #374151;
   --muted: #6B7280;
   --line: #000000;
+  --rule: #C7CDD4;
   --red: #DC2626;
+  --red2: #EF4444;
   --amber: #D97706;
   --green: #059669;
+  --green2: #10B981;
   --blue: #2563EB;
   --shadow-c: #000000;
   --mono: ui-monospace, 'Cascadia Mono', 'SF Mono', 'Segoe UI Mono', Consolas, 'Liberation Mono', Menlo, monospace;
@@ -30,58 +35,78 @@
 [data-theme="dark"] {
   --canvas: #0E1420;
   --canvas2: #161E2C;
+  --canvas3: #1D2736;
   --card: #121A26;
   --ink: #EDF2F9;
   --ink2: #C3CFDF;
   --muted: #8398AF;
   --line: #93A5BA;
+  --rule: #2E3B4F;
   --red: #FF5252;
+  --red2: #FF7A70;
   --amber: #FBBF24;
   --green: #22C88A;
+  --green2: #34D399;
   --blue: #60A5FA;
   --shadow-c: #EDF2F9;
 }
 
-html { background: var(--canvas); }
+html {
+  background: var(--canvas);
+  transition: background-color 0.3s ease;
+}
 body {
   background: transparent;
   color: var(--ink);
   font-family: var(--sans);
   min-height: 100vh;
-  transition: color 0.3s ease;
   display: flex;
   flex-direction: column;
+  transition: color 0.3s ease;
 }
+html { scrollbar-width: thin; scrollbar-color: var(--ink) var(--canvas2); }
+*::-webkit-scrollbar { width: 9px; }
+*::-webkit-scrollbar-track { background: var(--canvas2); }
+*::-webkit-scrollbar-thumb { background: var(--ink); border-radius: 0; }
 
 /* ── NAV ── */
 nav {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--canvas);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 2.5rem; height: 56px;
   border-bottom: 2px solid var(--line);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 .nav-brand {
-  font-family: var(--mono); font-size: 1.3rem; font-weight: 700;
+  font-family: var(--mono); font-size: clamp(1.05rem, 2.6vw, 1.3rem); font-weight: 700;
   color: var(--ink); text-decoration: none; letter-spacing: 0.06em;
-  text-transform: uppercase;
+  text-transform: uppercase; flex-shrink: 0;
+  transition: color 0.15s;
 }
+.nav-brand:hover { color: var(--red); }
 .nav-brand span { color: var(--red); }
+.nav-right { display: flex; align-items: center; gap: 0.8rem; }
 .nav-home {
-  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 700;
   letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--ink2); text-decoration: none;
-  border: 2px solid var(--line); padding: 0.45rem 0.8rem;
-  box-shadow: 3px 3px 0 0 var(--shadow-c);
+  color: var(--ink); text-decoration: none;
+  border: 2px solid var(--line); padding: 0.38rem 0.75rem;
+  background: var(--card);
+  box-shadow: 2px 2px 0 0 var(--shadow-c);
   transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, color 0.15s;
 }
-.nav-home:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--shadow-c); color: var(--red); }
-.nav-right { display: flex; align-items: center; gap: 0.9rem; }
+.nav-home:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 0 var(--shadow-c); color: var(--red); }
 
+/* ── THEME TOGGLE ── */
 .theme-toggle {
   position: relative; width: 52px; height: 26px;
   background: var(--card); border: 2px solid var(--line);
-  cursor: pointer; overflow: hidden;
+  cursor: pointer; flex-shrink: 0; overflow: hidden;
   box-shadow: 2px 2px 0 0 var(--shadow-c);
+  transition: background 0.3s, border-color 0.3s;
 }
+.theme-toggle:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
 .theme-toggle-thumb {
   position: absolute; top: 2px; left: 2px;
   width: 18px; height: 18px;
@@ -90,73 +115,120 @@ nav {
   transition: transform 0.3s cubic-bezier(.65,0,.35,1);
 }
 [data-theme="dark"] .theme-toggle-thumb { transform: translateX(25px); }
+.theme-toggle .icon-sun, .theme-toggle .icon-moon {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  transition: opacity 0.25s;
+}
+.theme-toggle .icon-sun { left: 6px; }
+.theme-toggle .icon-moon { right: 6px; }
+[data-theme="light"] .icon-moon { opacity: 0.35; }
+[data-theme="dark"] .icon-sun { opacity: 0.35; }
 
 /* ── MAIN ── */
-main { flex: 1; padding: 2.2rem 1.5rem 3rem; }
-.wrap { max-width: 800px; margin: 0 auto; }
+main { flex: 1; padding: 2.6rem 1.5rem 3rem; }
+.wrap { max-width: 760px; margin: 0 auto; }
 
+/* ── PAGE HEAD ── */
+.eyebrow {
+  display: flex; align-items: center; gap: 0.7rem;
+  font-family: var(--mono); font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink);
+  margin-bottom: 0.9rem;
+}
+.eyebrow::before { content: ''; display: block; width: 26px; height: 3px; background: var(--red); flex-shrink: 0; }
+.page-title {
+  font-size: clamp(1.6rem, 4.5vw, 2.3rem);
+  font-weight: 800; color: var(--ink); line-height: 1.05;
+  text-transform: uppercase; letter-spacing: -0.01em;
+}
+.page-title .dot { color: var(--red); }
+.page-sub {
+  margin-top: 0.6rem; font-size: 0.84rem; color: var(--muted);
+  font-weight: 400; line-height: 1.6; max-width: 560px;
+}
+
+/* ── SUMMARY BANNER ── */
 .summary {
   display: flex; align-items: center; gap: 1.2rem;
   border: 2px solid var(--line);
   box-shadow: 6px 6px 0 0 var(--shadow-c);
   background: var(--card);
-  padding: 1.6rem 1.7rem;
-  margin-bottom: 2.4rem;
+  padding: 1.5rem 1.7rem;
+  margin: 2rem 0 2.4rem;
   flex-wrap: wrap;
+  transition: background 0.3s;
 }
 .summary-dot {
-  width: 22px; height: 22px; flex: none;
+  width: 26px; height: 26px; flex: none;
   border: 2px solid var(--line);
   background: var(--muted);
+  transition: background 0.3s;
 }
 .summary-dot.ok { background: var(--green); }
 .summary-dot.warn { background: var(--amber); }
 .summary-dot.bad { background: var(--red); }
 .summary-main { flex: 1 1 auto; min-width: 0; }
 .summary-title {
-  font-family: var(--mono); font-weight: 800;
-  font-size: 1.15rem; letter-spacing: -0.01em;
-  margin-bottom: 0.3rem;
+  font-family: var(--sans); font-weight: 800;
+  font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+  text-transform: uppercase; letter-spacing: -0.005em;
+  line-height: 1.15; margin-bottom: 0.25rem;
 }
-.summary-sub { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.summary-sub {
+  font-family: var(--mono); font-size: 0.66rem; color: var(--muted);
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+}
 .summary-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; flex: none; }
 .btn {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: var(--ink); color: var(--canvas);
   font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.04em; text-transform: uppercase;
-  padding: 0.62rem 1.05rem; text-decoration: none;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 0.62rem 1.1rem 0.58rem; text-decoration: none;
   border: 2px solid var(--line); cursor: pointer;
   box-shadow: 4px 4px 0 0 var(--shadow-c);
   transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background 0.15s, color 0.15s;
 }
 .btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 0 var(--shadow-c); background: var(--red); color: #fff; }
 .btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 0 var(--shadow-c); }
+.btn:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
 .btn[disabled] { opacity: 0.5; cursor: default; transform: none; box-shadow: 4px 4px 0 0 var(--shadow-c); }
 .btn[disabled]:hover { background: var(--ink); color: var(--canvas); }
-.last-check { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.last-check { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.04em; }
 
-.group-label {
-  font-family: var(--mono); font-size: 0.78rem; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--ink2);
-  margin: 0 0 0.7rem 0.2rem;
+/* ── GROUP LABELS ── */
+.section-label {
+  display: flex; align-items: center; gap: 1rem;
+  font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ink); font-weight: 700;
+  margin: 0 0 0.9rem;
 }
-.group-label:not(:first-of-type) { margin-top: 2.2rem; }
-.group-label .count { color: var(--muted); }
+.section-label:not(:first-of-type) { margin-top: 2.6rem; }
+.section-label::after { content: ''; flex: 1; height: 2px; background: var(--line); }
+.section-label .count { color: var(--muted); font-weight: 700; }
 
-.svc-list { border: 2px solid var(--line); background: var(--card); box-shadow: 4px 4px 0 0 var(--shadow-c); }
-
+/* ── SERVICE LIST ── */
+.svc-list {
+  border: 2px solid var(--line); background: var(--card);
+  box-shadow: 4px 4px 0 0 var(--shadow-c);
+  transition: background 0.3s;
+}
 .svc {
   display: flex; align-items: center; gap: 1rem;
-  padding: 1rem 1.3rem;
+  padding: 0.95rem 1.2rem;
   color: inherit; text-decoration: none;
   border-bottom: 2px solid var(--line);
   transition: background 0.12s ease;
 }
 .svc:last-child { border-bottom: none; }
-.svc:hover { background: color-mix(in srgb, var(--canvas2) 60%, transparent); }
+.svc:hover { background: var(--canvas2); }
+.svc:hover .svc-name { color: var(--red); }
+.svc:focus-visible { outline: 3px solid var(--red); outline-offset: -3px; }
 
+.svc-idx {
+  font-family: var(--mono); font-size: 0.6rem; font-weight: 700;
+  color: var(--muted); letter-spacing: 0.06em; flex: none; min-width: 1.6em;
+}
 .svc-dot {
   width: 12px; height: 12px; flex: none;
   border: 1.5px solid var(--line);
@@ -165,41 +237,50 @@ main { flex: 1; padding: 2.2rem 1.5rem 3rem; }
 .svc-dot.warn { background: var(--amber); }
 .svc-dot.bad { background: var(--red); }
 .svc-dot.chk { background: var(--muted); animation: pulse 1s ease-in-out infinite; }
-@keyframes pulse { 50% { opacity: 0.25; } }
+@keyframes pulse { 50% { opacity: 0.2; } }
+@media (prefers-reduced-motion: reduce) { .svc-dot.chk { animation: none; } }
 
 .svc-name-block { flex: 1 1 auto; min-width: 0; }
-.svc-name { font-family: var(--mono); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.01em; }
+.svc-name { font-family: var(--mono); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.01em; transition: color 0.12s; }
 .svc-host {
-  display: block; font-family: var(--mono); font-size: 0.68rem;
-  color: var(--muted); font-weight: 600; margin-top: 0.18rem;
+  display: block; font-family: var(--mono); font-size: 0.66rem;
+  color: var(--muted); font-weight: 600; margin-top: 0.15rem;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-.svc-meta { flex: none; display: flex; align-items: center; gap: 0.8rem; }
+.svc-meta { flex: none; display: flex; align-items: center; gap: 0.9rem; }
 .svc-state {
-  font-family: var(--mono); font-size: 0.64rem; font-weight: 800;
+  font-family: var(--mono); font-size: 0.62rem; font-weight: 800;
   text-transform: uppercase; letter-spacing: 0.05em;
-  border: 2px solid var(--line);
-  padding: 0.32rem 0.6rem;
-  white-space: nowrap;
+  border: 2px solid var(--line); background: var(--canvas2);
+  padding: 0.32rem 0.55rem; white-space: nowrap;
+  transition: background 0.3s;
 }
 .svc-state.ok { color: var(--green); }
 .svc-state.warn { color: var(--amber); }
-.svc-state.bad { color: var(--red); }
+.svc-state.bad { color: #fff; background: var(--red); border-color: var(--line); }
 .svc-state.chk { color: var(--muted); }
 .svc-lat {
-  font-family: var(--mono); font-size: 0.66rem; color: var(--muted);
-  min-width: 4.2em; text-align: right; font-weight: 700;
+  font-family: var(--mono); font-size: 0.64rem; color: var(--muted);
+  min-width: 3.8em; text-align: right; font-weight: 700; white-space: nowrap;
 }
 
-.note {
+/* ── LEGEND / NOTES ── */
+.legend {
   margin-top: 2rem;
-  border: 2px dashed var(--line);
-  padding: 0.9rem 1.1rem;
-  font-family: var(--mono); font-size: 0.68rem; color: var(--muted);
-  font-weight: 700; line-height: 1.7;
+  display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem;
+  border: 2px dashed var(--rule);
+  background: var(--card);
+  padding: 0.85rem 1.1rem;
+  font-family: var(--mono); font-size: 0.62rem; color: var(--muted);
+  font-weight: 700; letter-spacing: 0.03em; line-height: 1.6;
 }
-.note code { background: var(--canvas2); border: 1px solid var(--line); padding: 0 0.3em; }
+.legend-item { display: inline-flex; align-items: center; gap: 0.5rem; }
+.legend-dot { width: 10px; height: 10px; flex: none; border: 1.5px solid var(--line); }
+.legend-dot.ok { background: var(--green); }
+.legend-dot.warn { background: var(--amber); }
+.legend-dot.bad { background: var(--red); }
+.legend code, .note code { background: var(--canvas2); border: 1px solid var(--line); padding: 0 0.3em; font-family: inherit; }
 
 .empty-note {
   padding: 1.4rem 1.3rem;
@@ -209,31 +290,47 @@ main { flex: 1; padding: 2.2rem 1.5rem 3rem; }
 
 footer {
   border-top: 2px solid var(--line);
+  background: var(--canvas);
   padding: 1.1rem 2.5rem;
   text-align: center;
-  font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700;
-  letter-spacing: 0.05em;
+  font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.04em;
+  line-height: 1.8;
+  transition: background 0.3s;
 }
 
 @media (max-width: 560px) {
   nav { padding: 0 1.2rem; }
-  main { padding: 1.4rem 0.9rem 2.4rem; }
+  main { padding: 2rem 0.9rem 2.4rem; }
   footer { padding: 1rem 1.2rem; }
-  .summary { padding: 1.2rem 1.1rem; }
-  .svc { gap: 0.7rem; padding: 0.85rem 0.9rem; }
-  .svc-meta { gap: 0.5rem; }
-  .svc-lat { min-width: 3.4em; }
-  .summary-actions { align-items: flex-start; width: 100%; }
+  .summary { padding: 1.2rem 1.1rem; margin: 1.6rem 0 2rem; }
+  .summary-actions { align-items: flex-start; width: 100%; flex-direction: row; justify-content: space-between; }
+  .svc { gap: 0.7rem; padding: 0.85rem 0.85rem; }
+  .svc-state { font-size: 0.56rem; padding: 0.28rem 0.45rem; }
+  .svc-lat { min-width: 3em; }
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <a class="nav-brand" href="https://emtypyie.in">emtypyie<span>.</span>in</a>
+  <a class="nav-brand" href="/">emtypyie<span>.</span>in</a>
   <div class="nav-right">
-    <a class="nav-home" href="https://emtypyie.in">← home</a>
+    <a class="nav-home" href="/">← home</a>
     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+      <svg class="icon-sun" width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="#ff5c8a" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="7" cy="7" r="2.5"/>
+        <line x1="7" y1="1" x2="7" y2="2.2"/>
+        <line x1="7" y1="11.8" x2="7" y2="13"/>
+        <line x1="1" y1="7" x2="2.2" y2="7"/>
+        <line x1="11.8" y1="7" x2="13" y2="7"/>
+        <line x1="2.8" y1="2.8" x2="3.7" y2="3.7"/>
+        <line x1="10.3" y1="10.3" x2="11.2" y2="11.2"/>
+        <line x1="11.2" y1="2.8" x2="10.3" y2="3.7"/>
+        <line x1="3.7" y1="10.3" x2="2.8" y2="11.2"/>
+      </svg>
+      <svg class="icon-moon" width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11.5 8.5A5 5 0 0 1 5.5 2.5 5 5 0 1 0 11.5 8.5z" fill="none"/>
+      </svg>
       <div class="theme-toggle-thumb"></div>
     </button>
   </div>
@@ -241,33 +338,49 @@ footer {
 
 <main>
   <div class="wrap">
+    <header class="page-head">
+      <div class="eyebrow">infrastructure · live status</div>
+      <h1 class="page-title">System <span class="dot">Status</span></h1>
+      <p class="page-sub">Probes the backend clusters and affiliated sites from your browser and falls back to an automated server record updated by GitHub Actions.</p>
+    </header>
+
     <div class="summary">
       <div class="summary-dot" id="summary-dot"></div>
-      <div class="summary-main">
+      <div class="summary-main" aria-live="polite">
         <div class="summary-title" id="summary-title">Checking services…</div>
-        <div class="summary-sub" id="summary-sub">pinging 8 endpoints from your browser</div>
+        <div class="summary-sub" id="summary-sub">probing 8 endpoints from your browser</div>
       </div>
       <div class="summary-actions">
-        <button class="btn" id="refresh">⟳ Recheck now</button>
-        <span class="last-check" id="last-check">last check: —</span>
+        <button class="btn" id="refresh">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 7a5.5 5.5 0 1 1-1.6-3.9"/><path d="M12.6 1.2v3.3H9.3"/></svg>
+          Recheck
+        </button>
+        <span class="last-check" id="last-check">last check —</span>
       </div>
     </div>
 
-    <h2 class="group-label">Backend <span class="count" id="count-backend"></span></h2>
-    <div class="svc-list" id="svc-backend"></div>
+    <section>
+      <h2 class="section-label">Backend <span class="count" id="count-backend"></span></h2>
+      <div class="svc-list" id="svc-backend"></div>
+    </section>
 
-    <h2 class="group-label">Sites <span class="count" id="count-sites"></span></h2>
-    <div class="svc-list" id="svc-sites"></div>
+    <section>
+      <h2 class="section-label">Sites <span class="count" id="count-sites"></span></h2>
+      <div class="svc-list" id="svc-sites"></div>
+    </section>
 
-    <p class="note">
-      Live checks from your browser every 30s —
-      <code>200</code> → operational · <code>redirect</code> / <code>404</code> → maintenance or not yet public ·
-      <code>error</code> / other status → down. Automated server checks run via GitHub Actions every 4 min and keep a record in <code>status.json</code>.
-    </p>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot ok"></span><code>200</code> → operational</span>
+      <span class="legend-item"><span class="legend-dot warn"></span><code>redirect</code>/<code>404</code> → maintenance</span>
+      <span class="legend-item"><span class="legend-dot bad"></span>error / other → down</span>
+    </div>
   </div>
 </main>
 
-<footer>&copy; 2026 emtypyie.in &middot; live checks in your browser</footer>
+<footer>
+  &copy; 2026 emtypyie.in &middot; live checks from your browser every 30s<br>
+  automated record from GitHub Actions every 4 min
+</footer>
 
 <script>
 (function () {
@@ -308,14 +421,17 @@ footer {
   var refresh = document.getElementById("refresh");
 
   var LABELS = { ok: "operational", maint: "maintenance", down: "down" };
+  var lastLive = null;
+  var lastAuto = null;
 
-  SERVICES.forEach(function (svc) {
+  SERVICES.forEach(function (svc, i) {
     var el = document.createElement("a");
     el.className = "svc";
     el.href = svc.url;
     el.target = "_blank";
     el.rel = "noopener";
     el.innerHTML =
+      '<span class="svc-idx"></span>' +
       '<span class="svc-dot" data-dot></span>' +
       '<span class="svc-name-block">' +
         '<span class="svc-name"></span>' +
@@ -325,6 +441,7 @@ footer {
         '<span class="svc-state" data-state></span>' +
         '<span class="svc-lat" data-lat>—</span>' +
       '</span>';
+    el.querySelector(".svc-idx").textContent = ("0" + (i + 1)).slice(-2);
     el.querySelector(".svc-name").textContent = svc.name;
     el.querySelector(".svc-host").textContent = svc.url.replace(/^https?:\/\//, "");
     lists[svc.group].appendChild(el);
@@ -339,11 +456,17 @@ footer {
   var REFRESH_MS = 30000;
   var running = false;
 
+  function makeSignal(ms) {
+    if (typeof AbortSignal !== "undefined" && AbortSignal.timeout) return AbortSignal.timeout(ms);
+    var c = new AbortController();
+    setTimeout(function () { c.abort(); }, ms);
+    return c.signal;
+  }
+
   function check(svc) {
     return new Promise(function (resolve) {
       var t0 = performance.now();
-      var signal = (typeof AbortSignal !== "undefined" && AbortSignal.timeout) ? AbortSignal.timeout(TIMEOUT) : null;
-      fetch(svc.url, { redirect: "manual", cache: "no-store", signal: signal }).then(function (res) {
+      fetch(svc.url, { redirect: "manual", cache: "no-store", signal: makeSignal(TIMEOUT) }).then(function (res) {
         var ms = Math.round(performance.now() - t0);
         if (res.type === "opaqueredirect" || (res.status >= 300 && res.status < 400)) resolve({ state: "maint", ms: ms, code: res.status });
         else if (res.status === 200) resolve({ state: "ok", ms: ms, code: 200 });
@@ -375,27 +498,42 @@ footer {
 
     if (down > 0) {
       summaryDot.className = "summary-dot bad";
-      summaryTitle.textContent = down + " service" + (down > 1 ? "s" : "") + " down";
-      summarySub.textContent = ok + "/" + total + " operational · " + maint + " in maintenance";
+      summaryTitle.textContent = down + " of " + total + " services down";
+      summarySub.textContent = ok + " operational · " + maint + " maintenance";
     } else if (maint > 0) {
       summaryDot.className = "summary-dot warn";
       summaryTitle.textContent = "Maintenance in progress";
-      summarySub.textContent = ok + "/" + total + " operational · " + maint + " in maintenance";
+      summarySub.textContent = ok + " of " + total + " operational · " + maint + " maintenance";
     } else {
       summaryDot.className = "summary-dot ok";
       summaryTitle.textContent = "All systems operational";
-      summarySub.textContent = ok + "/" + total + " services operational";
+      summarySub.textContent = ok + " of " + total + " services operational";
     }
+  }
+
+  function fmtTime(d) {
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+  function fmtAuto(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  }
+  function updateLastCheck() {
+    var parts = [];
+    if (lastLive) parts.push("live " + fmtTime(lastLive));
+    if (lastAuto) parts.push("server " + lastAuto);
+    lastCheck.textContent = parts.length ? "last check · " + parts.join(", ") : "last check —";
   }
 
   function refetchAutomatedRecord() {
     fetch("status.json", { cache: "no-store" }).then(function (r) {
-      if (!r.ok) return;
+      if (!r.ok) return null;
       return r.json();
     }).then(function (data) {
       if (data && data.generated_at) {
-        var d = new Date(data.generated_at);
-        lastCheck.textContent = "server record: " + (isNaN(d.getTime()) ? data.generated_at : d.toLocaleString());
+        lastAuto = fmtAuto(data.generated_at);
+        updateLastCheck();
       }
     }).catch(function () {});
   }
@@ -404,12 +542,13 @@ footer {
     if (running) return;
     running = true;
     refresh.disabled = true;
-    lastCheck.textContent = "checking…";
+    lastCheck.textContent = "probing…";
     SERVICES.forEach(function (svc) {
       svc.el.querySelector("[data-dot]").className = "svc-dot chk";
       var state = svc.el.querySelector("[data-state]");
       state.className = "svc-state chk";
-      state.textContent = "checking";
+      state.textContent = "probing";
+      svc.el.querySelector("[data-lat]").textContent = "—";
     });
 
     var results = [];
@@ -419,8 +558,8 @@ footer {
         renderSvc(svc, st);
         if (results.length === SERVICES.length) {
           renderSummary(results);
-          lastCheck.textContent = "last check: " + new Date().toLocaleTimeString();
-          refetchAutomatedRecord();
+          lastLive = new Date();
+          updateLastCheck();
           running = false;
           refresh.disabled = false;
         }
