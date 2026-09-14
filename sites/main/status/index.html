@@ -206,8 +206,6 @@ main { flex: 1; padding: 2.6rem 1.5rem 3rem; }
 .status-col { min-width: 0; }
 .status-col .summary { margin: 0 0 2.4rem; }
 .notices-col { min-width: 0; }
-.top-grid:has(#notices-section[hidden]) { grid-template-columns: 1fr; }
-.top-grid:has(#notices-section[hidden]) .notices-col { display: none; }
 
 /* ── GROUP LABELS ── */
 .status-col section + section { margin-top: 2.6rem; }
@@ -439,9 +437,11 @@ footer {
       </div>
 
       <div class="notices-col">
-        <section id="notices-section" hidden>
-          <h2 class="section-label">Notices <span class="count" id="count-notices"></span></h2>
-          <div class="notice-list" id="notice-list"></div>
+        <section id="notices-section">
+          <h2 class="section-label">Notices <span class="count" id="count-notices">· —</span></h2>
+          <div class="notice-list" id="notice-list">
+            <div class="empty-note" id="notice-empty">No active notices</div>
+          </div>
         </section>
       </div>
     </div>
@@ -653,14 +653,19 @@ footer {
   var SEVERITIES = ["info", "maintenance", "resolved", "outage"];
 
   function renderNotices(notices) {
-    var section = document.getElementById("notices-section");
     var list = document.getElementById("notice-list");
     var count = document.getElementById("count-notices");
-    if (!notices || !notices.length) { section.hidden = true; return; }
 
-    notices = notices.slice().sort(function (a, b) {
+    notices = (notices || []).slice().sort(function (a, b) {
       return (b.date || "").localeCompare(a.date || "");
     });
+
+    if (!notices.length) {
+      count.textContent = "· 0 notices";
+      list.innerHTML = '<div class="empty-note">No active notices</div>';
+      return;
+    }
+
     count.textContent = "· " + notices.length + (notices.length === 1 ? " notice" : " notices");
     list.innerHTML = "";
 
@@ -681,7 +686,6 @@ footer {
       el.querySelector(".notice-body").textContent = n.body || "";
       list.appendChild(el);
     });
-    section.hidden = false;
   }
 
   function loadNotices() {
@@ -691,7 +695,7 @@ footer {
     }).then(function (data) {
       renderNotices(data && data.notices);
     }).catch(function () {
-      document.getElementById("notices-section").hidden = true;
+      renderNotices([]);
     });
   }
 
