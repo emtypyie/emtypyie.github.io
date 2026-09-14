@@ -343,6 +343,32 @@ main { flex: 1; padding: 2.6rem 2rem 3rem; }
 .legend-dot.bad { background: var(--red); }
 .legend code, .note code { background: var(--canvas2); border: 1px solid var(--line); padding: 0 0.3em; font-family: inherit; }
 
+/* ── PRIVACY ── */
+.privacy {
+  margin-top: 1.2rem;
+  border: 2px solid var(--line); background: var(--card);
+  box-shadow: 2px 2px 0 0 var(--shadow-c);
+  font-family: var(--mono); font-size: 0.62rem; color: var(--ink2);
+  transition: background 0.3s;
+}
+.privacy summary {
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.7rem 1rem;
+  font-family: var(--mono); font-size: 0.62rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink);
+}
+.privacy summary::-webkit-details-marker { display: none; }
+.privacy summary::after { content: '+'; font-size: 0.9rem; color: var(--muted); transition: transform 0.15s; }
+.privacy[open] summary::after { content: '\2212'; }
+.privacy-body {
+  border-top: 2px solid var(--line);
+  padding: 1rem 1.2rem 1.2rem;
+  font-family: var(--sans); font-size: 0.78rem; line-height: 1.7; color: var(--ink2);
+}
+.privacy-body p { margin-bottom: 0.7rem; }
+.privacy-body p:last-child { margin-bottom: 0; }
+
 .empty-note {
   padding: 1.4rem 1.3rem;
   font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
@@ -459,6 +485,16 @@ footer {
       <span class="legend-item"><span class="legend-dot warn"></span><code>redirect</code>/<code>404</code> → maintenance</span>
       <span class="legend-item"><span class="legend-dot bad"></span>error / other → down</span>
     </div>
+
+    <details class="privacy">
+      <summary>Privacy Policy</summary>
+      <div class="privacy-body">
+        <p>This status page performs health checks straight from your browser to the services listed above and stores no personal data about you.</p>
+        <p>Your IP address may be visible to the services being probed (your browser contacts them directly) and to our hosting providers for security and logging. We do not set cookies, track you across sites, or sell your data.</p>
+        <p>The only data stored client-side is your chosen light/dark theme, saved in your browser's local storage so it persists between visits. You can clear it any time in your browser settings.</p>
+        <p>For questions or removal requests contact <a class="footer-email" href="mailto:contact@emtypyie.in">contact@emtypyie.in</a>.</p>
+      </div>
+    </details>
   </div>
 </main>
 
