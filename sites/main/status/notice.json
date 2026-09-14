@@ -1,6 +1,13 @@
 {
-  "updated_at": "2026-09-14T12:40:00+00:00",
+  "updated_at": "2026-09-14T18:00:00+00:00",
   "notices": [
+    {
+      "id": 6,
+      "severity": "info",
+      "title": "research.emtypyie.in is live",
+      "body": "The research site is now live at research.emtypyie.in. Browse project notes, experiments, and documentation over there.",
+      "date": "2026-09-14"
+    },
     {
       "id": 5,
       "severity": "maintenance",
