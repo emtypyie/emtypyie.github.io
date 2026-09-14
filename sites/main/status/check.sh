@@ -21,7 +21,6 @@ SERVICES=(
   "sites|research|https://research.emtypyie.in"
   "sites|emtypyie|https://emtypyie.in"
   "sites|cdn|https://cdn.emtypyie.in"
-  "sites|kepler|https://kepler.emtypyie.in"
   "sites|auth|https://auth.emtypyie.in"
 )
 

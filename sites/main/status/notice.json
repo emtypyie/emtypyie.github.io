@@ -3,9 +3,9 @@
   "notices": [
     {
       "id": 7,
-      "severity": "outage",
-      "title": "kepler.emtypyie.in down",
-      "body": "kepler.emtypyie.in is currently unreachable — the deployment could not be found on the hosting side. Work is in progress; a resolution notice will be posted once it is back up.",
+      "severity": "resolved",
+      "title": "kepler.emtypyie.in discontinued",
+      "body": "kepler.emtypyie.in has been permanently shut down. The service will no longer be monitored on this page.",
       "date": "2026-09-14"
     },
     {
