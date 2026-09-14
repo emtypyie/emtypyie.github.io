@@ -348,11 +348,13 @@ main { flex: 1; padding: 2.6rem 2rem 3rem; }
 footer {
   border-top: 2px solid var(--line);
   background: var(--canvas);
-  padding: 1.1rem 2.5rem;
-  text-align: center;
-  font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.04em;
-  line-height: 1.8;
+  padding: 1rem 2.5rem;
   transition: background 0.3s;
+}
+.footer-inner {
+  max-width: 760px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.04em;
 }
 .footer-email { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--line); transition: color 0.15s; }
 .footer-email:hover { color: var(--red); }
@@ -457,9 +459,11 @@ footer {
 </main>
 
 <footer>
-  &copy; 2026 emtypyie.in &middot; live checks from your browser every 30s<br>
-  automated record from GitHub Actions every 4 min<br>
-  questions? <a class="footer-email" href="mailto:contact@emtypyie.in">contact@emtypyie.in</a>
+  <div class="footer-inner">
+    <span class="footer-left">&copy; 2026 emtypyie.in</span>
+    <span class="footer-mid">live checks every 30s &middot; server record every 4 min</span>
+    <span class="footer-right">support &middot; <a class="footer-email" href="mailto:contact@emtypyie.in">contact@emtypyie.in</a></span>
+  </div>
 </footer>
 
 <script>
