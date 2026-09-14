@@ -1,6 +1,20 @@
 {
-  "updated_at": "2026-09-14T12:30:00+00:00",
+  "updated_at": "2026-09-14T12:40:00+00:00",
   "notices": [
+    {
+      "id": 5,
+      "severity": "maintenance",
+      "title": "Scheduled maintenance",
+      "body": "emtypyie.in, cluster0, cluster1, and auth.emtypyie.in will be under maintenance from 15th until 19th September 2026. Frontends will redirect to /503 for the duration.",
+      "date": "2026-09-15"
+    },
+    {
+      "id": 4,
+      "severity": "info",
+      "title": "dosa.emtypyie.in permanently redirects to emtypyie.in/dosa",
+      "body": "The dosa.emtypyie.in subdomain now permanently redirects to emtypyie.in/dosa. Update any bookmarks or links pointing to the old address.",
+      "date": "2026-05-15"
+    },
     {
       "id": 3,
       "severity": "maintenance",
