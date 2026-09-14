@@ -196,6 +196,17 @@ main { flex: 1; padding: 2.6rem 1.5rem 3rem; }
 .btn[disabled]:hover { background: var(--ink); color: var(--canvas); }
 .last-check { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.04em; }
 
+/* ── TOP GRID: SUMMARY + NOTICES ── */
+.top-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 1.2rem;
+  margin: 2rem 0 2.4rem;
+  align-items: start;
+}
+.top-grid .summary { margin: 0; }
+.top-grid:has(section[hidden]) { grid-template-columns: 1fr; }
+
 /* ── GROUP LABELS ── */
 section + section { margin-top: 2.6rem; }
 .section-label {
@@ -344,6 +355,10 @@ footer {
   transition: background 0.3s;
 }
 
+@media (max-width: 760px) {
+  .top-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 560px) {
   nav { padding: 0 1.2rem; }
   main { padding: 2rem 0.9rem 2.4rem; }
@@ -392,25 +407,27 @@ footer {
       <p class="page-sub">Probes the backend clusters and affiliated sites from your browser and falls back to an automated server record updated by GitHub Actions.</p>
     </header>
 
-    <div class="summary">
-      <div class="summary-dot" id="summary-dot"></div>
-      <div class="summary-main" aria-live="polite">
-        <div class="summary-title" id="summary-title">Checking services…</div>
-        <div class="summary-sub" id="summary-sub">probing 8 endpoints from your browser</div>
+    <div class="top-grid">
+      <div class="summary">
+        <div class="summary-dot" id="summary-dot"></div>
+        <div class="summary-main" aria-live="polite">
+          <div class="summary-title" id="summary-title">Checking services…</div>
+          <div class="summary-sub" id="summary-sub">probing 8 endpoints from your browser</div>
+        </div>
+        <div class="summary-actions">
+          <button class="btn" id="refresh">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 7a5.5 5.5 0 1 1-1.6-3.9"/><path d="M12.6 1.2v3.3H9.3"/></svg>
+            Recheck
+          </button>
+          <span class="last-check" id="last-check">last check —</span>
+        </div>
       </div>
-      <div class="summary-actions">
-        <button class="btn" id="refresh">
-          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 7a5.5 5.5 0 1 1-1.6-3.9"/><path d="M12.6 1.2v3.3H9.3"/></svg>
-          Recheck
-        </button>
-        <span class="last-check" id="last-check">last check —</span>
-      </div>
-    </div>
 
-    <section id="notices-section" hidden>
-      <h2 class="section-label">Notices <span class="count" id="count-notices"></span></h2>
-      <div class="notice-list" id="notice-list"></div>
-    </section>
+      <section id="notices-section" hidden>
+        <h2 class="section-label">Notices <span class="count" id="count-notices"></span></h2>
+        <div class="notice-list" id="notice-list"></div>
+      </section>
+    </div>
 
     <section>
       <h2 class="section-label">Backend <span class="count" id="count-backend"></span></h2>
@@ -579,8 +596,14 @@ footer {
     lastCheck.textContent = parts.length ? "last check · " + parts.join(", ") : "last check —";
   }
 
+  function baseUrl() {
+    var p = location.pathname || "/";
+    if (p.charAt(p.length - 1) === "/") return p;
+    return p + "/";
+  }
+
   function refetchAutomatedRecord() {
-    fetch("status.json", { cache: "no-store" }).then(function (r) {
+    fetch(baseUrl() + "status.json", { cache: "no-store" }).then(function (r) {
       if (!r.ok) return null;
       return r.json();
     }).then(function (data) {
@@ -655,7 +678,7 @@ footer {
   }
 
   function loadNotices() {
-    fetch("notice.json", { cache: "no-store" }).then(function (r) {
+    fetch(baseUrl() + "notice.json", { cache: "no-store" }).then(function (r) {
       if (!r.ok) throw new Error("notice.json missing");
       return r.json();
     }).then(function (data) {

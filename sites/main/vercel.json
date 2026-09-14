@@ -1,4 +1,6 @@
 {
-  "cleanUrls": true
-  
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/status", "destination": "/status/", "permanent": true }
+  ]
 }
