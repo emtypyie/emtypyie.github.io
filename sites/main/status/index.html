@@ -197,13 +197,13 @@ main { flex: 1; padding: 2.6rem 1.5rem 3rem; }
 .last-check { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.04em; }
 
 /* ── GROUP LABELS ── */
+section + section { margin-top: 2.6rem; }
 .section-label {
   display: flex; align-items: center; gap: 1rem;
   font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--ink); font-weight: 700;
   margin: 0 0 0.9rem;
 }
-.section-label:not(:first-of-type) { margin-top: 2.6rem; }
 .section-label::after { content: ''; flex: 1; height: 2px; background: var(--line); }
 .section-label .count { color: var(--muted); font-weight: 700; }
 
@@ -265,6 +265,52 @@ main { flex: 1; padding: 2.6rem 1.5rem 3rem; }
   min-width: 3.8em; text-align: right; font-weight: 700; white-space: nowrap;
 }
 
+/* ── NOTICE BOARD ── */
+.notice-list {
+  border: 2px solid var(--line); background: var(--card);
+  box-shadow: 4px 4px 0 0 var(--shadow-c);
+  transition: background 0.3s;
+}
+.notice {
+  padding: 1rem 1.2rem;
+  border-bottom: 2px solid var(--line);
+}
+.notice:last-child { border-bottom: none; }
+.notice-head { display: flex; align-items: center; gap: 0.7rem; }
+.notice-dot {
+  width: 10px; height: 10px; flex: none;
+  border: 1.5px solid var(--line);
+}
+.notice-dot.info { background: var(--blue); }
+.notice-dot.maintenance { background: var(--amber); }
+.notice-dot.resolved { background: var(--green); }
+.notice-dot.outage { background: var(--red); }
+.notice-sev {
+  flex: none;
+  font-family: var(--mono); font-size: 0.58rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  border: 2px solid var(--line); background: var(--canvas2);
+  padding: 0.28rem 0.5rem; white-space: nowrap;
+}
+.notice-sev.info { color: var(--blue); }
+.notice-sev.maintenance { color: var(--amber); }
+.notice-sev.resolved { color: var(--green); }
+.notice-sev.outage { color: var(--red); }
+.notice-title {
+  font-family: var(--mono); font-size: 0.85rem; font-weight: 800;
+  color: var(--ink); letter-spacing: 0.01em;
+  margin-right: auto; line-height: 1.35;
+}
+.notice-date {
+  flex: none;
+  font-family: var(--mono); font-size: 0.6rem; color: var(--muted);
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap;
+}
+.notice-body {
+  margin-top: 0.5rem;
+  font-size: 0.78rem; font-weight: 400; color: var(--ink2); line-height: 1.7;
+}
+
 /* ── LEGEND / NOTES ── */
 .legend {
   margin-top: 2rem;
@@ -307,6 +353,8 @@ footer {
   .svc { gap: 0.7rem; padding: 0.85rem 0.85rem; }
   .svc-state { font-size: 0.56rem; padding: 0.28rem 0.45rem; }
   .svc-lat { min-width: 3em; }
+  .notice { padding: 0.85rem 0.85rem; }
+  .notice-title { font-size: 0.8rem; }
 }
 </style>
 </head>
@@ -367,6 +415,11 @@ footer {
     <section>
       <h2 class="section-label">Sites <span class="count" id="count-sites"></span></h2>
       <div class="svc-list" id="svc-sites"></div>
+    </section>
+
+    <section id="notices-section" hidden>
+      <h2 class="section-label">Notices <span class="count" id="count-notices"></span></h2>
+      <div class="notice-list" id="notice-list"></div>
     </section>
 
     <div class="legend">
@@ -567,10 +620,56 @@ footer {
     });
   }
 
+  var SEVERITIES = ["info", "maintenance", "resolved", "outage"];
+
+  function renderNotices(notices) {
+    var section = document.getElementById("notices-section");
+    var list = document.getElementById("notice-list");
+    var count = document.getElementById("count-notices");
+    if (!notices || !notices.length) { section.hidden = true; return; }
+
+    notices = notices.slice().sort(function (a, b) {
+      return (b.date || "").localeCompare(a.date || "");
+    });
+    count.textContent = "· " + notices.length + (notices.length === 1 ? " notice" : " notices");
+    list.innerHTML = "";
+
+    notices.forEach(function (n) {
+      var sev = SEVERITIES.indexOf(n.severity) >= 0 ? n.severity : "info";
+      var el = document.createElement("article");
+      el.className = "notice";
+      el.innerHTML =
+        '<div class="notice-head">' +
+          '<span class="notice-dot ' + sev + '"></span>' +
+          '<span class="notice-sev ' + sev + '">' + sev + '</span>' +
+          '<h3 class="notice-title"></h3>' +
+          '<time class="notice-date"></time>' +
+        '</div>' +
+        '<p class="notice-body"></p>';
+      el.querySelector(".notice-title").textContent = n.title || "Notice";
+      el.querySelector(".notice-date").textContent = n.date || "";
+      el.querySelector(".notice-body").textContent = n.body || "";
+      list.appendChild(el);
+    });
+    section.hidden = false;
+  }
+
+  function loadNotices() {
+    fetch("notice.json", { cache: "no-store" }).then(function (r) {
+      if (!r.ok) throw new Error("notice.json missing");
+      return r.json();
+    }).then(function (data) {
+      renderNotices(data && data.notices);
+    }).catch(function () {
+      document.getElementById("notices-section").hidden = true;
+    });
+  }
+
   refresh.addEventListener("click", run);
   run();
   setInterval(run, REFRESH_MS);
   refetchAutomatedRecord();
+  loadNotices();
 })();
 </script>
 </body>

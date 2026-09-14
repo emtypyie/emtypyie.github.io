@@ -1,0 +1,26 @@
+{
+  "updated_at": "2026-09-14T12:30:00+00:00",
+  "notices": [
+    {
+      "id": 3,
+      "severity": "maintenance",
+      "title": "Backend clusters under maintenance",
+      "body": "cluster0 and cluster1 are offline for scheduled maintenance. Frontends redirect to /503 until the work completes. No action needed from your side.",
+      "date": "2026-09-14"
+    },
+    {
+      "id": 2,
+      "severity": "resolved",
+      "title": "wiki and kepler verified operational",
+      "body": "Scheduled verification of the wiki and kepler deployments completed without incidents. Both remain reachable at their usual addresses.",
+      "date": "2026-09-13"
+    },
+    {
+      "id": 1,
+      "severity": "info",
+      "title": "Status page goes live",
+      "body": "This page now runs live browser checks every 30 seconds and keeps a server-side record from GitHub Actions every 4 minutes. Notices will be posted here as things change.",
+      "date": "2026-09-12"
+    }
+  ]
+}
