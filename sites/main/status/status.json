@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T20:51:40+00:00",
+  "generated_at": "2026-09-18T09:37:58+00:00",
   "services": [
     {
       "name": "cluster0",
@@ -40,15 +40,15 @@
       "name": "emtypyie",
       "group": "sites",
       "url": "https://emtypyie.in",
-      "state": "maint",
-      "code": "307"
+      "state": "ok",
+      "code": "200"
     },
     {
       "name": "cdn",
       "group": "sites",
       "url": "https://cdn.emtypyie.in",
-      "state": "maint",
-      "code": "404"
+      "state": "ok",
+      "code": "200"
     },
     {
       "name": "auth",
