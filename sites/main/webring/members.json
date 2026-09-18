@@ -1,0 +1,48 @@
+{
+  "members": [
+    {
+      "handle": "emtypyie",
+      "name": "Emtypyie",
+      "role": "founder \u00b7 systems & aerospace tinkerer",
+      "github": "https://github.com/emtypyie",
+      "site": "https://emtypyie.in",
+      "self": true
+    },
+    {
+      "handle": "divyanshudhruv",
+      "name": "Divyanshu Dhruv",
+      "role": "fs developer \u00b7 react, ts, python & java",
+      "github": "https://github.com/divyanshudhruv",
+      "site": "https://divyanshudhruv.is-a.dev"
+    },
+    {
+      "handle": "omnimistic",
+      "name": "Prasurjya",
+      "role": "developer \u00b7 if not me, then who?",
+      "github": "https://github.com/omnimistic",
+      "site": "https://omnimistic.github.io"
+    },
+    {
+      "handle": "rkcode2025",
+      "name": "Syphax",
+      "role": "ai/ml enthusiast \u00b7 nlp",
+      "github": "https://github.com/rkcode2025",
+      "site": "https://syphax.vercel.app",
+      "twitter": "https://twitter.com/syphax_twt"
+    },
+    {
+      "handle": "theNeonTerminal",
+      "name": "/usr/NeonTerminal",
+      "role": "core member \u00b7 open dih",
+      "github": "https://github.com/theNeonTerminal"
+    },
+    {
+      "handle": "X3r0Day",
+      "name": "X3r0Day",
+      "role": "security researcher \u00b7 founder @ project x3r0day",
+      "github": "https://github.com/X3r0Day",
+      "site": "https://x3r0day.me",
+      "twitter": "https://twitter.com/X3r0DaySec"
+    }
+  ]
+}
