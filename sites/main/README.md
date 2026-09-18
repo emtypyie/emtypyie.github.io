@@ -1,12 +1,8 @@
-# emtypyie — Portfolio Data
-
-This repo is the **CMS** for [emtypyie.in](https://emtypyie.in).  
-
 {
   "cleanUrls": true,
   "redirects": [
     {
-      "source": "/:path((?!503$).*)",
+      "source": "/:path((?!503|status).*)",
       "destination": "/503",
       "permanent": false
     }
