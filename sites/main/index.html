@@ -374,13 +374,10 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
   color: var(--ink); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.04em;
 }
 .footer-brand span { color: var(--red); }
-.footer-tagline { font-size: 0.66rem; color: var(--muted); font-weight: 400; line-height: 1.5; }
-.footer-links { display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end; }
-.footer-links-label {
-  font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--muted); font-weight: 700;
+.footer-nav {
+  display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;
 }
-.footer-links a {
+.footer-nav a {
   font-family: var(--mono); font-size: 0.62rem; color: var(--ink); font-weight: 700;
   text-decoration: none; letter-spacing: 0.05em;
   border: 2px solid var(--line); border-radius: 0;
@@ -388,7 +385,8 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
   box-shadow: 2px 2px 0 0 var(--shadow-c);
   transition: transform 0.12s, box-shadow 0.12s, color 0.12s;
 }
-.footer-links a:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 0 var(--shadow-c); color: var(--red); }
+.footer-nav a:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 0 var(--shadow-c); color: var(--red); }
+.footer-tagline { font-size: 0.66rem; color: var(--muted); font-weight: 400; line-height: 1.5; }
 .footer-bottom {
   max-width: 1200px; margin: 0 auto; padding: 0.9rem 3rem 1.2rem;
   border-top: 2px dashed var(--rule);
@@ -1323,11 +1321,9 @@ footer { border-top: 2px solid var(--line); background: var(--canvas); transitio
       <p class="footer-brand" data-scramble="hover">emtypyie<span>.</span>in</p>
       <p class="footer-tagline">Research &amp; Development · Engineering<br>Made From Scratch Personally</p>
     </div>
-    <div class="footer-links">
-      <span class="footer-links-label">legal</span>
-      <a href="#" onclick="openModal('privacy'); return false;">privacy policy</a>
-      <a href="#" onclick="openModal('disclaimer'); return false;">disclaimer</a>
+    <div class="footer-nav">
       <a href="/webring/index.html">the webring</a>
+      <a href="/status/index.html">status</a>
     </div>
   </div>
   <div class="footer-bottom">

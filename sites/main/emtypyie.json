@@ -3,7 +3,7 @@
   "@type": "Person",
   "name": "Subhadeep Das",
   "alternateName": ["emty", "emtypyie"],
-  "description": "Student at Indian Institute of Technology Madras, pursuing Bachelor's in Aerospace Engineering. Passionate about aerospace, electronics, and computer science. Builds niche projects including slyr.cpp and emtypyie.cli.",
+  "description": "Student at iitm, pursuing Bachelor's degree. Passionate about aerospace, electronics, and computer science. Builds niche projects including slyr.cpp and emtypyie.cli.",
   "url": "https://emtypyie.in",
   "image": "https://emtypyie.in/avatar.svg",
   "sameAs": [
@@ -20,11 +20,11 @@
   "alumniOf": {
     "@type": "EducationalOrganization",
     "name": "Indian Institute of Technology Madras",
-    "url": "https://www.iitm.ac.in"
+    "url": "https://www.study.iitm.ac.in"
   },
   "educationalCredentialAwarded": {
     "@type": "EducationalOccupationalCredential",
-    "credentialCategory": "Bachelor of Technology",
+    "credentialCategory": "Bachelor of Science",
     "recognizedBy": {
       "@type": "Organization",
       "name": "Indian Institute of Technology Madras"
@@ -35,7 +35,7 @@
     "name": "Student Researcher",
     "occupationLocation": {
       "@type": "Place",
-      "name": "Chennai, Tamil Nadu, India"
+      "name": "Kolkata, India"
     }
   },
   "previousSchool": {
