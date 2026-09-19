@@ -1,0 +1,41 @@
+[
+  {
+    "slug": "buildwithai",
+    "date": "09-08-2026",
+    "title": "BUILD WITH AI — Kolkata",
+    "subtitle": "Prompt engineering tricks, MCP, a prototype, and very good paneer",
+    "tags": ["Event", "AI"],
+    "excerpt": "Attended the BUILD WITH AI 9 August session in Kolkata: prompt engineering tricks, how not to give prompts, MCP, and a prototype built with Google AI Studio, Stitch and Antigravity.",
+    "readTime": "2 min read"
+  },
+  {
+    "slug": "arrayonsystems",
+    "date": "06-07-2026",
+    "title": "Arryon Systems",
+    "subtitle": "A new chapter, a new team, a lot of unknowns",
+    "tags": [
+      "Career",
+      "AI"
+    ],
+    "excerpt": "I recently joined a startup called Arrayon Systems, working on AI R&D, B2B automation and WhatsApp-based tooling. Here's the story so far.",
+    "readTime": "3 min read"
+  },
+  {
+    "slug": "22-06-2026",
+    "date": "22-06-2026",
+    "title": "Small Updates & Future Plans",
+    "subtitle": "Cleaning things up and planning what's next",
+    "tags": ["Website", "Update"],
+    "excerpt": "Today I planned to make a few minor changes to the website. Nothing huge, just cleaning things up and making it a bit easier to use.",
+    "readTime": "2 min read"
+  },
+  {
+    "slug": "21-06-2026",
+    "date": "21-06-2026",
+    "title": "Making Of This",
+    "subtitle": "How I came to make this emtypyie.in",
+    "tags": ["Information"],
+    "excerpt": "First post on the new emtypyie.in, so here's the actual story of how this happened.",
+    "readTime": "1 min read"
+  }
+]
