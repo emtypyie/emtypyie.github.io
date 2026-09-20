@@ -1,1 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kohlrausch — Building a Custom Macropad from Scratch</title>
+    <meta name="description" content="How I designed and built Kohlrausch, a custom mechanical macropad using RP2040, MicroPython, and a fully custom PCB.">
+    <link rel="icon" type="image/jpeg" href="https://cdn.emtypyie.in/assets/favicon.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Bricolage+Grotesque:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root{--purple:#c298ea;--accent:#bd5e59;--card:#000;--tile:#2b2b2b;--tile-hover:#363636;--line:#262626;--text:#fff;--body:#d4d4d4;--muted:#a0a0a0;--nav-glass:rgba(14,12,18,.5);--nav-glass-scrolled:rgba(14,12,18,.64);--nav-border:rgba(255,255,255,.14);--nav-menu-bg:rgba(14,12,18,.95);--nav-h:4rem;--shell-w:min(75%,80rem);--shell-pad:2.5rem}
+        :root[data-theme="light"]{--purple:#c298ea;--accent:#0a0110;--card:#fff;--tile:#f3eef8;--tile-hover:#e8dff2;--line:#e7e2ee;--text:#17141c;--body:#423f47;--muted:#79747f}
+        *{box-sizing:border-box}html{font-size:clamp(.9375rem,.4vw + .6rem,1.35rem);scroll-behavior:smooth}
+        body{background-color:var(--purple);background-image:radial-gradient(rgba(0,0,0,.16) 1.6px,transparent 1.6px);background-size:26px 26px;margin:0;padding:0 1.25rem;min-height:100vh;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--text);transition:background-color .25s ease}
+        .nav{position:sticky;top:1rem;z-index:10;display:flex;align-items:center;justify-content:center;max-width:55rem;height:var(--nav-h);margin:1rem auto 1.5rem;transition:transform .4s cubic-bezier(.22,1,.36,1);will-change:transform}
+        .nav.hidden{transform:translateY(calc(-100% - 5rem));pointer-events:none}
+        .nav:has(:focus-visible){transform:none;pointer-events:auto}
+        .nav-inner{position:relative;width:100%;max-width:55rem;height:var(--nav-h);padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;border-radius:1.1rem;border:1px solid var(--nav-border);background-color:var(--nav-glass);background-image:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 55%);-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);box-shadow:0 12px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.22);transition:max-width .4s cubic-bezier(.22,1,.36,1),height .4s cubic-bezier(.22,1,.36,1),padding .4s ease,border-radius .4s ease,background-color .4s ease,box-shadow .4s ease}
+        .nav.scrolled .nav-inner{max-width:50rem;height:3.3rem;padding:0 1rem;border-radius:1rem;background-color:var(--nav-glass-scrolled);box-shadow:0 8px 24px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.2)}
+        .brand{color:#fff;text-decoration:none;font-family:"Bricolage Grotesque","Inter",system-ui,sans-serif;font-weight:700;font-size:1.1rem;line-height:1;letter-spacing:.01em;white-space:nowrap;transition:font-size .4s ease}
+        .nav.scrolled .brand{font-size:.95rem}
+        .nav-links{list-style:none;margin:0;padding:0;display:flex;gap:1.5rem;transition:gap .4s ease}
+        .nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.82rem;font-weight:500;padding:.4rem 0;border-bottom:2px solid transparent;transition:color .2s ease}
+        .nav-links a:hover{color:#fff}.nav-links a.active{color:#fff;border-bottom-color:#fff}
+        .nav-right{display:flex;align-items:center;gap:1.1rem}
+        .theme-switch{position:relative;width:3rem;height:1.625rem;padding:0;flex-shrink:0;border-radius:999px;border:1px solid rgba(255,255,255,.18);background-color:rgba(255,255,255,.08);cursor:pointer;transition:background-color .25s ease}
+        .theme-switch:hover{background-color:rgba(255,255,255,.16)}
+        .theme-knob{position:absolute;top:.125rem;left:.125rem;width:1.25rem;height:1.25rem;border-radius:50%;background-color:#fff;color:#17141c;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:transform .28s cubic-bezier(.22,1,.36,1)}
+        .theme-switch[aria-checked="true"] .theme-knob{transform:translateX(1.375rem)}
+        .nav-toggle{display:none;background:none;border:0;color:#fff;font-size:1.25rem;padding:.5rem;cursor:pointer}
+        .nav a:focus-visible,.nav button:focus-visible{outline-color:#fff}
+        @media(max-width:900px){.nav-toggle{display:inline-flex}.nav.scrolled .nav-inner{max-width:92%}.nav-links{display:none;position:absolute;top:calc(100% - 4px);left:0;right:0;flex-direction:column;gap:0;background-color:var(--nav-menu-bg);border:1px solid rgba(255,255,255,.1);border-radius:.65rem;padding:.5rem;box-shadow:0 12px 30px rgba(0,0,0,.4)}.nav-links.open{display:flex}.nav-links a{display:block;padding:.75rem .9rem;font-size:.95rem;border-bottom:0}.nav-links a.active{color:#fff}.nav-right{gap:.75rem}}
+        main{width:var(--shell-w);margin:0 auto;padding:0 var(--shell-pad) 5rem;background-color:var(--card);border-radius:.75rem .75rem 0 0;transition:background-color .25s ease}
+        .post-header{padding:3.5rem 0 0}
+        .back-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:600;color:var(--muted);text-decoration:none;margin-bottom:1.5rem;transition:color .2s ease}
+        .back-link:hover{color:var(--accent)}
+        .post-tags{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+        .tag{font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background-color:rgba(189,94,89,.14);padding:.25rem .65rem;border-radius:1.25rem}
+        .post-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.1;letter-spacing:.01em;margin:0 0 .5rem}
+        .post-subtitle{font-size:1.1rem;color:var(--body);margin:0 0 1rem;font-weight:500}
+        .post-meta{font-size:.85rem;color:var(--muted);margin:0 0 2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--line)}
+        .post-body{font-size:1.05rem;color:var(--body);line-height:1.8}
+        .post-body p{margin:0 0 1.25rem;max-width:65ch}
+        .post-body h2{font-size:1.5rem;font-weight:800;color:var(--text);margin:2.5rem 0 .75rem;letter-spacing:.005em}
+        .post-body img{width:100%;border-radius:.5rem;border:1px solid var(--line);margin:1rem 0 .5rem;display:block}
+        .img-caption{font-size:.82rem;color:var(--muted);text-align:center;margin:0 0 1.5rem;font-style:italic}
+        .post-body strong{color:var(--text);font-weight:600}
+        .highlight{background:var(--tile);border-left:3px solid var(--accent);padding:1rem 1.25rem;border-radius:0 .5rem .5rem 0;margin:1.5rem 0}
+        .highlight p{margin:0}
+        .post-footer{display:flex;justify-content:space-between;align-items:center;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+        .post-footer a{color:var(--accent);text-decoration:none;font-weight:600;transition:color .2s ease}
+        .post-footer a:hover{color:var(--text)}
+        footer{margin-top:auto;width:100%;background-color:var(--card);border-radius:.75rem .75rem 0 0;transition:background-color .25s ease}
+        .footer-inner{width:calc(var(--shell-w) - 2*var(--shell-pad));margin:0 auto;padding:2.5rem 0 1.5rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;flex-wrap:wrap}
+        .footer-name{margin:0 0 .5rem;font-size:1.15rem;font-weight:800}
+        .footer-blurb{margin:0 0 .8rem;font-size:.9rem;line-height:1.7;color:var(--muted);max-width:32ch}
+        .footer a{color:var(--body);text-decoration:none;font-size:.9rem;transition:color .2s ease}
+        .footer a:hover{color:var(--accent)}
+        .footer-bottom{margin-top:2rem;padding-top:1.1rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.6rem}
+        .footer-bottom p{margin:0;font-size:.82rem;color:var(--muted)}
+        .footer-bottom a{font-size:.82rem;color:var(--muted)}
+        .footer-bottom a i{margin-right:.4rem}
+        .support-fab{position:fixed;right:1.25rem;bottom:1.25rem;z-index:20;display:inline-flex;align-items:center;gap:.5rem;font:inherit;font-size:.9rem;font-weight:600;color:#fff;background-color:var(--accent);border:0;padding:.7rem 1.1rem;border-radius:999px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:transform .2s ease,box-shadow .2s ease}
+        .support-fab:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.4)}
+        .modal-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:1.25rem;background-color:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+        .modal-overlay.open{display:flex}
+        .modal{position:relative;width:100%;max-width:26rem;max-height:100%;overflow-y:auto;padding:2rem 1.75rem 1.75rem;color:var(--text);background-color:var(--card);border:1px solid var(--line);border-radius:.9rem;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+        .modal h2{margin:0 2.5rem .5rem 0;font-size:1.3rem;font-weight:800;line-height:1.3}
+        .modal-close{position:absolute;top:.9rem;right:1rem;font:inherit;font-size:.85rem;color:var(--muted);background:none;border:0;padding:.25rem .4rem;cursor:pointer}
+        .modal-close:hover{color:var(--text)}
+        .support-sub{margin:0 0 1.25rem;font-size:.95rem;line-height:1.6;color:var(--muted)}
+        .amount-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:.9rem}
+        .amount-option{font:inherit;font-weight:600;color:var(--text);background-color:var(--tile);border:1px solid var(--line);border-radius:.5rem;padding:.7rem 0;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease}
+        .amount-option:hover{background-color:var(--tile-hover)}
+        .amount-option.active{color:var(--accent);border-color:var(--accent);background-color:rgba(189,94,89,.16)}
+        .custom-amount-row{display:flex;align-items:center;gap:.6rem;margin-bottom:1.1rem;padding:0 .9rem;background-color:var(--tile);border:1px solid var(--line);border-radius:.5rem;transition:border-color .2s ease}
+        .custom-amount-row:focus-within{border-color:var(--accent)}
+        .custom-amount-prefix{font-weight:600;color:var(--muted)}
+        .custom-amount-row input{flex:1;min-width:0;font:inherit;color:var(--text);background:none;border:0;outline:0;padding:.75rem 0}
+        .custom-amount-row input::placeholder{color:var(--muted)}
+        .support-continue,.upi-app-btn{display:block;width:100%;font:inherit;font-weight:600;text-align:center;text-decoration:none;color:#fff;background-color:var(--accent);border:0;border-radius:.5rem;padding:.8rem 1rem;cursor:pointer;transition:opacity .2s ease}
+        .support-continue:hover:not(:disabled),.upi-app-btn:hover{opacity:.9}
+        .support-continue:disabled{opacity:.4;cursor:not-allowed}
+        .upi-id-line-wrap{margin-bottom:1rem;text-align:center}
+        .upi-id-line{display:inline-block;font-size:.9rem;color:var(--body);background-color:var(--tile);border:1px solid var(--line);border-radius:999px;padding:.35rem .9rem;cursor:copy;transition:border-color .2s ease,color .2s ease}
+        .upi-id-line.copied{color:var(--accent);border-color:var(--accent)}
+        .qr-wrap{display:flex;justify-content:center;margin:0 auto 1.1rem}
+        .qr-wrap img{display:block;border-radius:.5rem}
+        .support-back{display:block;margin:.9rem auto 0;font:inherit;font-size:.85rem;color:var(--muted);background:none;border:0;cursor:pointer}
+        .support-back:hover{color:var(--text)}
+        .share-toast{position:fixed;left:50%;bottom:1.5rem;z-index:200;transform:translate(-50%,1rem);opacity:0;pointer-events:none;font-size:.9rem;font-weight:600;color:var(--text);background-color:var(--tile);border:1px solid var(--line);border-radius:999px;padding:.6rem 1.2rem;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:opacity .25s ease,transform .25s ease}
+        .share-toast.show{opacity:1;transform:translate(-50%,0)}
+        a:focus-visible,button:focus-visible{outline:2px solid var(--text);outline-offset:3px;border-radius:4px}
+        @media(max-width:640px){body{padding:0 .75rem}:root{--shell-w:100%;--shell-pad:1.25rem}.post-header{padding:2rem 0 0}.footer-inner{flex-direction:column;padding:1.6rem 1.2rem}.footer-bottom{padding:1rem 1.2rem 1.4rem;flex-direction:column;gap:1rem}.amount-grid{grid-template-columns:repeat(2,1fr)}.modal{padding:1.5rem}}
+    </style>
+</head>
+<body>
 
+    <header class="nav" id="nav">
+        <div class="nav-inner">
+            <a class="brand" href="/">emtypyie.in</a>
+            <div class="nav-right">
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/index.html#about">About</a></li>
+                    <li><a href="/blogs/index.html" class="active">Blog</a></li>
+                </ul>
+                <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><i class="fa-solid fa-bars"></i></button>
+                <button class="theme-switch" id="theme-toggle" type="button" role="switch" aria-checked="true" aria-label="Dark mode"><span class="theme-knob"><i class="fa-solid fa-moon" id="theme-icon"></i></span></button>
+            </div>
+        </div>
+    </header>
+
+    <button class="support-fab" id="support-fab" type="button" aria-label="Support emty" title="Support!">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M7 12.2C7 12.2 1.2 8.8 1.2 4.9 1.2 2.9 2.8 1.3 4.7 1.3c1 0 2 .5 2.3 1.3.3-.8 1.3-1.3 2.3-1.3 1.9 0 3.5 1.6 3.5 3.6 0 3.9-5.8 7.3-5.8 7.3z"/></svg>
+        <span>Support!</span>
+    </button>
+
+    <main>
+
+        <div class="post-header">
+            <a class="back-link" href="/blogs/index.html"><i class="fa-solid fa-arrow-left"></i> All posts</a>
+
+            <div class="post-tags">
+                <span class="tag">Hardware</span>
+                <span class="tag">RP2040</span>
+                <span class="tag">Macropad</span>
+            </div>
+
+            <h1 class="post-title">Kohlrausch</h1>
+            <p class="post-subtitle">Building a custom macropad from scratch</p>
+            <p class="post-meta">Sep 2026 &middot; 3 min read</p>
+        </div>
+
+        <article class="post-body">
+
+            <p>I had been watching a lot of videos about custom macropads for a while, and at some point I just decided to build one myself. It seemed like a fun weekend project. Turns out it was a bit more than that.</p>
+
+            <h2>The MCU Dilemma</h2>
+
+            <p>The plan was straightforward: a compact macropad with mechanical keys, wired over USB. I started looking at microcontrollers and quickly ran into a chain of trade-offs.</p>
+
+            <p>I originally wanted to go wireless, so the <strong>ESP32-C3</strong> was my first pick. Small, cheap, WiFi and Bluetooth built in. But then I found out it does not support native USB transmission, which kind of defeats the purpose if you want a wired fallback. So I moved to the <strong>ESP32-S3-N16R8</strong> &mdash; it has native USB and plenty of power. The problem? It was too big for the compact form factor I had in mind.</p>
+
+            <p>After going back and forth a few times, I landed on the <strong>RP2040</strong>. It is small, well-documented, has native USB, and there are tons of community resources for keyboard firmware. The obvious downside is no wireless at all &mdash; no WiFi, no Bluetooth. But I figured I could always pair it with an ESP32-S3 as an external wireless module later if I really needed it. For now, wired it is.</p>
+
+            <h2>Going Solo</h2>
+
+            <p>I reached out to three or four friends about collaborating on this, but everyone was caught up with their own things. After a few weeks of waiting, I just started working on it alone. Sometimes you just have to build things yourself.</p>
+
+            <h2>Schematics and PCB Design</h2>
+
+            <p>The first real step was drawing up the schematics. I spent about two to three hours on the initial layout &mdash; figuring out the key matrix, the RP2040 pinout, reverse-polarity protection diodes, and the USB-C connector. It was my first time designing a PCB from scratch, so there was a lot of double-checking datasheets.</p>
+
+            <img src="../assets/rough%20schematic.jpg" alt="Rough schematic drawing of the Kohlrausch macropad">
+            <p class="img-caption">The initial rough schematic</p>
+
+            <p>Once the schematic was solid, I moved on to the actual PCB layout in KiCad. Routing the traces took a bit of patience, especially keeping everything compact while making sure the key matrix traces did not cross over each other awkwardly.</p>
+
+            <img src="../assets/PDBDesign.jpg" alt="PCB routing and design in progress">
+            <p class="img-caption">PCB design &mdash; routing the traces</p>
+
+            <h2>The Final PCB</h2>
+
+            <p>After a few iterations and design rule checks, the board came together nicely. The 3D render from KiCad looked clean enough that I felt confident sending it out for fabrication.</p>
+
+            <img src="../assets/kohlrauschpcb.jpg" alt="Final 3D render of the Kohlrausch PCB">
+            <p class="img-caption">Final PCB render</p>
+
+            <h2>The Enclosure</h2>
+
+            <p>The housing is just as important as the board itself. I designed a basic enclosure in CAD &mdash; nothing too fancy, just something to hold the PCB and switches in place with a clean look. The mechanical switches and keycaps are from MechKeys, and they fit the design well.</p>
+
+            <img src="../assets/CadModel.jpg" alt="CAD model of the macropad enclosure">
+            <p class="img-caption">CAD model of the enclosure</p>
+
+            <h2>Firmware</h2>
+
+            <p>For the firmware, I went with <strong>MicroPython</strong>. I wrote a basic key-scanning script and tested it on the ESP32-S3 first to verify everything worked as expected. The key matrix scanning, debounce logic, and USB HID output were all functioning correctly.</p>
+
+            <p>The firmware is mostly done at this point. It needs some polishing &mdash; better debounce tuning, maybe some macro support &mdash; but the core is solid.</p>
+
+            <h2>What's Next</h2>
+
+            <p>Work on this is paused for now. I am waiting on funds to come in, and work will resume in the last week of October. Here is the plan:</p>
+
+            <div class="highlight">
+                <p><strong>Parts to order:</strong> PCB fabrication (from JLCPCB or Robu.in, depending on budget), diodes, and the RP2040 MCU &mdash; all from QuartzComponents. The mechanical switches and housing are already here from MechKeys.</p>
+            </div>
+
+            <p>Once everything arrives, it is just assembly, flashing the firmware, and testing. I am hoping to have a working unit by mid-November.</p>
+
+            <p>It has been a solo ride so far. The friend who was originally supposed to help with this bailed early on, so I have been handling everything &mdash; schematics, PCB, firmware, enclosure &mdash; on my own. It is a lot of work, but honestly, there is something satisfying about building a piece of hardware from nothing but a schematic and a bag of parts.</p>
+
+            <p>So yeah, let us see how it goes.</p>
+
+            <p style="color:var(--muted);font-style:italic;margin-top:2rem;">Signing off,<br>Emtypyie</p>
+
+        </article>
+
+        <div class="post-footer">
+            <a href="/blogs/index.html"><i class="fa-solid fa-arrow-left"></i> Back to blog</a>
+            <span>Sep 2026</span>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div>
+                <p class="footer-name">emtypyie.in</p>
+                <p class="footer-blurb">Aerospace major building things with embedded systems, robotics and machine learning.</p>
+                <a href="mailto:me@emtypyie.in">me@emtypyie.in</a>
+            </div>
+            <div style="text-align:right">
+                <p style="font-size:.9rem;font-weight:600;margin:0 0 .5rem">Legal</p>
+                <p style="margin:0 0 .3rem"><a href="/privacy">Privacy Policy</a></p>
+                <p style="margin:0"><a href="/disclaimer">Disclaimer</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 All Rights Reserved, emtypyie.in</p>
+            <a href="#home"><i class="fa-solid fa-arrow-up"></i> Back to top</a>
+        </div>
+    </footer>
+
+    <!-- Support Modal -->
+    <div class="modal-overlay" id="modal-support" onclick="if(event.target===this)closeModal()">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="support-modal-title">
+            <button class="modal-close" type="button" onclick="closeModal()">close x</button>
+            <div id="support-view-amount">
+                <h2 id="support-modal-title">Support emty so we can keep building</h2>
+                <p class="support-sub">Pick an amount, or set your own. It all goes straight back into whatever is next in the queue.</p>
+                <div class="amount-grid">
+                    <button class="amount-option" data-amount="10" type="button">10</button>
+                    <button class="amount-option" data-amount="20" type="button">20</button>
+                    <button class="amount-option" data-amount="50" type="button">50</button>
+                    <button class="amount-option" data-amount="100" type="button">100</button>
+                </div>
+                <div class="custom-amount-row">
+                    <span class="custom-amount-prefix">Rs.</span>
+                    <input type="number" id="custom-amount-input" placeholder="Custom amount" aria-label="Custom amount" min="1" inputmode="numeric">
+                </div>
+                <button class="support-continue" id="support-continue-btn" type="button" disabled>Continue</button>
+            </div>
+            <div id="support-view-qr" style="display:none;">
+                <h2 id="support-qr-heading">Scan to pay</h2>
+                <p class="support-sub">Scan with any UPI app</p>
+                <div class="upi-id-line-wrap">
+                    <span class="upi-id-line" id="upi-id-line" title="Click to copy">workforemty@oksbi</span>
+                </div>
+                <div class="qr-wrap">
+                    <img id="upi-qr-img" alt="UPI payment QR code" width="190" height="190">
+                </div>
+                <a class="upi-app-btn" id="upi-app-link" href="#">Open in UPI app</a>
+                <button class="support-back" id="support-back-btn" type="button">change amount</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="share-toast" id="share-toast" role="status" aria-live="polite"></div>
+
+    <script>
+        const menu = document.getElementById('nav-links');
+        const toggle = document.querySelector('.nav-toggle');
+        const navLinks = menu.querySelectorAll('a');
+        function setMenu(open) { menu.classList.toggle('open', open); toggle.setAttribute('aria-expanded', String(open)); }
+        toggle.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
+        navLinks.forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeIcon.className = theme === 'light' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            themeToggle.setAttribute('aria-checked', String(theme !== 'light'));
+        }
+        let savedTheme = 'dark';
+        try { savedTheme = localStorage.getItem('emtypyie-theme') || 'dark'; } catch(e) {}
+        applyTheme(savedTheme);
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            applyTheme(current === 'light' ? 'dark' : 'light');
+            try { localStorage.setItem('emtypyie-theme', current === 'light' ? 'dark' : 'light'); } catch(e) {}
+        });
+
+        const nav = document.getElementById('nav');
+        let lastY = window.scrollY, ticking = false;
+        function updateNav() {
+            ticking = false;
+            nav.classList.toggle('scrolled', window.scrollY > 24);
+        }
+        window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(updateNav); } }, { passive: true });
+        updateNav();
+
+        function showToast(msg) {
+            const t = document.getElementById('share-toast');
+            t.textContent = msg || 'Done';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
+        function openModal(id) { document.getElementById('modal-' + id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function closeModal() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); document.body.style.overflow = ''; }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        const UPI_ID = 'workforemty@oksbi';
+        const UPI_NAME = 'SUBHADEEP DAS';
+        let supportAmount = null;
+        document.getElementById('support-fab').addEventListener('click', () => {
+            document.getElementById('support-view-amount').style.display = 'block';
+            document.getElementById('support-view-qr').style.display = 'none';
+            document.querySelectorAll('.amount-option').forEach(b => b.classList.remove('active'));
+            document.getElementById('custom-amount-input').value = '';
+            supportAmount = null;
+            document.getElementById('support-continue-btn').disabled = true;
+            openModal('support');
+        });
+        document.querySelectorAll('.amount-option').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.amount-option').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                supportAmount = parseInt(btn.dataset.amount, 10);
+                document.getElementById('custom-amount-input').value = '';
+                document.getElementById('support-continue-btn').disabled = false;
+            });
+        });
+        document.getElementById('custom-amount-input').addEventListener('input', function() {
+            document.querySelectorAll('.amount-option').forEach(b => b.classList.remove('active'));
+            const val = parseInt(this.value, 10);
+            supportAmount = (!isNaN(val) && val > 0) ? val : null;
+            document.getElementById('support-continue-btn').disabled = !(supportAmount && supportAmount > 0);
+        });
+        document.getElementById('support-continue-btn').addEventListener('click', () => {
+            if (!supportAmount || supportAmount <= 0) return;
+            document.getElementById('support-view-amount').style.display = 'none';
+            document.getElementById('support-view-qr').style.display = 'block';
+            document.getElementById('support-qr-heading').textContent = 'Pay ' + supportAmount;
+            const upiLink = 'upi://pay?pa=' + encodeURIComponent(UPI_ID) + '&pn=' + encodeURIComponent(UPI_NAME) + '&am=' + supportAmount + '&cu=INR&tn=Support%20for%20Emty';
+            document.getElementById('upi-app-link').href = upiLink;
+            document.getElementById('upi-qr-img').src = 'https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=' + encodeURIComponent(upiLink) + '&qzone=1';
+        });
+        document.getElementById('support-back-btn').addEventListener('click', () => {
+            document.getElementById('support-view-qr').style.display = 'none';
+            document.getElementById('support-view-amount').style.display = 'block';
+        });
+        document.getElementById('upi-id-line').addEventListener('click', function() {
+            navigator.clipboard.writeText(this.textContent).then(() => {
+                this.classList.add('copied');
+                showToast('UPI ID copied!');
+                setTimeout(() => this.classList.remove('copied'), 2000);
+            });
+        });
+    </script>
+</body>
+</html>
