@@ -261,38 +261,105 @@
 
         /* ---------- Hero ----------*/
         .hero {
-            --hero-h: calc(var(--vh) - 9.5rem);
-            --u: max(0.8rem, min(calc(var(--hero-h) / 38), calc((75vw - 5rem) / 29)));
-            min-height: var(--hero-h);
+            --u: clamp(0.85rem, 0.55vw + 0.7rem, 1.25rem);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-align: center;
         }
 
-        .avatar {
-            width: calc(var(--u) * 8);
-            height: calc(var(--u) * 8);
+        /* ---------- Profile banner (Twitter-style header) ----------
+           Height comes from the aspect ratio (4:1, shorter than the old 3:1).
+           object-fit: cover crops the image to fit instead of stretching it.
+           Tweak object-position if the crop cuts off something important. */
+        .banner-wrap {
+            width: calc(100% + 2 * var(--shell-pad));
+            margin: 0 calc(-1 * var(--shell-pad));
+            aspect-ratio: 4 / 1;
+            min-height: 7rem;           /* keeps it from getting too thin on phones */
+            overflow: hidden;
+            background-color: var(--tile);
+            border-radius: 0.75rem 0.75rem 0 0;
+        }
+
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .profile-row {
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem 1.5rem;
+            margin: -3.2rem 0 1.6rem;
+            padding: 0 0.1rem;
+            text-align: left;
+        }
+
+        .profile-id {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            min-width: 0;
+        }
+
+        .profile-avatar {
+            flex-shrink: 0;
+            width: 8.5rem;
+            height: 8.5rem;
             border-radius: 50%;
+            border: 4px solid var(--card);
             background-color: var(--purple);
             object-fit: cover;
             display: block;
-            margin: 0 auto calc(var(--u) * 1.1);
         }
 
-        .hero h1 {
-            margin: 0 0 calc(var(--u) * 0.3);
-            font-size: calc(var(--u) * 3);
+        .profile-id-text { min-width: 0; padding-bottom: 0.3rem; }
+
+        .profile-id-text h1 {
+            margin: 0;
+            font-size: 1.55rem;
             font-weight: 800;
-            line-height: 1.1;
+            line-height: 1.2;
             letter-spacing: 0.01em;
         }
 
         .location {
             color: var(--muted);
-            font-size: var(--u);
-            margin: 0 0 calc(var(--u) * 1.2);
+            font-size: 0.92rem;
+            margin: 0.25rem 0 0;
+        }
+
+        .profile-contrib {
+            flex-shrink: 0;
+            max-width: 22rem;
+            width: 100%;
+            padding-bottom: 0.2rem;
+        }
+
+        .profile-contrib img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Dark graph shows by default, light graph shows in light mode.
+           These are written with .profile-contrib in front so they are more specific than
+           ".profile-contrib img { display: block }" above. Without that, the light graph
+           never hid and both graphs were stacked in dark mode. */
+        .profile-contrib .contrib-light { display: none; }
+        :root[data-theme="light"] .profile-contrib .contrib-dark { display: none; }
+        :root[data-theme="light"] .profile-contrib .contrib-light { display: block; }
+
+        @media (max-width: 720px) {
+            .profile-row { margin-top: -3.2rem; }
+            .profile-avatar { width: 6.6rem; height: 6.6rem; border-width: 3px; }
+            .profile-contrib { max-width: 100%; }
         }
 
         .bio {
@@ -1393,12 +1460,32 @@
             <!-- ===== Home / hero ===== -->
             <section class="hero" id="home" data-spy>
 
-                <img class="avatar"
-                     src="https://cdn.emtypyie.in/assets/favicon.jpg"
-                     alt="avatar lol">
+                <div class="banner-wrap">
+                    <img class="banner-img"
+                         src="https://cdn.emtypyie.in/assets/pfpbanner.webp"
+                         alt="">
+                </div>
 
-                <h1>Subhadeep Das</h1>
-                <p class="location">@emtypyie &nbsp;|&nbsp; Kolkata, India</p>
+                <div class="profile-row">
+                    <div class="profile-id">
+                        <img class="profile-avatar"
+                             src="https://cdn.emtypyie.in/assets/favicon.jpg"
+                             alt="Subhadeep Das">
+                        <div class="profile-id-text">
+                            <h1>Subhadeep Das</h1>
+                            <p class="location">@emtypyie &nbsp;|&nbsp; Kolkata, India</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-contrib">
+                        <img class="contrib-graph contrib-dark"
+                             src="https://raw.githubusercontent.com/emtypyie/emtypyie/output/pacman-contribution-graph-dark.svg"
+                             alt="GitHub contribution graph" loading="lazy">
+                        <img class="contrib-graph contrib-light"
+                             src="https://raw.githubusercontent.com/emtypyie/emtypyie/output/pacman-contribution-graph.svg"
+                             alt="GitHub contribution graph" loading="lazy">
+                    </div>
+                </div>
 
                 <p class="bio">
                     That Nerdy Aerospace Major<br>
