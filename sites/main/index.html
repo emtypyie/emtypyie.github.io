@@ -388,6 +388,9 @@
             }
 
             .profile-contrib { justify-self: start; max-width: 40rem; margin-top: 0; }
+
+            /* stacked: the graph is left-aligned, so the links line up with it */
+            .socials, .actions { justify-content: flex-start; }
         }
 
         .bio {
@@ -469,7 +472,7 @@
 
         .socials {
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             flex-wrap: wrap;
             gap: calc(var(--u) * 1.1);
             margin-bottom: calc(var(--u) * 1.2);
@@ -491,7 +494,7 @@
 
         .actions {
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             flex-wrap: wrap;
             gap: calc(var(--u) * 0.9);
         }
