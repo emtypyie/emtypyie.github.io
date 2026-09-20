@@ -1,0 +1,6 @@
+# https://emtypyie.in/robots.txt
+User-agent: *
+Allow: /
+Disallow: /data/
+
+Sitemap: https://emtypyie.in/sitemap.xml
