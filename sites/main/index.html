@@ -68,11 +68,19 @@
        
         body {
             background-color: var(--purple);
+            background-image: radial-gradient(rgba(0, 0, 0, 0.16) 1.6px, transparent 1.6px);
+            background-size: 26px 26px;
+            animation: dot-drift 16s linear infinite;
             margin: 0;
             padding: 0 1.25rem;
             min-height: 100vh;
             font-family: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
             transition: background-color 0.25s ease;
+        }
+
+        @keyframes dot-drift {
+            from { background-position: 0 0; }
+            to { background-position: 26px 26px; }
         }
 
         /* ---------- Nav bar ----------     */
@@ -1338,6 +1346,7 @@
 
         @media (prefers-reduced-motion: reduce) {
             * { transition: none !important; }
+            body { animation: none !important; }
         }
     </style>
 </head>
