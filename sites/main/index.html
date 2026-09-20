@@ -251,7 +251,7 @@
         main {
             width: var(--shell-w);
             margin: 0 auto;
-            padding: 2rem var(--shell-pad) 5rem;
+            padding: 0 var(--shell-pad) 5rem;   /* no top padding: the hero banner sits flush with the top edge */
             background-color: var(--card);
             border-radius: 0.75rem 0.75rem 0 0;
             transition: background-color 0.25s ease;
@@ -266,6 +266,8 @@
             flex-direction: column;
             align-items: stretch;
             text-align: left;
+            --avatar: 8.5rem;              /* avatar diameter; it overlaps the banner by half of this */
+            --graph-w: 32.4rem;            /* width of the right column / contribution graph (was 24rem, +35%) */
             container-type: inline-size;   /* the grid below picks 2 columns or 1 based on this width */
             container-name: hero;
         }
@@ -295,10 +297,10 @@
         /* ---------- Hero layout: a 2 x 2 grid ----------
            red    (.profile-id)      avatar, name, handle, location   |  blue   (.profile-contrib)  contribution graph
            purple (.hero-data)       tagline + skills                 |  orange (.hero-links)        social links + buttons
-           Below ~46rem of width it stacks into one column (see the @container rule further down). */
+           Below ~58rem of width it stacks into one column (see the @container rule further down). */
         .hero-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+            grid-template-columns: minmax(0, 1fr) minmax(0, var(--graph-w));
             grid-template-areas:
                 "id   graph"
                 "data links";
@@ -316,13 +318,13 @@
             align-items: flex-end;
             gap: 1rem;
             min-width: 0;
-            margin-top: -3.2rem;        /* pulls the avatar up so it overlaps the banner */
+            margin-top: calc(var(--avatar) / -2);   /* pulls the avatar up so exactly 50% overlaps the banner */
         }
 
         .profile-avatar {
             flex-shrink: 0;
-            width: 8.5rem;
-            height: 8.5rem;
+            width: var(--avatar);
+            height: var(--avatar);
             border-radius: 50%;
             border: 4px solid var(--card);
             background-color: var(--purple);
@@ -352,7 +354,7 @@
             align-self: center;
             justify-self: end;
             width: 100%;
-            max-width: 24rem;
+            max-width: var(--graph-w);
         }
 
         .profile-contrib img {
@@ -369,11 +371,12 @@
         :root[data-theme="light"] .profile-contrib .contrib-light { display: block; }
 
         @media (max-width: 720px) {
-            .profile-avatar { width: 6.6rem; height: 6.6rem; border-width: 3px; }
+            .hero { --avatar: 6.6rem; }
+            .profile-avatar { border-width: 3px; }
         }
 
         /* not enough room for two columns: stack red, blue, purple, orange */
-        @container hero (max-width: 46rem) {
+        @container hero (max-width: 58rem) {
             .hero-grid {
                 grid-template-columns: minmax(0, 1fr);
                 grid-template-areas:
@@ -383,7 +386,7 @@
                     "links";
             }
 
-            .profile-contrib { justify-self: start; max-width: 26rem; }
+            .profile-contrib { justify-self: start; max-width: 35rem; }
         }
 
         .bio {
@@ -1426,7 +1429,6 @@
             body { padding: 0 0.75rem; }
 
             :root { --shell-w: 100%; --shell-pad: 1.25rem; }
-            main { padding-top: 1.5rem; }
             .section { padding-top: 3.5rem; }
             .footer-grid { grid-template-columns: 1fr; gap: 1.6rem; }
 
