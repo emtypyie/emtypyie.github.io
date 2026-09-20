@@ -267,7 +267,7 @@
             align-items: stretch;
             text-align: left;
             --avatar: 8.5rem;              /* avatar diameter; it overlaps the banner by half of this */
-            --graph-w: 32.4rem;            /* width of the right column / contribution graph (was 24rem, +35%) */
+            --graph-w: 38.9rem;            /* width of the right column / contribution graph */
             container-type: inline-size;   /* the grid below picks 2 columns or 1 based on this width */
             container-name: hero;
         }
@@ -297,7 +297,7 @@
         /* ---------- Hero layout: a 2 x 2 grid ----------
            red    (.profile-id)      avatar, name, handle, location   |  blue   (.profile-contrib)  contribution graph
            purple (.hero-data)       tagline + skills                 |  orange (.hero-links)        social links + buttons
-           Below ~58rem of width it stacks into one column (see the @container rule further down). */
+           Below ~62rem of width it stacks into one column (see the @container rule further down). */
         .hero-grid {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, var(--graph-w));
@@ -351,8 +351,9 @@
         /* blue */
         .profile-contrib {
             grid-area: graph;
-            align-self: center;
+            align-self: start;
             justify-self: end;
+            margin-top: 1rem;           /* small gap between the banner and the graph */
             width: 100%;
             max-width: var(--graph-w);
         }
@@ -376,7 +377,7 @@
         }
 
         /* not enough room for two columns: stack red, blue, purple, orange */
-        @container hero (max-width: 58rem) {
+        @container hero (max-width: 62rem) {
             .hero-grid {
                 grid-template-columns: minmax(0, 1fr);
                 grid-template-areas:
@@ -386,7 +387,7 @@
                     "links";
             }
 
-            .profile-contrib { justify-self: start; max-width: 35rem; }
+            .profile-contrib { justify-self: start; max-width: 40rem; margin-top: 0; }
         }
 
         .bio {
