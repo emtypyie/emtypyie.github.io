@@ -54,7 +54,7 @@
         .post-footer a{color:var(--accent);text-decoration:none;font-weight:600;transition:color .2s ease}
         .post-footer a:hover{color:var(--text)}
         footer{margin-top:auto;width:100%;background-color:var(--card);border-radius:.75rem .75rem 0 0;transition:background-color .25s ease}
-        .footer-inner{width:calc(var(--shell-w) - 2*var(--shell-pad));margin:0 auto;padding:2.5rem 0 1.5rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;flex-wrap:wrap}
+        .footer-inner{max-width:55rem;margin:0 auto;padding:2.5rem 1.25rem 1.5rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;flex-wrap:wrap}
         .footer-name{margin:0 0 .5rem;font-size:1.15rem;font-weight:800}
         .footer-blurb{margin:0 0 .8rem;font-size:.9rem;line-height:1.7;color:var(--muted);max-width:32ch}
         .footer a{color:var(--body);text-decoration:none;font-size:.9rem;transition:color .2s ease}
@@ -155,27 +155,27 @@
 
             <p>The first real step was drawing up the schematics. I spent about two to three hours on the initial layout &mdash; figuring out the key matrix, the RP2040 pinout, reverse-polarity protection diodes, and the USB-C connector. It was my first time designing a PCB from scratch, so there was a lot of double-checking datasheets.</p>
 
-            <img src="../assets/rough%20schematic.jpg" alt="Rough schematic drawing of the Kohlrausch macropad">
-            <p class="img-caption">The initial rough schematic</p>
+            <img src="../assets/rough%20schematic.webp" alt="Rough schematic drawing of the Kohlrausch macropad">
+            <p class="img-caption">Fig. 1 — Initial rough schematic</p>
 
-            <p>Once the schematic was solid, I moved on to the actual PCB layout in KiCad. Routing the traces took a bit of patience, especially keeping everything compact while making sure the key matrix traces did not cross over each other awkwardly.</p>
+            <p>Once the schematic was solid, I moved on to the actual PCB layout in EasyEDA Pro. Routing the traces took a bit of patience, especially keeping everything compact while making sure the key matrix traces did not cross over each other awkwardly.</p>
 
-            <img src="../assets/PDBDesign.jpg" alt="PCB routing and design in progress">
-            <p class="img-caption">PCB design &mdash; routing the traces</p>
+            <img src="../assets/PDBDesign.webp" alt="PCB routing and design in progress">
+            <p class="img-caption">Fig. 2 — PCB layout and trace routing in EasyEDA Pro</p>
 
             <h2>The Final PCB</h2>
 
-            <p>After a few iterations and design rule checks, the board came together nicely. The 3D render from KiCad looked clean enough that I felt confident sending it out for fabrication.</p>
+            <p>After a few iterations and design rule checks, the board came together nicely. The 3D render from EasyEDA Pro looked clean enough that I felt confident sending it out for fabrication.</p>
 
-            <img src="../assets/kohlrauschpcb.jpg" alt="Final 3D render of the Kohlrausch PCB">
-            <p class="img-caption">Final PCB render</p>
+            <img src="../assets/kohlrauschpcb.webp" alt="Final 3D render of the Kohlrausch PCB">
+            <p class="img-caption">Fig. 3 — Final 3D render of the PCB</p>
 
             <h2>The Enclosure</h2>
 
             <p>The housing is just as important as the board itself. I designed a basic enclosure in CAD &mdash; nothing too fancy, just something to hold the PCB and switches in place with a clean look. The mechanical switches and keycaps are from MechKeys, and they fit the design well.</p>
 
-            <img src="../assets/CadModel.jpg" alt="CAD model of the macropad enclosure">
-            <p class="img-caption">CAD model of the enclosure</p>
+            <img src="../assets/CadModel.webp" alt="CAD model of the macropad enclosure">
+            <p class="img-caption">Fig. 4 — CAD model of the enclosure</p>
 
             <h2>Firmware</h2>
 
