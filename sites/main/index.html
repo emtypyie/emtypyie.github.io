@@ -2510,6 +2510,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
     if (revealed) return;
     revealed = true;
     root.classList.add('is-ready');
+    document.dispatchEvent(new CustomEvent('site:revealed'));
     const curtain = document.getElementById('preloader');
     if (curtain) setTimeout(() => curtain.remove(), 1200);   // curtain transition is 0.95s
   }
@@ -2652,7 +2653,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
   if (!audio || !btn) return;
   const icon = btn.querySelector('i');
   const STORE_KEY = 'emtypyie-music';
-  const GESTURES = ['pointerup', 'touchend', 'keydown', 'click'];
+  const GESTURES = ['pointerdown', 'mousedown', 'pointerup', 'touchend', 'keydown', 'click'];
 
   audio.volume = 0.5;
 
@@ -2715,7 +2716,18 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
   render();
   if (wantsMusic) {
-    tryPlay().then(ok => { if (!ok) startListening(); });
+    tryPlay().then(ok => {
+      if (ok) return;                 // autoplay worked
+      startListening();               // blocked: start on the first click / tap / key press
+      // once the intro is over, let the visitor know how to start it
+      document.addEventListener('site:revealed', () => {
+        setTimeout(() => {
+          if (audio.paused && wantsMusic && !btn.hidden && typeof showToast === 'function') {
+            showToast('Click anywhere to start the music');
+          }
+        }, 1500);
+      }, { once: true });
+    });
   }
 })();
 </script>
