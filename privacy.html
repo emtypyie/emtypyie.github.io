@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | emtypyie.in</title>
+    <meta name="description" content="Privacy Policy for emtypyie.in. How this personal portfolio site handles data.">
+    <link rel="icon" type="image/jpeg" href="https://cdn.emtypyie.in/assets/favicon.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Bricolage+Grotesque:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --purple: #c298ea;
+            --accent: #bd5e59;
+            --card: #000000;
+            --tile: #2b2b2b;
+            --tile-hover: #363636;
+            --line: #262626;
+            --text: #ffffff;
+            --body: #d4d4d4;
+            --muted: #a0a0a0;
+            --nav-h: 4rem;
+            --shell-w: min(75%, 80rem);
+            --shell-pad: 2.5rem;
+            --nav-glass: rgba(14, 12, 18, 0.50);
+            --nav-glass-scrolled: rgba(14, 12, 18, 0.64);
+            --nav-border: rgba(255, 255, 255, 0.14);
+            --nav-menu-bg: rgba(14, 12, 18, 0.95);
+        }
+        :root[data-theme="light"] {
+            --purple: #c298ea;
+            --accent: #0a0110;
+            --card: #ffffff;
+            --tile: #f3eef8;
+            --tile-hover: #e8dff2;
+            --line: #e7e2ee;
+            --text: #17141c;
+            --body: #423f47;
+            --muted: #79747f;
+        }
+        * { box-sizing: border-box; }
+        html { font-size: clamp(0.9375rem, 0.4vw + 0.6rem, 1.35rem); }
+        @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+        body {
+            background-color: var(--purple);
+            background-image: radial-gradient(rgba(0, 0, 0, 0.16) 1.6px, transparent 1.6px);
+            background-size: 26px 26px;
+            margin: 0;
+            padding: 0 1.25rem;
+            min-height: 100vh;
+            font-family: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+            transition: background-color 0.25s ease;
+        }
+
+        .nav {
+            position: sticky;
+            top: 1rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 55rem;
+            height: var(--nav-h);
+            margin: 1rem auto 1.5rem;
+        }
+        .nav-inner {
+            width: 100%;
+            max-width: 55rem;
+            height: var(--nav-h);
+            padding: 0 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 1.1rem;
+            border: 1px solid var(--nav-border);
+            background-color: var(--nav-glass);
+            background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03) 55%);
+            -webkit-backdrop-filter: blur(18px) saturate(170%);
+            backdrop-filter: blur(18px) saturate(170%);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+        .brand {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .brand:hover { text-decoration: none; }
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 1.5rem;
+        }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.4rem 0;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s ease;
+        }
+        .nav-links a:hover { color: #ffffff; }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+        }
+        .theme-switch {
+            position: relative;
+            width: 3rem;
+            height: 1.625rem;
+            padding: 0;
+            flex-shrink: 0;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background-color: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: background-color 0.25s ease;
+        }
+        .theme-switch:hover { background-color: rgba(255, 255, 255, 0.16); }
+        .theme-knob {
+            position: absolute;
+            top: 0.125rem;
+            left: 0.125rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background-color: #ffffff;
+            color: #17141c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .theme-switch[aria-checked="true"] .theme-knob { transform: translateX(1.375rem); }
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: 0;
+            color: #ffffff;
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+        .nav a:focus-visible,
+        .nav button:focus-visible { outline-color: #ffffff; }
+
+        .profile-card {
+            color: var(--text);
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            transition: color 0.25s ease;
+        }
+        main {
+            width: var(--shell-w);
+            margin: 0 auto;
+            padding: 0 var(--shell-pad) 5rem;
+            background-color: var(--card);
+            border-radius: 0.75rem 0.75rem 0 0;
+            transition: background-color 0.25s ease;
+        }
+
+        .doc-header {
+            padding: 3rem 0 2.5rem;
+            border-bottom: 1px solid var(--line);
+        }
+        .doc-header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.01em;
+        }
+        .doc-meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+        .doc-body { padding: 2.5rem 0; }
+        .doc-section { margin-bottom: 3rem; }
+        .doc-section h2 {
+            margin: 0 0 1rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--line);
+        }
+        .doc-section p {
+            margin: 0 0 1rem;
+            max-width: 62ch;
+            font-size: 1rem;
+            line-height: 1.75;
+            color: var(--body);
+        }
+        .doc-section ul {
+            margin: 0.75rem 0 1rem;
+            padding-left: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .doc-section ul li {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--body);
+        }
+        .doc-section ul li::marker { color: var(--accent); }
+        .doc-section strong { color: var(--text); font-weight: 600; }
+
+        .callout {
+            margin: 1.5rem 0;
+            padding: 1rem 1.25rem;
+            background-color: var(--tile);
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 0.35rem 0.35rem 0;
+            font-size: 0.9rem;
+            color: var(--body);
+            line-height: 1.7;
+        }
+
+        .contact-box {
+            margin-top: 2.5rem;
+            padding: 1.25rem 1.5rem;
+            background-color: var(--tile);
+            border: 1px solid var(--line);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--body);
+            line-height: 1.8;
+        }
+        .contact-box a { color: var(--accent); text-decoration: none; }
+        .contact-box a:hover { text-decoration: underline; }
+
+        .footer {
+            margin-top: auto;
+            margin-left: -1.25rem;
+            margin-right: -1.25rem;
+            width: calc(100% + 2.5rem);
+            background-color: var(--card);
+            transition: background-color 0.25s ease;
+        }
+        .footer-inner {
+            max-width: 55rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.25rem 1.5rem;
+            border-top: 1px solid var(--line);
+        }
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.1rem;
+            border-top: 1px solid var(--line);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .footer-bottom p { margin: 0; font-size: 0.82rem; color: var(--muted); }
+        .footer-bottom a { font-size: 0.82rem; color: var(--muted); text-decoration: none; }
+        .footer-bottom a:hover { color: var(--accent); }
+        .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .footer-links a { color: var(--body); text-decoration: none; font-size: 0.9rem; }
+        .footer-links a:hover { color: var(--accent); }
+
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--text);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-toggle { display: inline-flex; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: calc(100% - 4px);
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                background-color: var(--nav-menu-bg);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 0.65rem;
+                padding: 0.5rem;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            }
+            .nav-links.open { display: flex; }
+            .nav-links a { display: block; padding: 0.75rem 0.9rem; font-size: 0.95rem; border-bottom: 0; }
+            .nav-links a.active { color: #ffffff; }
+            .nav-right { gap: 0.75rem; }
+        }
+        @media (max-width: 640px) {
+            body { padding: 0 0.75rem; }
+            :root { --shell-w: 100%; --shell-pad: 1.25rem; }
+            .doc-header h1 { font-size: 1.5rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="nav" id="nav">
+        <div class="nav-inner">
+            <a class="brand" href="/">EMTYPYIE.IN</a>
+            <div class="nav-right">
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/#about">About</a></li>
+                    <li><a href="/#projects">Projects</a></li>
+                    <li><a href="/#blog">Blog</a></li>
+                    <li><a href="/#contact">Contact</a></li>
+                </ul>
+                <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <button class="theme-switch" id="theme-toggle" type="button" role="switch" aria-checked="true" aria-label="Dark mode">
+                    <span class="theme-knob"><i class="fa-solid fa-moon" id="theme-icon"></i></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="profile-card">
+        <main>
+            <header class="doc-header">
+                <h1>Privacy Policy</h1>
+                <div class="doc-meta">Last updated: 22 Sep 2026 · emtypyie.in</div>
+            </header>
+
+            <div class="doc-body">
+
+                <div class="doc-section">
+                    <p>This Privacy Policy explains how <strong>emtypyie.in</strong> handles information when you visit. It's a personal portfolio site. There's no account system, no user profiles, and no tracking beyond what's listed below.</p>
+                </div>
+
+                <div class="doc-section">
+                    <h2>What We Collect</h2>
+                    <p>Not much, honestly. Here's the full list:</p>
+                    <ul>
+                        <li><strong>Standard server logs.</strong> Like any web server, requests may be logged by the hosting provider (Vercel). That includes IP address, browser type, and which page was requested. These logs are governed by Vercel's own privacy policy and we don't access or store them beyond what the platform keeps automatically.</li>
+                        <li><strong>No cookies.</strong> This site doesn't set any cookies. Your theme preference is stored in <code>localStorage</code> on your own device, and that's it.</li>
+                        <li><strong>No analytics.</strong> No Google Analytics, Mixpanel, Plausible, or any other third-party analytics. None.</li>
+                    </ul>
+                </div>
+
+                <div class="doc-section">
+                    <h2>What We Don't Collect</h2>
+                    <ul>
+                        <li>No email addresses, names, or contact info (unless you choose to send an email)</li>
+                        <li>No browsing history or cross-site tracking</li>
+                        <li>No advertising identifiers</li>
+                        <li>No fingerprinting or device identification</li>
+                        <li>No social media trackers or pixels</li>
+                    </ul>
+                </div>
+
+                <div class="doc-section">
+                    <h2>Third-Party Services</h2>
+                    <p>A few external services get loaded when you visit:</p>
+                    <ul>
+                        <li><strong>Vercel</strong> is the hosting provider. They collect access logs as part of normal infrastructure operation.</li>
+                        <li><strong>GitHub</strong> contribution graphs and avatar images are loaded straight from GitHub. Their privacy policy applies.</li>
+                        <li><strong>Google Fonts</strong> serves the fonts. Google's privacy policy applies to those requests.</li>
+                        <li><strong>Font Awesome</strong> provides the icons via their CDN.</li>
+                    </ul>
+                    <p>No ad networks, no social media trackers, no third-party analytics.</p>
+                </div>
+
+                <div class="doc-section">
+                    <h2>External Links</h2>
+                    <p>This site links out to GitHub, LinkedIn, ORCID, Instagram, and others. We don't control what's on those sites and aren't responsible for their content or privacy practices.</p>
+                </div>
+
+                <div class="doc-section">
+                    <h2>Data Retention</h2>
+                    <p>There's no database of visitor information on our end. The <code>localStorage</code> data (your theme preference) stays on your device and you can clear it anytime through your browser settings.</p>
+                </div>
+
+                <div class="doc-section">
+                    <h2>Children's Privacy</h2>
+                    <p>This site isn't directed at children under 13 and doesn't knowingly collect information from them.</p>
+                </div>
+
+                <div class="doc-section">
+                    <h2>Changes to This Policy</h2>
+                    <p>If this policy changes, the "Last updated" date at the top will reflect it. No email blasts, no notifications. Just check back here if you're unsure.</p>
+                </div>
+
+                <div class="contact-box">
+                    Got questions? Drop a line at <a href="mailto:me@emtypyie.in">me@emtypyie.in</a> or open an issue on <a href="https://github.com/emtypyie" target="_blank" rel="noopener">github.com/emtypyie</a>.
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-inner">
+                <div class="footer-links">
+                    <a href="/">Home</a>
+                    <a href="/#about">About</a>
+                    <a href="/#projects">Projects</a>
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/disclaimer">Disclaimer</a>
+                    <a href="mailto:me@emtypyie.in">Contact</a>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; <span id="year">2026</span> All Rights Reserved, Emtypyie.in</p>
+                    <p>Maintained by Emtypyie&amp;Co</p>
+                    <a href="#home"><i class="fa-solid fa-arrow-up"></i> Back to top</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const menu = document.getElementById('nav-links');
+        const toggle = document.querySelector('.nav-toggle');
+        const navLinks = menu.querySelectorAll('a');
+        function setMenu(open) {
+            menu.classList.toggle('open', open);
+            toggle.setAttribute('aria-expanded', String(open));
+        }
+        toggle.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
+        navLinks.forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeIcon.className = theme === 'light' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            themeToggle.setAttribute('aria-checked', String(theme !== 'light'));
+        }
+        let savedTheme = 'dark';
+        try { savedTheme = localStorage.getItem('emtypyie-theme') || 'dark'; } catch (e) {}
+        applyTheme(savedTheme);
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            const next = current === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+            try { localStorage.setItem('emtypyie-theme', next); } catch (e) {}
+        });
+    </script>
+</body>
+</html>

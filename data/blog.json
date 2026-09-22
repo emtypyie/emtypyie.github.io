@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "kohlrausch",
+    "date": "20-09-2026",
+    "title": "Kohlrausch",
+    "subtitle": "Building a custom macropad from scratch",
+    "tags": ["Hardware", "RP2040", "Macropad"],
+    "excerpt": "After watching tons of macropad videos I decided to build my own. Chose RP2040 over ESP32-C3 and S3, designed the PCB, wrote MicroPython firmware, and did it all solo.",
+    "readTime": "3 min read"
+  },
+  {
+    "slug": "buildwithai",
+    "date": "09-08-2026",
+    "title": "buildwithai",
+    "subtitle": "Prompt engineering tricks, MCP, a prototype, and very good paneer",
+    "tags": ["Event", "AI"],
+    "excerpt": "Attended the BUILD WITH AI 9 August session in Kolkata: prompt engineering tricks, how not to give prompts, MCP, and a prototype built with Google AI Studio, Stitch and Antigravity.",
+    "readTime": "2 min read"
+  }
+]

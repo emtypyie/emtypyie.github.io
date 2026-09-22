@@ -144,65 +144,65 @@
 
         <article class="post-body">
 
-            <p>I had been watching a lot of videos about custom macropads for a while, and at some point I just decided to build one myself. It seemed like a fun weekend project. Turns out it was a bit more than that.</p>
+            <p>I'd been watching a ton of videos about custom macropads for a while, and eventually I just decided to build one myself. Seemed like a fun weekend project. It was not.</p>
 
             <h2>The MCU Dilemma</h2>
 
-            <p>The plan was straightforward: a compact macropad with mechanical keys, wired over USB. I started looking at microcontrollers and quickly ran into a chain of trade-offs.</p>
+            <p>The plan was simple: a compact macropad with mechanical keys, wired over USB. Then I started looking at microcontrollers and fell into a rabbit hole of trade-offs.</p>
 
-            <p>I originally wanted to go wireless, so the <strong>ESP32-C3</strong> was my first pick. Small, cheap, WiFi and Bluetooth built in. But then I found out it does not support native USB transmission, which kind of defeats the purpose if you want a wired fallback. So I moved to the <strong>ESP32-S3-N16R8</strong> &mdash; it has native USB and plenty of power. The problem? It was too big for the compact form factor I had in mind.</p>
+            <p>I wanted to go wireless at first, so the <strong>ESP32-C3</strong> was my pick. Small, cheap, WiFi and Bluetooth built in. Then I found out it doesn't support native USB transmission, which kind of defeats the purpose if you want a wired fallback. So I moved to the <strong>ESP32-S3-N16R8</strong>. It has native USB and plenty of power. The problem? Too big for the compact form factor I had in mind.</p>
 
-            <p>After going back and forth a few times, I landed on the <strong>RP2040</strong>. It is small, well-documented, has native USB, and there are tons of community resources for keyboard firmware. The obvious downside is no wireless at all &mdash; no WiFi, no Bluetooth. But I figured I could always pair it with an ESP32-S3 as an external wireless module later if I really needed it. For now, wired it is.</p>
+            <p>After going back and forth a bunch of times, I landed on the <strong>RP2040</strong>. It's small, well-documented, has native USB, and there are tons of community resources for keyboard firmware. The obvious downside is no wireless at all. No WiFi, no Bluetooth. But I figured I could always pair it with an ESP32-S3 as an external wireless module later if I really needed it. For now, wired it is.</p>
 
             <h2>Going Solo</h2>
 
-            <p>I reached out to three or four friends about collaborating on this, but everyone was caught up with their own things. After a few weeks of waiting, I just started working on it alone. Sometimes you just have to build things yourself.</p>
+            <p>I hit up three or four friends about collaborating on this, but everyone was busy with their own stuff. After a few weeks of waiting, I just started building it alone. Sometimes you just have to do things yourself.</p>
 
             <h2>Schematics and PCB Design</h2>
 
-            <p>The first real step was drawing up the schematics. I spent about two to three hours on the initial layout &mdash; figuring out the key matrix, the RP2040 pinout, reverse-polarity protection diodes, and the USB-C connector. It was my first time designing a PCB from scratch, so there was a lot of double-checking datasheets.</p>
+            <p>The first real step was drawing up the schematics. I spent about two to three hours on the initial layout, figuring out the key matrix, the RP2040 pinout, reverse-polarity protection diodes, and the USB-C connector. It was my first time designing a PCB from scratch, so there was a lot of double-checking datasheets.</p>
 
             <img src="../assets/rough%20schematic.webp" alt="Rough schematic drawing of the Kohlrausch macropad">
-            <p class="img-caption">Fig. 1 — Initial rough schematic</p>
+            <p class="img-caption">Fig. 1: Initial rough schematic</p>
 
-            <p>Once the schematic was solid, I moved on to the actual PCB layout in EasyEDA Pro. Routing the traces took a bit of patience, especially keeping everything compact while making sure the key matrix traces did not cross over each other awkwardly.</p>
+            <p>Once the schematic was solid, I moved on to the actual PCB layout in EasyEDA Pro. Routing the traces took a bit of patience, especially keeping everything compact while making sure the key matrix traces didn't cross over each other awkwardly.</p>
 
             <img src="../assets/PDBDesign.webp" alt="PCB routing and design in progress">
-            <p class="img-caption">Fig. 2 — PCB layout and trace routing in EasyEDA Pro</p>
+            <p class="img-caption">Fig. 2: PCB layout and trace routing in EasyEDA Pro</p>
 
             <h2>The Final PCB</h2>
 
             <p>After a few iterations and design rule checks, the board came together nicely. The 3D render from EasyEDA Pro looked clean enough that I felt confident sending it out for fabrication.</p>
 
             <img src="../assets/kohlrauschpcb.webp" alt="Final 3D render of the Kohlrausch PCB">
-            <p class="img-caption">Fig. 3 — Final 3D render of the PCB</p>
+            <p class="img-caption">Fig. 3: Final 3D render of the PCB</p>
 
             <h2>The Enclosure</h2>
 
-            <p>The housing is just as important as the board itself. I designed a basic enclosure in CAD &mdash; nothing too fancy, just something to hold the PCB and switches in place with a clean look. The mechanical switches and keycaps are from MechKeys, and they fit the design well.</p>
+            <p>The housing is just as important as the board itself. I designed a basic enclosure in CAD. Nothing too fancy, just something to hold the PCB and switches in place with a clean look. The mechanical switches and keycaps are from MechKeys, and they fit the design well.</p>
 
             <img src="../assets/CadModel.webp" alt="CAD model of the macropad enclosure">
-            <p class="img-caption">Fig. 4 — CAD model of the enclosure</p>
+            <p class="img-caption">Fig. 4: CAD model of the enclosure</p>
 
             <h2>Firmware</h2>
 
-            <p>For the firmware, I went with <strong>MicroPython</strong>. I wrote a basic key-scanning script and tested it on the ESP32-S3 first to verify everything worked as expected. The key matrix scanning, debounce logic, and USB HID output were all functioning correctly.</p>
+            <p>For the firmware, I went with <strong>MicroPython</strong>. Wrote a basic key-scanning script and tested it on the ESP32-S3 first to verify everything worked as expected. The key matrix scanning, debounce logic, and USB HID output were all functioning correctly.</p>
 
-            <p>The firmware is mostly done at this point. It needs some polishing &mdash; better debounce tuning, maybe some macro support &mdash; but the core is solid.</p>
+            <p>The firmware is mostly done at this point. It needs some polishing, better debounce tuning, maybe some macro support, but the core is solid.</p>
 
             <h2>What's Next</h2>
 
-            <p>Work on this is paused for now. I am waiting on funds to come in, and work will resume in the last week of October. Here is the plan:</p>
+            <p>Work on this is paused for now. Waiting on funds to come in, and work will resume in the last week of October. Here's the plan:</p>
 
             <div class="highlight">
-                <p><strong>Parts to order:</strong> PCB fabrication (from JLCPCB or Robu.in, depending on budget), diodes, and the RP2040 MCU &mdash; all from QuartzComponents. The mechanical switches and housing are already here from MechKeys.</p>
+                <p><strong>Parts to order:</strong> PCB fabrication (from JLCPCB or Robu.in, depending on budget), diodes, and the RP2040 MCU, all from QuartzComponents. The mechanical switches and housing are already here from MechKeys.</p>
             </div>
 
-            <p>Once everything arrives, it is just assembly, flashing the firmware, and testing. I am hoping to have a working unit by mid-November.</p>
+            <p>Once everything arrives, it's just assembly, flashing the firmware, and testing. Hoping to have a working unit by mid-November.</p>
 
-            <p>It has been a solo ride so far. The friend who was originally supposed to help with this bailed early on, so I have been handling everything &mdash; schematics, PCB, firmware, enclosure &mdash; on my own. It is a lot of work, but honestly, there is something satisfying about building a piece of hardware from nothing but a schematic and a bag of parts.</p>
+            <p>It's been a solo ride so far. The friend who was originally supposed to help bailed early on, so I've been handling everything myself. Schematics, PCB, firmware, enclosure. It's a lot of work, but honestly, there's something satisfying about building a piece of hardware from nothing but a schematic and a bag of parts.</p>
 
-            <p>So yeah, let us see how it goes.</p>
+            <p>So yeah, let's see how it goes.</p>
 
             <p style="color:var(--muted);font-style:italic;margin-top:2rem;">Signing off,<br>Emtypyie</p>
 
