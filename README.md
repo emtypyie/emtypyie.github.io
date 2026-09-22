@@ -16,3 +16,15 @@ Aerospace and computer science major building things with embedded systems, robo
 - **Wiki:** [wiki.emtypyie.in](https://wiki.emtypyie.in)
 - **GitHub:** [github.com/emtypyie](https://github.com/emtypyie)
 - **Contact:** [me@emtypyie.in](mailto:me@emtypyie.in)
+
+
+{
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path((?!503|status).*)",
+      "destination": "/503",
+      "permanent": false
+    }
+  ]
+}
