@@ -459,7 +459,11 @@
            The script at the bottom just moves the .is-active class around. Every quote is stacked in
            the same box and the box keeps a fixed height, so swapping them cross-fades in place
            instead of shoving the rest of the hero down. */
-        .quotes { max-width: calc(var(--u) * 32); }
+        .quotes {
+            max-width: calc(var(--u) * 30);
+            margin-inline: auto;    /* centres the block in the hero column */
+            text-align: center;
+        }
 
         .quote-stage {
             position: relative;
@@ -472,18 +476,16 @@
             left: 0;
             right: 0;
             margin: 0;
-            padding-left: 0.85rem;
-            border-left: 2px solid var(--line);
             font-size: calc(var(--u) * 0.82);
             font-style: italic;
             line-height: 1.65;
             color: var(--body);
             opacity: 0;
             transform: translateY(0.4rem);
-            transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.5s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .quote.is-active { opacity: 1; transform: none; border-left-color: var(--accent); }
+        .quote.is-active { opacity: 1; transform: none; }
 
         .quote-by {
             display: block;
@@ -495,8 +497,9 @@
 
         .quote-dots {
             display: flex;
+            justify-content: center;
             gap: 0.35rem;
-            margin: 0.6rem 0 0 0.85rem;
+            margin-top: 0.6rem;
         }
 
         .quote-dots:empty { display: none; }
