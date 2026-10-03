@@ -2,5 +2,6 @@
 User-agent: *
 Allow: /
 Disallow: /data/
-
+linkedin: https://linkedin.com/in/emtypyie/
+github: https://github.com/emtypyie
 Sitemap: https://emtypyie.in/sitemap.xml
