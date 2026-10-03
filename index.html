@@ -467,11 +467,11 @@
 
         .quote-stage {
             position: relative;
-            min-height: 4.2em;     /* two lines of quote plus the attribution, held open so nothing shifts */
+            min-height: 2.6em;     /* floor; the script stretches this to the tallest quote (see below) */
         }
 
         .quote {
-            position: absolute;
+            position: absolute;    /* every quote shares the same spot, only the active one is visible */
             top: 0;
             left: 0;
             right: 0;
@@ -485,7 +485,12 @@
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .quote.is-active { opacity: 1; transform: none; }
+        /* the visible one sits in the flow, so the box is always exactly as tall as the text it shows */
+        .quote.is-active {
+            position: relative;
+            opacity: 1;
+            transform: none;
+        }
 
         .quote-by {
             display: block;
@@ -2287,6 +2292,7 @@
 
             const quotes = Array.from(box.querySelectorAll('.quote'));
             const dots = document.getElementById('quote-dots');
+            const stage = box.querySelector('.quote-stage');
             if (quotes.length < 2) return;
 
             let current = Math.max(0, quotes.findIndex(q => q.classList.contains('is-active')));
@@ -2298,24 +2304,43 @@
                 marks.forEach((m, n) => m.classList.toggle('on', n === i));
             }
 
+            // Hold the box at the height of the tallest quote: a long quote can never spill into the
+            // dots, and short ones leave the dots in the same place instead of nudging them up and down.
+            function fit() {
+                let tallest = 0;
+                quotes.forEach(q => { tallest = Math.max(tallest, q.offsetHeight); });
+                if (tallest) stage.style.minHeight = tallest + 'px';
+            }
+
             // dots first, so the "you are on the first one" marker is there even if nothing rotates
             if (dots) {
                 dots.innerHTML = quotes.map(() => '<i></i>').join('');
                 marks = Array.from(dots.children);
             }
 
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                show(current);
-                return;
-            }
-
-            let timer = setInterval(() => show((current + 1) % quotes.length), ROTATE_MS);
             show(current);
+            fit();
+            // web fonts and window resizes change how the text wraps, so re-measure after both
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+            window.addEventListener('resize', fit);
 
-            box.addEventListener('mouseenter', () => clearInterval(timer));
-            box.addEventListener('focusin', () => clearInterval(timer));
-            box.addEventListener('mouseleave', () => { timer = setInterval(() => show((current + 1) % quotes.length), ROTATE_MS); });
-            box.addEventListener('focusout', () => { timer = setInterval(() => show((current + 1) % quotes.length), ROTATE_MS); });
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            // start() clears first: mouse-leave and focus-out can both fire for one interaction,
+            // and without the clear the old timer would keep running alongside the new one
+            let timer = null;
+            function start() {
+                clearInterval(timer);
+                timer = setInterval(() => show((current + 1) % quotes.length), ROTATE_MS);
+            }
+            function stop() { clearInterval(timer); }
+
+            start();
+
+            box.addEventListener('mouseenter', stop);
+            box.addEventListener('focusin', stop);
+            box.addEventListener('mouseleave', start);
+            box.addEventListener('focusout', start);
         })();
 
         // Webring: reads data/webring.json, shows each site with its own favicon, powers the random button
