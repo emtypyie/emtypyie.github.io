@@ -460,11 +460,11 @@
            the same box and the box keeps a fixed height, so swapping them cross-fades in place
            instead of shoving the rest of the hero down. */
         .quotes {
-    width: 100%;
-    max-width: none;        /* fill the whole hero column so it centres properly */
-    margin: 0 auto;
-    text-align: center;
-}
+            width: 100%;
+            max-width: 44rem;       /* keeps long quotes from stretching edge to edge */
+            margin: 2.5rem auto 0;  /* auto sides = centred on the page */
+            text-align: center;
+        }
 
         .quote-stage {
             position: relative;
@@ -472,20 +472,20 @@
         }
 
         .quote {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: 0;
-    font-size: calc(var(--u) * 1.1);    /* was 0.82 */
-    font-style: italic;
-    line-height: 1.6;
-    text-align: center;
-    color: var(--body);
-    opacity: 0;
-    transform: translateY(0.4rem);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
+            position: absolute;    /* every quote shares the same spot, only the active one is visible */
+            top: 0;
+            left: 0;
+            right: 0;
+            margin: 0;
+            font-size: calc(var(--u) * 1.1);
+            font-style: italic;
+            line-height: 1.6;
+            text-align: center;
+            color: var(--body);
+            opacity: 0;
+            transform: translateY(0.4rem);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
 
         /* the visible one sits in the flow, so the box is always exactly as tall as the text it shows */
         .quote.is-active {
@@ -495,12 +495,12 @@
         }
 
        .quote-by {
-    display: block;
-    margin-top: 0.3rem;
-    font-size: calc(var(--u) * 0.85);   /* was 0.72 */
-    font-style: normal;
-    color: var(--muted);
-}
+            display: block;
+            margin-top: 0.3rem;
+            font-size: calc(var(--u) * 0.85);
+            font-style: normal;
+            color: var(--muted);
+        }
 
         .quote-dots {
             display: flex;
@@ -646,10 +646,10 @@
         }
 
         .about p {
-            margin: 0 0 1rem;
-            max-width: 62ch;
-            font-size: 1.05rem;
-            line-height: 1.75;
+            margin: 0 0 1.1rem;
+            max-width: none;        /* was 62ch, which left empty space on the right */
+            font-size: 1.15rem;
+            line-height: 1.8;
             color: var(--body);
         }
 
@@ -1833,14 +1833,6 @@
                             <!-- Rotating quote. Only the first one is marked active, so that is the one
                                  you see before the script starts swapping them every 5 seconds.
                                  EDIT: add or remove a <p class="quote"> here to change the rotation. -->
-                            <div class="quotes" id="quotes">
-                                <div class="quote-stage">
-                                    <p class="quote is-active">My enemies are many, but my equals are none.<span class="quote-by">not a declaration of war (most probably)</span></p>
-                                    <p class="quote">Curiosity killed the cat but satisfaction make em back.</p>
-                                    <p class="quote">They don't hate me, they hate that they can't be me.</p>
-                                </div>
-                                <span class="quote-dots" id="quote-dots" aria-hidden="true"></span>
-                            </div>
                         </div>
 
                     </div>
@@ -1878,6 +1870,17 @@
                     </div>
 
                 </div>
+
+                <!-- Rotating quote: full width, centred on the page -->
+                <div class="quotes" id="quotes">
+                    <div class="quote-stage">
+                        <p class="quote is-active">My enemies are many, but my equals are none.<span class="quote-by">not a declaration of war (most probably)</span></p>
+                        <p class="quote">Curiosity killed the cat but satisfaction make em back.</p>
+                        <p class="quote">They don't hate me, they hate that they can't be me.</p>
+                    </div>
+                    <span class="quote-dots" id="quote-dots" aria-hidden="true"></span>
+                </div>
+
             </section>
 
            
