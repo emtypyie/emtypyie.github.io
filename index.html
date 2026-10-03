@@ -460,10 +460,11 @@
            the same box and the box keeps a fixed height, so swapping them cross-fades in place
            instead of shoving the rest of the hero down. */
         .quotes {
-            max-width: calc(var(--u) * 30);
-            margin-inline: auto;    /* centres the block in the hero column */
-            text-align: center;
-        }
+    width: 100%;
+    max-width: none;        /* fill the whole hero column so it centres properly */
+    margin: 0 auto;
+    text-align: center;
+}
 
         .quote-stage {
             position: relative;
@@ -471,19 +472,20 @@
         }
 
         .quote {
-            position: absolute;    /* every quote shares the same spot, only the active one is visible */
-            top: 0;
-            left: 0;
-            right: 0;
-            margin: 0;
-            font-size: calc(var(--u) * 0.82);
-            font-style: italic;
-            line-height: 1.65;
-            color: var(--body);
-            opacity: 0;
-            transform: translateY(0.4rem);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    font-size: calc(var(--u) * 1.1);    /* was 0.82 */
+    font-style: italic;
+    line-height: 1.6;
+    text-align: center;
+    color: var(--body);
+    opacity: 0;
+    transform: translateY(0.4rem);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
 
         /* the visible one sits in the flow, so the box is always exactly as tall as the text it shows */
         .quote.is-active {
@@ -492,13 +494,13 @@
             transform: none;
         }
 
-        .quote-by {
-            display: block;
-            margin-top: 0.25rem;
-            font-size: calc(var(--u) * 0.72);
-            font-style: normal;
-            color: var(--muted);
-        }
+       .quote-by {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: calc(var(--u) * 0.85);   /* was 0.72 */
+    font-style: normal;
+    color: var(--muted);
+}
 
         .quote-dots {
             display: flex;
