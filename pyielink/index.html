@@ -11,6 +11,19 @@
   --acid:#d9ff3f; --mono:"Courier New",monospace; --sans:Arial,Helvetica,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+
+/* ---------- Scrollbar ----------
+   Same treatment as the homepage (transparent track, rounded thumb) in this page's own palette. */
+html{scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{
+  background-color:var(--ink);
+  border:2px solid transparent;   /* transparent border + content-box clip = inset pill */
+  border-radius:999px;
+  background-clip:content-box;
+}
+::-webkit-scrollbar-thumb:hover{background-color:var(--acid)}
 html,body{width:100%;min-height:100%;background:var(--bg);color:var(--ink)}
 body{font-family:var(--sans);overflow-x:hidden}
 body:before{
