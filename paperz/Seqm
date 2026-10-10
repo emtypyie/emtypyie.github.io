@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sequential Matching and Information Acquisition</title>
+<meta name="description" content="Sequential Matching and Information Acquisition for Reciprocal Introductions Under Incomplete Information and Dynamic Constraints. Team EmptyBrains, IITM x Romeo Juliet Hackathon.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Bricolage+Grotesque:wght@700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --purple:#c298ea; --accent:#bd5e59; --card:#000; --tile:#2b2b2b; --tile-hover:#363636; --line:#262626;
+  --text:#fff; --body:#d4d4d4; --muted:#a0a0a0; --nav-h:4rem;
+  --blue:#3b82f6; --orange:#f2603a;
+  --shell-w:min(75%,80rem); --shell-pad:2.5rem;
+  --nav-glass:rgba(14,12,18,.50); --nav-glass-scrolled:rgba(14,12,18,.64);
+  --nav-border:rgba(255,255,255,.14); --nav-menu-bg:rgba(14,12,18,.95);
+}
+:root[data-theme="light"]{
+  --purple:#c298ea; --accent:#0a0110; --card:#fff; --tile:#f3eef8; --tile-hover:#e8dff2; --line:#e7e2ee;
+  --text:#17141c; --body:#423f47; --muted:#79747f;
+}
+*{box-sizing:border-box}
+html{scrollbar-width:thin;scrollbar-color:var(--purple) transparent;font-size:clamp(.9375rem,.4vw + .6rem,1.35rem)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background-color:var(--purple);border:2px solid transparent;border-radius:999px;background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background-color:var(--accent)}
+body{
+  background-color:var(--purple);
+  background-image:radial-gradient(rgba(0,0,0,.16) 1.6px,transparent 1.6px);
+  background-size:26px 26px;animation:dot-drift 16s linear infinite;
+  margin:0;padding:0 1.25rem;min-height:100vh;
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  transition:background-color .25s ease;
+}
+@keyframes dot-drift{from{background-position:0 0}to{background-position:26px 26px}}
+
+/* nav */
+.nav{position:sticky;top:1rem;z-index:10;display:flex;align-items:center;justify-content:center;max-width:55rem;height:var(--nav-h);margin:1rem auto 1.5rem;transition:transform .4s cubic-bezier(.22,1,.36,1);will-change:transform}
+.nav.hidden{transform:translateY(calc(-100% - 5rem));pointer-events:none}
+.nav:has(:focus-visible){transform:none;pointer-events:auto}
+.nav-inner{position:relative;width:100%;max-width:55rem;height:var(--nav-h);padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;border-radius:1.1rem;border:1px solid var(--nav-border);background-color:var(--nav-glass);background-image:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 55%);-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);box-shadow:0 12px 32px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.22);transition:max-width .4s cubic-bezier(.22,1,.36,1),height .4s cubic-bezier(.22,1,.36,1),padding .4s ease,border-radius .4s ease,background-color .4s ease,box-shadow .4s ease}
+.nav.scrolled .nav-inner{max-width:50rem;height:3.3rem;padding:0 1rem;border-radius:1rem;background-color:var(--nav-glass-scrolled);box-shadow:0 8px 24px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.2)}
+.brand{color:#fff;text-decoration:none;font-family:"Bricolage Grotesque","Inter",system-ui,sans-serif;font-weight:700;font-size:1.1rem;line-height:1;letter-spacing:.01em;white-space:nowrap;transition:font-size .4s ease}
+.nav.scrolled .brand{font-size:.95rem}
+.nav-links{list-style:none;margin:0;padding:0;display:flex;gap:1.3rem;transition:gap .4s ease}
+.nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.82rem;font-weight:500;padding:.4rem 0;border-bottom:2px solid transparent;transition:color .2s ease}
+.nav-links a:hover{color:#fff}
+.nav-links a.active{color:#fff;border-bottom-color:#fff}
+.nav-right{display:flex;align-items:center;gap:1.1rem}
+.theme-switch{position:relative;width:3rem;height:1.625rem;padding:0;flex-shrink:0;border-radius:999px;border:1px solid rgba(255,255,255,.18);background-color:rgba(255,255,255,.08);cursor:pointer;transition:background-color .25s ease}
+.theme-switch:hover{background-color:rgba(255,255,255,.16)}
+.theme-knob{position:absolute;top:.125rem;left:.125rem;width:1.25rem;height:1.25rem;border-radius:50%;background-color:#fff;color:#17141c;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:transform .28s cubic-bezier(.22,1,.36,1)}
+.theme-switch[aria-checked="true"] .theme-knob{transform:translateX(1.375rem)}
+.nav-toggle{display:none;background:none;border:0;color:#fff;font-size:1.25rem;padding:.5rem;cursor:pointer}
+.nav a:focus-visible,.nav button:focus-visible{outline-color:#fff}
+
+/* page + column */
+.profile-card{color:var(--text);width:100%;margin:0 auto;min-height:calc(100vh - var(--nav-h));display:flex;flex-direction:column;transition:color .25s ease}
+main{width:var(--shell-w);margin:0 auto;padding:0 var(--shell-pad) 5rem;background-color:var(--card);border-radius:.75rem .75rem 0 0;transition:background-color .25s ease;color:var(--body);line-height:1.8}
+section,.anchor{scroll-margin-top:calc(var(--nav-h) + .5rem)}
+
+/* hero */
+.hero{--avatar:8.5rem;--u:clamp(.85rem,.55vw + .7rem,1.25rem)}
+.banner-wrap{width:calc(100% + 2 * var(--shell-pad));margin:0 calc(-1 * var(--shell-pad));aspect-ratio:4/1;min-height:7rem;overflow:hidden;background-color:var(--tile);border-radius:.75rem .75rem 0 0}
+.banner-img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.profile-id{display:flex;align-items:flex-end;gap:1.1rem;margin-top:calc(var(--avatar) / -2)}
+.profile-avatar{flex-shrink:0;width:var(--avatar);height:var(--avatar);border-radius:50%;border:4px solid var(--card);background-color:var(--purple);object-fit:cover;display:block}
+.profile-id-text{min-width:0;padding-bottom:.3rem}
+.profile-id-text strong{display:block;font-size:1.3rem;font-weight:800;color:var(--text);line-height:1.2}
+.location{color:var(--muted);font-size:.92rem;margin:.25rem 0 0}
+.hero h1{margin:1.6rem 0 .6rem;font-size:clamp(1.6rem,2.6vw,2.4rem);font-weight:800;line-height:1.2;letter-spacing:.005em;color:var(--text)}
+.bio-sub{display:block;font-size:calc(var(--u) * .9);font-weight:500;letter-spacing:.02em;color:var(--body);margin-bottom:1.2rem}
+.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.7rem;margin:1.4rem 0}
+.person{background:var(--tile);border:1px solid var(--line);border-radius:.85rem;padding:.9rem 1.1rem;font-size:.85rem;color:var(--muted);line-height:1.5;transition:border-color .2s ease}
+.person:hover{border-color:var(--accent)}
+.person b{display:block;color:var(--text);font-size:1rem;font-weight:600}
+.chips{list-style:none;margin:0 0 1.2rem;padding:0;display:flex;flex-wrap:wrap;gap:.5rem}
+.chips li{font-size:.8rem;font-weight:500;color:var(--body);background-color:var(--line);padding:.25rem .7rem;border-radius:999px}
+.actions{display:flex;flex-wrap:wrap;gap:calc(var(--u) * .9);margin:1.2rem 0 1.4rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:calc(var(--u) * .55);background-color:var(--tile);color:var(--text);text-decoration:none;font-size:calc(var(--u) * .95);font-weight:600;padding:calc(var(--u) * .8) calc(var(--u) * 1.4);border-radius:.35rem;min-width:calc(var(--u) * 8.5);transition:background-color .2s ease}
+.btn:hover{background-color:var(--tile-hover)}
+.pill-links{display:flex;flex-wrap:wrap;gap:.6rem}
+.pill-links a{display:inline-flex;align-items:center;gap:.45rem;font-size:.85rem;font-weight:600;color:var(--text);text-decoration:none;border:1px solid var(--line);background-color:var(--card);padding:.45rem .85rem;border-radius:999px;transition:border-color .2s ease,color .2s ease}
+.pill-links a:hover{border-color:var(--accent);color:var(--accent)}
+.quotes{text-align:center;max-width:44rem;margin:2.5rem auto 0}
+.quotes .quote{margin:0;font-size:calc(var(--u) * 1.1);font-style:italic;line-height:1.6;color:var(--body)}
+.quote-by{display:block;margin-top:.3rem;font-size:calc(var(--u) * .85);font-style:normal;color:var(--muted)}
+.quote-dots{display:flex;justify-content:center;gap:.35rem;margin-top:.6rem}
+.quote-dots i{width:.35rem;height:.35rem;border-radius:999px;background-color:var(--line)}
+.quote-dots i.on{width:1.15rem;background-color:var(--accent)}
+
+/* paper content, themed with the site's tokens */
+h2{margin:5.5rem 0 1.25rem;font-size:1.65rem;font-weight:800;letter-spacing:.01em;color:var(--text);scroll-margin-top:calc(var(--nav-h) + .5rem)}
+h3{margin:2.6rem 0 .8rem;font-size:1.25rem;font-weight:600;color:var(--text)}
+h4{margin:1.7rem 0 .4rem;font-size:1.05rem;font-weight:600;color:var(--text)}
+p{margin:0 0 1.1rem;font-size:1.05rem;color:var(--body)}
+a{color:var(--accent)}
+:root[data-theme="light"] a{text-decoration:underline}
+strong{color:var(--text);font-weight:600}
+ul,ol{padding-left:1.4rem;margin:0 0 1.1rem;font-size:1.05rem}
+li{margin:.35rem 0}
+code,.mono{font-family:"JetBrains Mono",monospace;font-size:.86em}
+code{background:var(--tile);padding:.1rem .4rem;border-radius:.3rem}
+.sub{color:var(--muted);font-size:.9rem}
+.formula{background:var(--tile);border:1px solid var(--line);border-radius:.7rem;padding:1rem 1.2rem;margin:1rem 0 1.3rem;font-family:"JetBrains Mono",monospace;font-size:.88rem;overflow-x:auto;color:var(--text);white-space:pre-wrap;line-height:1.7}
+.callout{background:var(--tile);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:.7rem;padding:1.2rem 1.5rem;margin:1.5rem 0}
+.callout p:last-child,.callout ol:last-child,.callout ul:last-child{margin-bottom:0}
+.grid{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));margin:1.5rem 0}
+.stat{background:var(--tile);border:1px solid var(--line);border-radius:.7rem;padding:1.2rem;transition:border-color .2s ease}
+.stat:hover{border-color:var(--accent)}
+.stat b{display:block;font-size:1.9rem;font-weight:800;color:var(--text);line-height:1.1;margin-bottom:.2rem}
+.stat span{font-size:.85rem;color:var(--muted)}
+.tw{overflow-x:auto;margin:1.2rem 0 1.8rem;border:1px solid var(--line);border-radius:.7rem}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:35rem;line-height:1.55}
+th{background:var(--tile);color:var(--text);text-align:left;font-weight:600;padding:.7rem .9rem;white-space:nowrap}
+td{padding:.65rem .9rem;border-top:1px solid var(--line);vertical-align:top;background:var(--card);color:var(--body)}
+tr:hover td{background:var(--tile)}
+td:first-child{color:var(--text);font-weight:500}
+.tag{display:inline-block;color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,transparent);border-radius:999px;padding:.1rem .7rem;font-size:.78rem;font-weight:700}
+.fig{background:var(--tile);border:1px solid var(--line);border-radius:.8rem;padding:1.4rem;margin:1.6rem 0}
+.fig figcaption{color:var(--muted);font-size:.85rem;margin-top:.9rem;text-align:center;line-height:1.6}
+.bar{display:grid;grid-template-columns:13rem 1fr;gap:.8rem;align-items:center;margin:.55rem 0;font-size:.88rem;color:var(--body)}
+.bar .t{height:1.5rem;background:var(--card);border-radius:.4rem;overflow:hidden;position:relative}
+.bar .f{height:100%;background:var(--blue);border-radius:.4rem;display:flex;align-items:center;justify-content:flex-end;padding-right:.5rem;font-size:.75rem;font-weight:700;color:#fff;min-width:2.1rem}
+.bar .f.a{background:var(--accent);color:#fff}
+:root[data-theme="light"] .bar .f.a{background:#bd5e59}
+.legend{display:flex;gap:1.3rem;justify-content:center;font-size:.85rem;margin-bottom:.4rem;color:var(--body)}
+.legend i{display:inline-block;width:1.4rem;height:3px;vertical-align:middle;margin-right:.4rem}
+.flow{display:flex;flex-wrap:wrap;gap:.6rem;align-items:stretch;justify-content:center}
+.flow div{background:var(--card);border:1px solid var(--line);border-radius:.7rem;padding:.9rem 1rem;flex:1 1 10rem;max-width:15rem;font-size:.82rem;color:var(--muted);line-height:1.5}
+.flow div b{display:block;color:var(--text);margin-bottom:.2rem}
+.flow .ar{background:none;border:0;flex:0 0 auto;padding:0;align-self:center;font-size:1.3rem;color:var(--accent);min-width:0}
+svg text{font-family:Inter,sans-serif}
+.ref p{font-size:.95rem;color:var(--muted)}
+.ref p em{color:var(--body)}
+
+/* footer */
+.footer{margin-top:auto;margin-left:-1.25rem;margin-right:-1.25rem;width:calc(100% + 2.5rem);background-color:var(--card);transition:background-color .25s ease}
+.footer-inner{max-width:55rem;margin:0 auto;padding:2.5rem 1.25rem 1.5rem;border-top:1px solid var(--line)}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:2rem}
+.footer-name{margin:0 0 .5rem;font-size:1.15rem;font-weight:800;color:var(--text)}
+.footer-blurb{margin:0 0 .8rem;font-size:.9rem;line-height:1.7;color:var(--muted);max-width:32ch}
+.footer a{color:var(--body);text-decoration:none;font-size:.9rem;transition:color .2s ease}
+.footer a:hover{color:var(--accent)}
+.footer-title{margin:0 0 .8rem;font-size:.9rem;font-weight:600;color:var(--text)}
+.footer-list{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.footer-list li{margin:0}
+.footer-socials{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.6rem}
+.footer-socials li{margin:0}
+.footer .footer-socials a{display:inline-flex;align-items:center;justify-content:center;width:2.6rem;height:2.6rem;border-radius:.5rem;color:var(--body);background-color:var(--tile);font-size:1.1rem;transition:color .2s ease,background-color .2s ease,transform .2s ease}
+.footer .footer-socials a:hover{color:var(--accent);background-color:var(--tile-hover);transform:translateY(-2px)}
+.footer-bottom{margin-top:2rem;padding-top:1.1rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.6rem}
+.footer-bottom p{margin:0;font-size:.82rem;color:var(--muted)}
+.footer-bottom a{font-size:.82rem;color:var(--muted)}
+.footer-bottom a i{margin-right:.4rem}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--text);outline-offset:3px;border-radius:4px}
+
+@media (min-width:901px){.nav.scrolled .nav-links{gap:1.05rem}}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex}
+  .nav.scrolled .nav-inner{max-width:92%}
+  .nav-links{display:none;position:absolute;top:calc(100% - 4px);left:0;right:0;flex-direction:column;gap:0;background-color:var(--nav-menu-bg);border:1px solid rgba(255,255,255,.1);border-radius:.65rem;padding:.5rem;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+  .nav-links.open{display:flex}
+  .nav-links a{display:block;padding:.75rem .9rem;font-size:.95rem;border-bottom:0}
+  .nav-right{gap:.75rem}
+}
+@media (max-width:720px){.hero{--avatar:6.6rem}.profile-avatar{border-width:3px}.bar{grid-template-columns:1fr}}
+@media (max-width:640px){
+  body{padding:0 .75rem}
+  :root{--shell-w:100%;--shell-pad:1.25rem}
+  .footer-grid{grid-template-columns:1fr;gap:1.6rem}
+  h2{margin-top:3.5rem}
+  .hero{--u:.95rem}
+}
+@keyframes rise{from{opacity:0;transform:translateY(2rem)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference){main{animation:rise .9s cubic-bezier(.22,1,.36,1) backwards}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}body{animation:none!important}}
+
+/* ---------- interactive layer ---------- */
+#progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--purple),var(--accent));pointer-events:none}
+
+/* scroll reveal (only when JS is running) */
+.js .rv{opacity:0;transform:translateY(1.4rem);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1)}
+.js .rv.in{opacity:1;transform:none}
+
+/* hero entrance */
+@keyframes wordin{from{opacity:0;transform:translateY(.8em)}to{opacity:1;transform:none}}
+@keyframes popin{from{opacity:0;transform:scale(.85) translateY(.6rem)}to{opacity:1;transform:none}}
+.hero h1 .w{display:inline-block;opacity:0;animation:wordin .75s cubic-bezier(.22,1,.36,1) forwards;animation-delay:calc(var(--i) * 45ms + .15s)}
+.pop{opacity:0;animation:popin .6s cubic-bezier(.34,1.4,.64,1) forwards;animation-delay:calc(.7s + var(--i) * 70ms)}
+
+/* cursor glow on cards */
+.stat,.person,.callout,.fig{position:relative;overflow:hidden}
+.stat::after,.person::after,.callout::after,.fig::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s ease;background:radial-gradient(16rem circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--accent) 22%,transparent),transparent 60%)}
+.stat:hover::after,.person:hover::after,.callout:hover::after,.fig:hover::after{opacity:1}
+.stat{transition:border-color .2s ease,transform .25s ease,opacity .7s ease}
+.stat:hover{transform:translateY(-3px)}
+.chips li{transition:background-color .2s ease,color .2s ease,transform .2s ease}
+.chips li:hover{background-color:var(--accent);color:var(--card);transform:translateY(-2px)}
+.btn{transition:background-color .2s ease,transform .2s ease}
+.btn:hover{transform:translateY(-2px)}
+.pill-links a:hover{transform:translateY(-2px)}
+.pill-links a{transition:border-color .2s ease,color .2s ease,transform .2s ease}
+
+/* heading anchors */
+h2 .hl{margin-left:.5rem;font-size:.7em;font-weight:600;text-decoration:none;opacity:0;transition:opacity .2s ease}
+h2:hover .hl{opacity:.7}
+h2 .hl:hover{opacity:1}
+
+/* bars */
+.bar .f{transition:width 1s cubic-bezier(.22,1,.36,1)}
+
+/* section dot-rail */
+.rail{position:fixed;right:.9rem;top:50%;transform:translateY(-50%);z-index:9;display:none;flex-direction:column;gap:.6rem}
+@media (min-width:1100px){.rail{display:flex}}
+.rail a{position:relative;width:.7rem;height:.7rem;border-radius:50%;background:rgba(0,0,0,.38);transition:transform .25s ease,background-color .25s ease}
+.rail a:hover{transform:scale(1.5);background:rgba(0,0,0,.75)}
+.rail a.on{transform:scale(1.6);background:#fff;box-shadow:0 0 0 2px rgba(0,0,0,.55)}
+.rail a::after{content:attr(data-l);position:absolute;right:1.5rem;top:50%;transform:translate(.4rem,-50%);white-space:nowrap;font-size:.72rem;font-weight:600;color:#fff;background:rgba(14,12,18,.92);padding:.3rem .65rem;border-radius:.4rem;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.rail a:hover::after{opacity:1;transform:translate(0,-50%)}
+
+/* back to top + toast */
+#totop{position:fixed;right:1.25rem;bottom:1.25rem;z-index:20;width:2.9rem;height:2.9rem;border-radius:50%;border:1px solid var(--line);background:var(--tile);color:var(--text);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transform:translateY(1rem);pointer-events:none;transition:opacity .25s ease,transform .25s ease,background-color .2s ease}
+#totop.show{opacity:1;transform:none;pointer-events:auto}
+#totop:hover{background:var(--tile-hover);transform:translateY(-2px)}
+#toast{position:fixed;left:50%;bottom:1.5rem;z-index:200;transform:translate(-50%,1rem);opacity:0;pointer-events:none;font-size:.9rem;font-weight:600;color:var(--text);background:var(--tile);border:1px solid var(--line);border-radius:999px;padding:.6rem 1.2rem;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:opacity .25s ease,transform .25s ease}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* fig 1 hover + tooltip */
+.r rect{fill:transparent}
+.r:hover rect{fill:color-mix(in srgb,var(--accent) 12%,transparent)}
+.r circle{transition:r .2s ease}
+.r:hover circle{r:7}
+#tip{position:fixed;z-index:100;pointer-events:none;opacity:0;transform:translateY(.3rem);transition:opacity .15s ease,transform .15s ease;background:rgba(14,12,18,.95);color:#fff;border:1px solid rgba(255,255,255,.14);border-radius:.55rem;padding:.55rem .8rem;font-size:.78rem;line-height:1.55;max-width:20rem;box-shadow:0 10px 28px rgba(0,0,0,.4)}
+#tip.show{opacity:1;transform:none}
+#tip b{display:block;margin-bottom:.15rem}
+#tip .d{color:#7db0ff}#tip .c{color:#ff9a7a}
+
+/* collapsible long tables */
+.tw.collapsed{max-height:22rem;overflow:hidden;position:relative}
+.tw.collapsed::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6rem;pointer-events:none;background:linear-gradient(transparent,var(--card))}
+.tbtn{display:flex;margin:-1.1rem auto 1.8rem;align-items:center;gap:.5rem;font:inherit;font-size:.85rem;font-weight:600;color:var(--text);background:var(--tile);border:1px solid var(--line);border-radius:999px;padding:.5rem 1.1rem;cursor:pointer;position:relative;z-index:2;transition:border-color .2s ease,color .2s ease}
+.tbtn:hover{border-color:var(--accent);color:var(--accent)}
+.tbtn i{transition:transform .3s ease}
+.tbtn.open i{transform:rotate(180deg)}
+
+/* quote rotator */
+.quote-stage{display:grid}
+.quote-stage .quote{grid-area:1/1;opacity:0;transform:translateY(.4rem);transition:opacity .5s ease,transform .5s ease}
+.quote-stage .quote.is-active{opacity:1;transform:none}
+.quote-dots i{cursor:pointer;transition:width .3s ease,background-color .3s ease}
+.quote-dots{gap:.5rem}
+</style>
+</head>
+<body>
+
+<div id="progress" aria-hidden="true"></div>
+<nav class="rail" id="rail" aria-label="Sections"></nav>
+<button id="totop" type="button" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="tip" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="https://emtypyie.in">EMTYPYIE.IN</a>
+    <div class="nav-right">
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#abstract">Abstract</a></li>
+        <li><a href="#s2">Findings</a></li>
+        <li><a href="#s3">Policy</a></li>
+        <li><a href="#s6">Evaluation</a></li>
+        <li><a href="#refs">References</a></li>
+        <li><a href="#appA">Appendix</a></li>
+        <li><a href="#contact">Team</a></li>
+      </ul>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><i class="fa-solid fa-bars"></i></button>
+      <button class="theme-switch" id="theme-toggle" type="button" role="switch" aria-checked="true" aria-label="Dark mode"><span class="theme-knob"><i class="fa-solid fa-moon" id="theme-icon"></i></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="profile-card">
+<main>
+
+<section class="hero" id="home">
+  <p class="location" style="margin-top:3.2rem">Research Paper &nbsp;|&nbsp; Oct 2026 &nbsp;|&nbsp; Team EmptyBrains</p>
+  <h1>Sequential Matching and Information Acquisition for Reciprocal Introductions Under Incomplete Information and Dynamic Constraints</h1>
+  <span class="bio-sub">Research Paper for Romeo Juliet X IITM | Pan IIT Hackathon (IIT Madras x Romeo &amp; Juliet: The Sequential Matching Problem)</span>
+
+  <ul class="chips">
+    <li>Sequential Matching</li><li>Information Acquisition</li><li>Reciprocal Introductions</li><li>Dynamic Constraints</li><li>Incomplete Information</li>
+  </ul>
+
+  <div class="team">
+    <div class="person"><b>Vishnu P</b>26f2001878@ds.study.iitm.ac.in</div>
+    <div class="person"><b>Subhadeep Das</b>26f2300048@ae.study.iitm.ac.in<br>me@emtypyie.in</div>
+    <div class="person"><b>Ameya Raut</b>26f2001863@ds.study.iitm.ac.in</div>
+    <div class="person"><b>Taniya Jha</b>taniyajhaadc@gmail.com</div>
+  </div>
+
+  <div class="actions">
+    <a class="btn" href="#abstract"><i class="fa-solid fa-file-lines"></i> Abstract</a>
+    <a class="btn" href="#refs"><i class="fa-solid fa-book"></i> References</a>
+  </div>
+
+  <div class="pill-links">
+    <a href="#abstract">Abstract</a><a href="#s1">1 Problem</a><a href="#s2">2 Findings</a><a href="#s3">3 Policy</a><a href="#s4">4 Hypotheses</a><a href="#s5">5 PS 1-2</a><a href="#s6">6 Evaluation</a><a href="#s7">7 Failure modes</a><a href="#s8">8 Product</a><a href="#s9">9 Limitations</a><a href="#appA">App. A</a><a href="#appB">App. B</a><a href="#appC">App. C</a>
+  </div>
+
+  <div class="quotes">
+    <div class="quote-stage">
+      <p class="quote is-active">A strong match on paper is often not a match in person.<span class="quote-by">structure caps outcomes; chemistry and chance do the rest</span></p>
+      <p class="quote">Always match. Introduce every feasible pair promptly.<span class="quote-by">the core recommendation</span></p>
+      <p class="quote">Policy choices add little within the cap structure sets.<span class="quote-by">why ranking moves outcomes so little here</span></p>
+    </div>
+    <span class="quote-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></span>
+  </div>
+</section>
+
+<h2 id="abstract">Abstract</h2>
+<p><strong>Objective.</strong> The ranked metric is Mutual Second-Meeting Intention (MSMI) per 100 arrived members. It factors into two terms: the number of introductions a policy makes, and the probability that each introduction qualifies.</p>
+<p><strong>Central finding.</strong> In this environment the second term is largely beyond a policy's control. Feasible pairs are scarce: there are about 1.3 options per matchable member, and no feasible pair at all on 34–76% of days. Most introductions are therefore effectively forced. Whether an introduction then qualifies depends mainly on two things no observable field records: how well the two members suit each other in person (pair compatibility, or "chemistry"), and chance.</p>
+<p><strong>Evidence.</strong> We placed every policy lever on a common, low-variance scale: the expected number of qualifying outcomes given the introductions actually made, computed offline from the simulator's ground truth on public seeds. It narrows paired confidence intervals roughly fifteen-fold. Across 20–40 paired seeds per scenario family, levers available to a policy have negligible effect. Pure waiting, learned scoring and value-based clarification each changed expected MSMI by at most about 0.005 per 100. Perfect information adds little. Compatibility and chance dominate. An offline foresight benchmark added 0.10–0.23 realised MSMI per 100.</p>
+
+<div class="grid">
+  <div class="stat"><b>1.3</b><span>options per matchable member</span></div>
+  <div class="stat"><b>34–76%</b><span>of days with no feasible pair</span></div>
+  <div class="stat"><b>≤ 0.005</b><span>expected MSMI / 100 change from any lever</span></div>
+  <div class="stat"><b>0.10–0.23</b><span>realised MSMI / 100 from foresight</span></div>
+</div>
+
+<div class="callout">
+  <h4 style="margin-top:0">Recommended design</h4>
+  <ol>
+    <li><strong>Always match.</strong> Introduce every feasible pair promptly, using whole-pool maximum-weight matching.</li>
+    <li><strong>Never produce an invalid episode.</strong></li>
+    <li><strong>Aim clarification at unlocking pairs.</strong></li>
+    <li><strong>Keep a choice-aware learner on probation.</strong></li>
+  </ol>
+</div>
+
+<!-- ============ 1 ============ -->
+<h2 id="s1">1. Problem formulation</h2>
+<h3>1.1 Objective</h3>
+<p>The ranked score is MSMI per 100 arrived members, averaged equally over six scenario families (PS 10). An introduction qualifies only if three conditions all hold:</p>
+<ul>
+  <li>both members reply Yes within 7 days;</li>
+  <li>a date takes place within 30 days of assignment;</li>
+  <li>both members report a second-meeting Yes within 3 days of the date.</li>
+</ul>
+<p>For one episode:</p>
+<div class="formula">MSMI per 100 = 100 × (introductions / arrived members) × P(an introduction qualifies)</div>
+<p>A policy changes the first term only by creating feasible pairs (clarification) or by holding members back (waiting). It changes the second only by choosing which feasible pairs to introduce (ranking and allocation). Coverage, mutual acceptances, clarification cost and inference time break exact ties only.</p>
+
+<h3>1.2 Structure of the problem</h3>
+<ul>
+  <li><strong>Two-sided.</strong> Both members must independently agree. Every answer is a decision by a member with their own preferences, and an introduction makes both members unavailable for 8 days in the public simulator.</li>
+  <li><strong>Non-bipartite.</strong> Of the 2,000 supplied members, 148 are non-binary and 414 accept more than one gender, so allocation must operate on a general graph.</li>
+  <li><strong>Rare outcomes.</strong> About one qualifying pair arises per 200-member episode.</li>
+  <li><strong>Scarce, reusable participants.</strong> Each member can have at most one open introduction.</li>
+  <li><strong>Feasibility gated by hard answers.</strong> At most four members can be fully clarified per day (12 units, 3 per bundle). In the kit's published reference runs, removing clarification reduces coverage from 0.41 to 0.17.</li>
+  <li><strong>Selective, delayed labels.</strong> Outcomes exist only for introduced pairs, and second-meeting answers arrive weeks after the decision.</li>
+</ul>
+
+<h3>1.3 Terminology</h3>
+<div class="tw"><table>
+<tr><th>Term</th><th>Meaning in this note</th></tr>
+<tr><td>Feasible pair</td><td>A pair for which <code>eligibility(a, b)</code> returns feasible: every hard answer is known and satisfied in both directions</td></tr>
+<tr><td>Matchable member</td><td>An available member with at least one feasible partner on a given day; "options" are that member's feasible partners</td></tr>
+<tr><td>Unservable member</td><td>A member who has declined at least one hard-constraint question and so can never be introduced; always kept in coverage denominators</td></tr>
+<tr><td>Supplied greedy</td><td>The kit's baseline allocation. It introduces feasible pairs in descending order of the number of soft fields on which the two members' known values agree, without overlap</td></tr>
+<tr><td>List-order asks</td><td>The kit's baseline clarification. It requests constraint bundles from the first available members who are missing a hard answer and have declined none, within budget</td></tr>
+<tr><td>Realised MSMI</td><td>The MSMI the simulator actually produced in an episode</td></tr>
+<tr><td>Expected MSMI</td><td>Research metric. The sum, over the introductions a policy made, of the ground-truth probability that each one qualifies (Section 2.2); computed only in experiments on public seeds; never a policy input and never an admission criterion</td></tr>
+<tr><td>Benchmark ranker</td><td>Offline evaluation tool. A ranker given simulator ground truth in experiments on public seeds; it bounds what ranking with that information could add. It is never a candidate policy</td></tr>
+<tr><td>Pair compatibility</td><td>The part of acceptance that two members of a pair share and that no field records; in the simulator, a random pair effect</td></tr>
+<tr><td>Acceptance tendency</td><td>A member's general propensity to say Yes, independent of the partner</td></tr>
+<tr><td>Choice-aware</td><td>A component whose output can matter only when a member has two or more feasible partners</td></tr>
+<tr><td>Lab</td><td>A numbered experiment on declared seeds; all are listed in Appendix A</td></tr>
+</table></div>
+
+<!-- ============ 2 ============ -->
+<h2 id="s2">2. Empirical findings</h2>
+<p>All results were produced on the public simulator, run in-process with <code>PYTHONHASHSEED=0</code>. They are recorded in committed result files: 1,330 policy records and 60 graph records, with no duplicate keys and no funnel violations. Comparisons are paired on identical worlds, with 95% bootstrap intervals over seeds. No policy parameter was tuned on a seed used to report a comparison. Provenance is given in Section 9.</p>
+<p>The public families match the assessed ones. Under PS 10, each assessed episode has 200 members, with 20 private seeds in each of the same six scenario families, and "the public variants let teams test the same categories without exposing assessed episodes".</p>
+
+<h3>2.1 The supply of feasible pairs is thin</h3>
+<p>Logged daily over the 60 decision days under the supplied baseline (seeds 1101–1120):</p>
+<div class="tw"><table>
+<tr><th>Family</th><th>Feasible pairs per day</th><th>Days with none</th><th>Options per matchable member</th><th>Available members with an option</th></tr>
+<tr><td>Development</td><td>2.88 (1.58–4.32)</td><td>34%</td><td>1.29</td><td>3% (2–4%)</td></tr>
+<tr><td>Cold start</td><td>2.21 (1.07–4.27)</td><td>41%</td><td>1.28</td><td>2% (1–3%)</td></tr>
+<tr><td>Sparse</td><td>0.43 (0.22–0.77)</td><td>76%</td><td>1.07</td><td>under 1%</td></tr>
+</table></div>
+<p>In development a median of 160 members are available on a given day, and 35–120 have every hard answer known. Yet only 0–36 feasible pairs exist. A declined hard field makes 33% of members unservable in development, 41% in cold start and 32% in sparse. These members are reported as a separate group and never removed from coverage. Because most members have at most one option at a time, alternative policies largely make the same introductions: every ranking variant tested changed only 8–12% of introductions relative to greedy.</p>
+
+<h3>2.2 An expected-outcome estimator</h3>
+<p>Realised MSMI is too noisy to rank policies at feasible sample sizes. With 15–20 seeds, a single qualifying pair moves a family mean by 0.025–0.033 (0.5 per 100 in one 200-member episode), and paired intervals span about ±0.2.</p>
+<p>To measure the environment precisely, we therefore also compute, for each episode, the expected number of qualifying outcomes given the introductions the policy actually made. It is the sum over those introductions of the ground-truth probability that each qualifies. Each probability is computed from both members' simulated traits and complete profiles, with pair compatibility and all later random outcomes averaged out. The formula mirrors the public simulator's acceptance and second-meeting rules. Because it uses simulator ground truth, the estimator is an offline research instrument: it is never a policy input and never decides which component enters the submitted policy (Section 6). Admission decisions and final results use realised metrics from the supplied evaluator.</p>
+<p>Per pair, the formula matches 200,000 simulated draws within Monte Carlo error.</p>
+<p><strong>Calibration.</strong> Over 525 development episodes the estimator predicts 481 qualifying outcomes against 480 observed. In the other families tested, cold start included, observed counts ran 12–37% above expected on the reused seed sets. This gap is not yet explained. A level error common to the policies being compared would scale paired differences without changing their sign. We therefore treat cold-start differences as indicative, and we base no claim on the remaining four families until the gap is explained.</p>
+<p><strong>Precision.</strong> Paired intervals narrow from about ±0.2 to about ±0.01–0.02 per 100.</p>
+
+<h3>2.3 The effect of each policy lever</h3>
+<figure class="fig">
+  <div class="legend"><span><i style="background:var(--blue)"></i>Development</span><span><i style="background:var(--orange)"></i>Cold start</span></div>
+  <div id="fig1"></div>
+  <figcaption>Figure 1. Change in expected MSMI per 100 arrived members relative to each comparison's baseline (95% interval).</figcaption>
+</figure>
+
+<h4>Clarification</h4>
+<ul>
+  <li><strong>Value-based asks.</strong> Value-based hard-constraint asks reveal more feasible pairs than list-order asks: +0.45 and +0.49 per day, with wins/ties/losses of 19/0/1 and 17/2/1. But they add only +0.005 expected MSMI ([−0.006, +0.017] in development, [−0.007, +0.017] in cold start), a quarter to two-fifths of what perfect answers add.</li>
+  <li><strong>Perfect answers.</strong> Free, perfect answers to every non-declined hard question add +0.019 [+0.008, +0.031] in development and +0.013 [+0.002, +0.024] in cold start. That is about 3–4% and the clearest effect measured, while coverage moves by at most 0.003. The additional pairs are mostly second options for members who would be served anyway.</li>
+</ul>
+<h4>Waiting</h4>
+<ul>
+  <li><strong>Protected reserve.</strong> A member's only option is never postponed, so the protected reserve changed no decision.</li>
+  <li><strong>Pure waiting.</strong> Without protections, waiting changed 7% of introductions and moved expected MSMI by +0.003 and −0.002. It also left 0.4 more members unserved per development episode (+0.40 [+0.05, +0.75]).</li>
+</ul>
+<h4>Ranking with perfect information (Lab 13, seeds 1161–1180)</h4>
+<p>Ranking each day's feasible pairs greedily by the ground-truth probability of success adds at most about 0.013 expected MSMI per 100, whatever the benchmark knows: true reply rates; true member traits (reply rate, acceptance tendency, second-meeting tendency); complete true profiles; or all of these combined. All intervals but one include zero, and upper bounds reach 0.031 (7%). These figures bound myopic ranking only: the benchmarks know each day's pairs perfectly but do not plan across days.</p>
+<h4>Ranking with learned estimates</h4>
+<ul>
+  <li><strong>Lab 13 learners.</strong> Learned soft-field scores, learned reply rates (posterior mean or Thompson sampling) and learned acceptance tendencies all fall within ±0.004 of greedy, and every interval includes zero. None detectably captures the benchmark headroom.</li>
+  <li><strong>Lab 12 learned field score.</strong> It moved expected MSMI by +0.002 and −0.004. Its first seed block showed a realised loss in development (−0.20 [−0.35, −0.05]) that did not replicate, and it reduced coverage by 0.002 in cold start ([−0.004, −0.000]) (C4).</li>
+</ul>
+
+<h3>2.4 Pair compatibility and chance</h3>
+<figure class="fig">
+  <div class="bar"><span>No response</span><div class="t"><div class="f" style="width:83.8%">41.9%</div></div></div>
+  <div class="bar"><span>Answered No</span><div class="t"><div class="f" style="width:85.2%">42.6%</div></div></div>
+  <div class="bar"><span>No date</span><div class="t"><div class="f" style="width:6.8%">3.4%</div></div></div>
+  <div class="bar"><span>Date after 30 days</span><div class="t"><div class="f" style="width:0.6%;min-width:0;padding:0"></div><span class="mono" style="position:absolute;left:8px;top:2px;font-size:12px">0.0%</span></div></div>
+  <div class="bar"><span>No mutual second-meeting Yes</span><div class="t"><div class="f" style="width:21%">10.5%</div></div></div>
+  <div class="bar"><span><strong>Qualifying outcome (MSMI)</strong></span><div class="t"><div class="f a" style="width:3.2%">1.6%</div></div></div>
+  <figcaption>Figure 2. Stage at which the supplied greedy policy's introductions end (development, seeds 1101–1120, 1,782 introductions). Bar width: share of all introductions, 0–50%.</figcaption>
+</figure>
+<p>Most introductions end at the first step (Figure 2). In every family, 83–86% end in no response or a No, and only 0.9–1.6% qualify. Late dates are negligible even in the delayed family (0.1–0.2% of introductions).</p>
+<p><strong>Foresight.</strong> An offline foresight benchmark is given, for each candidate introduction on a public seed, the outcome the simulator would produce. It raises realised MSMI by +0.10 [−0.18, +0.43] per 100 in development and +0.23 [+0.03, +0.45] in cold start. For rankers without that foresight, realised and expected gains coincide on average wherever the estimator is calibrated. Foresight is therefore worth roughly eight to twenty times the gain from perfect knowledge of members and profiles. The comparison is approximate: the development interval includes zero, and in cold start the expected values run below the observed counts.</p>
+<p><strong>Chance without a benchmark.</strong> The same greedy policy scored 0.70 realised MSMI per 100 on development seeds 1101–1120 against 0.46 expected, and 0.55 against 0.44 on seeds 1161–1180. Consistent with this, soft-field agreement explains little of who accepts (held-out AUC about 0.57): a strong match on paper is often not a match in person. What remains is pair compatibility and chance, and no observable field captures either.</p>
+
+<h3>2.5 What feedback can teach</h3>
+<p>Labels arrive only for introduced pairs, and pairs never repeat. Knowledge about one pair's compatibility is therefore never reused. Only knowledge about members (reply rate, acceptance tendency) and about shared structure (field weights, acceptance drift) carries forward.</p>
+<h4>Shared structure is learnable at scale</h4>
+<ul>
+  <li><strong>Too few labels.</strong> With 1,049 labels from 8 rollouts, no field weight was trustworthy. The largest flipped sign between halves, and one weight that passed was on a field the simulator's acceptance rule ignores.</li>
+  <li><strong>Enough labels.</strong> With 130 fresh rollouts (17,539 labels; whole-episode bootstrap), exactly the four fields the rule uses passed: relationship goal, pace, conversations (+0.25) and lifestyle (+0.18). The fitted weights were close to values written down before the run: relationship goal +0.49 and −0.50 against about ±0.48, and pace 0.35 against 0.36.</li>
+  <li><strong>Held-out ranking.</strong> On 20 held-out worlds the model ranks acceptances better than greedy's count of agreeing fields: AUC 0.574 [0.560, 0.590] against 0.523 [0.504, 0.544].</li>
+</ul>
+<p><strong>Individual members can hardly be learned within an episode.</strong> A served member receives on average 2.32 introductions per development episode, and 41% receive only one. At decision time, a member's own estimate rests on about one prior observation.</p>
+<p><strong>Fast and slow labels differ.</strong> Replies arrive within 7 days and can be used within the episode. Date and second-meeting outcomes arrive weeks later, so those stages rely mainly on an offline prior, refined slowly online.</p>
+<p><strong>The value of learning is bounded by the benchmark gap.</strong> Learning can recover at most what perfect information would add, and Section 2.3 shows that is small. Exploration therefore has little to inform. It pays only where a member has a genuine choice, and it should target shared parameters rather than individual members.</p>
+
+<h3>2.6 Implications for design</h3>
+<ul>
+  <li><strong>Structure caps outcomes.</strong> There are few feasible pairs, a fixed unavailability period after each introduction, and a large unservable group.</li>
+  <li><strong>Policy choices add little within that cap.</strong> They move expected MSMI by a few percent: under 10% even at upper interval bounds and with perfect information.</li>
+  <li><strong>Realised MSMI cannot rank policies at 20 seeds.</strong> It is dominated by pair compatibility and chance; expected-outcome comparisons can measure their differences.</li>
+  <li><strong>What a policy can still secure:</strong> validity in every episode, since a single invalid action disqualifies the entry; the small measurable gain from better hard-constraint information; robustness across all six families.</li>
+</ul>
+<p>The tie-breakers (coverage, mutual acceptances, clarification cost, runtime) apply only to exact unrounded ties, so no MSMI is traded for them.</p>
+
+<!-- ============ 3 ============ -->
+<h2 id="s3">3. Policy design</h2>
+<p>The design follows from Section 2. The policy runs twice per simulated day and rebuilds its view of the world from the history carried in each request. The ask call selects clarifications and the match call selects introductions (Figure 3). Every output passes a validator. Input handling, modelling and allocation are separate modules, as PS 15 requires.</p>
+
+<figure class="fig">
+  <div class="flow">
+    <div><b>Phase 0 · Validity</b>Re-check every output; fallback chain; 7 s guard</div><span class="ar" style="background:none;max-width:none">→</span>
+    <div><b>Phase 1 · Feasibility &amp; clarification</b>eligibility() classes; value-based asks</div><span class="ar" style="background:none;max-width:none">→</span>
+    <div><b>Phase 2 · Funnel scorer</b>Edge value V(A,B) from one model per stage</div><span class="ar" style="background:none;max-width:none">→</span>
+    <div><b>Phase 3 · Allocation</b>Whole-pool blossom matching, no waiting</div><span class="ar" style="background:none;max-width:none">→</span>
+    <div><b>Phases 4–5 · Learn &amp; explore</b>Online refit; Thompson sampling over shared weights</div>
+  </div>
+  <figcaption>Figure 3. Daily decision cycle. The ask call also uses Phase 2 values and a tentative Phase 3 matching; each phase is shown where it mainly runs. Candidate components enter only under the decision rule of Section 6.</figcaption>
+</figure>
+
+<p>Three commitments follow directly from the evidence:</p>
+<ol>
+  <li><strong>Always match.</strong> Every pair selected by the matching is introduced the same day; waiting is off.</li>
+  <li><strong>Clarification aimed at unlocking pairs.</strong> Hard-constraint answers carry the clearest measured gain (perfect answers: +3–4%), and clarification cost matters only on exact ties. The value-based rule in Section 3.2 is the current candidate. Like every component, it enters the submitted policy only under the decision rule in Section 6, with list-order asks as the fallback.</li>
+  <li><strong>Pooled learning.</strong> A pair is never seen twice and a member is introduced about twice on average. Learning is therefore pooled across members, and exploration targets shared parameters.</li>
+</ol>
+
+<h4>Default policy and candidate components</h4>
+<p>The policy is built as a fixed core plus candidate components:</p>
+<div class="tw"><table>
+<tr><th>Layer</th><th>Contents</th><th>Status</th></tr>
+<tr><td>Core (always on)</td><td>Validity layer with fallback chain (3.1); eligibility()-based feasibility (3.2); whole-pool blossom matching on the baseline score (3.4); no waiting</td><td>Submitted as is; blossom kept provisionally pending its no-loss check (H4)</td></tr>
+<tr><td>Clarification candidate</td><td>Value-based hard-constraint asks, then a better-targeted rule (3.2)</td><td>Replaces list-order asks only if admitted (H2)</td></tr>
+<tr><td>Learning candidates</td><td>Funnel scorer with pooled member terms (3.3); online updates and Thompson sampling over shared weights (3.5); soft-field asks and the planning bonus</td><td>Each added only if admitted (H3)</td></tr>
+</table></div>
+<p>If no candidate meets the decision rule in Section 6, the submitted policy is the core: list-order asks, blossom matching on the baseline score and the validity layer. That is the supplied greedy policy with whole-pool allocation and stronger safeguards. Section 2 implies this core already captures most of what any policy can achieve here. Candidates are stacked on it one at a time (steps L1–L5 in Section 6), and each must earn its place on the supplied evaluator's metrics.</p>
+
+<h3>3.1 Validity and fallback (Phase 0)</h3>
+<p>A single invalid action in any of the 120 assessed episodes makes the entry ineligible. Validity therefore receives the most engineering: every output is re-checked on the refreshed state before it leaves the process.</p>
+<h4>Pairs</h4>
+<ul>
+  <li><code>eligibility(a, b)</code> returns feasible.</li>
+  <li>The two members are distinct, available and in the same pool.</li>
+  <li>Neither has an outstanding introduction. This is checked explicitly, not only through the availability flag.</li>
+  <li>The pair has not been introduced this episode.</li>
+</ul>
+<h4>Asks</h4>
+<ul>
+  <li>No member appears twice in the batch.</li>
+  <li>The member is available.</li>
+  <li>The field is constraints or a valid soft field.</li>
+  <li>There is no duplicate (member, field).</li>
+  <li>Total cost stays within <code>ask_budget_remaining</code>.</li>
+  <li>Members whose relevant fields are declined are never asked.</li>
+</ul>
+<p><strong>Fallback.</strong> The chain runs from the full policy to the supplied greedy baseline, then to an empty list, with a wall-clock switch at 7 s inside the 10 s limit. Only protocol JSON is written to stdout.</p>
+<p><strong>State.</strong> The policy refits from the request's history on every call. Memory holds only a model version tag and an RNG counter, far below the 1 MiB cap, so loss of the memory object cannot corrupt a decision.</p>
+<p><strong>Packaging.</strong> The starter Dockerfile carries pinned dependencies (licences included), and the offline prior is shipped as an inference asset. Every Round 2 build is evaluated in container mode before submission.</p>
+<p><strong>Stress tests.</strong> These cover an empty population, an empty feasible graph, every member busy, a budget of 0–2 units, every hard field declined, and a 200-member day-0 burst, all under container limits.</p>
+
+<h3>3.2 Feasibility and clarification (Phase 1)</h3>
+<p>Feasibility is delegated to the supplied <code>eligibility(a, b)</code> and is never reimplemented or relaxed. Pairs fall into three classes:</p>
+<ul>
+  <li><strong>infeasible:</strong> a known failure in either direction;</li>
+  <li><strong>needs_clarification:</strong> no known failure, but a missing hard answer;</li>
+  <li><strong>feasible:</strong> every hard answer known and satisfied both ways. Only these pairs can be scored.</li>
+</ul>
+<p>Declined answers are never re-asked or inferred. On day 0 of one development world, 55 of 137 arrived members had every hard answer known, and 41 had declined at least one.</p>
+<p><strong>Constraint asks (3 units).</strong> Each available, unresolved member <em>i</em> with no declined hard field receives a priority</p>
+<div class="formula">U_i = Σ_{j∈K(i)} V(i,j) · 1[j available]  +  β · Σ_{j∈K(i)} V̂(i,j)  +  γ · Σ_{j∈Q(i)} V̂(i,j)</div>
+<p>Here K(i) is the set of fully known members with no known conflict with i, Q(i) is the set of other unresolved members with no known conflict, and V is the Phase 2 edge value.</p>
+<p><strong>Public fields rule partners out early.</strong> Age, gender and zone are always public, so a partner is ruled out before any question whenever either member's stated preferences already exclude the other's age, gender or zone.</p>
+<p><strong>Asking order.</strong> Members with no possible partner score zero and are never asked. The top members are asked while budget allows, with ties broken by earliest arrival.</p>
+<p><strong>Prototype weights.</strong> The tested prototype uses V̂=1, β=0.5 and γ=0.2, set by hand. A fully known, available partner counts 1.5, a fully known but busy one 0.5, and an unresolved one 0.2.</p>
+<p>This rule reveals more feasible pairs than list-order asks. On point estimates, however, it captures only a quarter to two-fifths of what perfect answers add (+0.005 of +0.019 and +0.013, with intervals including zero; Section 2.3). Because clarification cost matters only on exact ties, budget is not conserved for its own sake; only asks that cannot unlock any pair are skipped. Round 2 tests targeting that closes more of the gap (H2), for example: favouring members whose answer would give someone a first feasible option; asking newcomers on their arrival day.</p>
+<p><strong>Soft-field asks (1 unit).</strong> Remaining units are spent only if an answer could change the day's decision (value of information; Howard, 1966). This addresses the problem statement's warning that a question may consume budget without changing anything (PS 1). In the ask call the policy computes a tentative matching. It then asks the unknown soft field with the largest learned weight, and only for members who face a choice between partners that the answer could reverse. Otherwise the unit is not spent.</p>
+
+<h3>3.3 Funnel scorer (Phase 2)</h3>
+<p>The edge value V(A,B) estimates the probability that introducing A and B today ends in MSMI. It multiplies one small model per stage, each with its own target and observation window (PS 3):</p>
+<ul>
+  <li>a directional Yes recorded by the deadline;</li>
+  <li>a date within 30 days of assignment;</li>
+  <li>a second-meeting Yes within 3 days of the date.</li>
+</ul>
+<div class="formula">V(A,B) = ρ_A · ρ_B · σ(Θ·x_{A→B}) · σ(Θ·x_{B→A}) · p̂_date · p′_A · p′_B · σ(φ·z_{A→B}) · σ(φ·z_{B→A})</div>
+<div class="tw"><table>
+<tr><th>Term</th><th>Estimates</th><th>Learned from</th><th>Form</th></tr>
+<tr><td>ρ</td><td>P(member responds by the deadline)</td><td>Matured responses</td><td>Beta-Binomial per member, shrunk to the pool mean</td></tr>
+<tr><td>σ(Θ·x)</td><td>P(A says Yes to B, given A responded)</td><td>Non-null responses</td><td>Bayesian logistic regression, shared weights</td></tr>
+<tr><td>p̂_date</td><td>P(date within 30 days, given mutual Yes)</td><td>Date events and their days</td><td>Pool-level Beta rate</td></tr>
+<tr><td>p′</td><td>P(member answers the second-meeting question within 3 days)</td><td>Matured second-meeting events</td><td>Beta-Binomial per member</td></tr>
+<tr><td>σ(φ·z)</td><td>P(A wants a second meeting, given a date)</td><td>Non-null second-meeting answers</td><td>Bayesian logistic regression, shared weights</td></tr>
+</table></div>
+<p>Features are directional: A's agreement with B on each soft field; A's own values crossed with agreement; an "unknown" indicator per field (missing data is never treated as a mismatch); a separate "declined" indicator; a small per-member intercept, shrunk strongly towards zero. Asymmetry comes from the separate directions, the A-side features and the per-member terms.</p>
+<p>The scorer is <strong>choice-aware</strong>. A score changes a decision only when a member has two or more feasible partners. For a member with one option, the matching introduces that pair whatever its score. With 1.3 options per matchable member on average, at most three in ten can have a second option on a given day. In line with this, any ranking changes only 8–12% of introductions, which is why ranking moves outcomes so little here. The scorer is retained because it is the component that can exploit choice where choice exists: days with several feasible pairs, and the shifted families. It enters the submitted policy only under the decision rule in Section 6.</p>
+<p><strong>Calibration and independence.</strong> V is on a probability scale, which maximum-weight matching needs in order to add values across pairs. It is not yet calibrated; we will report reliability curves on held-out pools for directional acceptance, mutual acceptance and MSMI (PS 10). Multiplying the two directions assumes they are independent given the features. Unobserved pair compatibility makes them positively correlated, so the product understates mutual acceptance, and not by the same factor for every pair. We measure this by comparing the product with observed mutual-Yes rates per score decile.</p>
+<p><strong>Priors.</strong> Θ starts from a prior fitted offline on at least 64 rollouts, the size from which no ignored field passed (Appendix A, Lab 7c). φ has far fewer labels, because about one introduction in eight reaches a date. Its prior therefore uses more rollouts and stronger shrinkage, checked the same way.</p>
+
+<h3>3.4 Allocation without waiting (Phase 3)</h3>
+<p>Each day the policy solves one maximum-weight matching over the feasible graph of available members, using Edmonds' blossom algorithm (networkx, pinned, BSD licence), which handles non-bipartite pools. It resolves the problem statement's A-D/B-C case correctly. Greedy takes the 0.90 edge and is left with 0.05; matching selects the two 0.65 edges (1.30 against 0.95). Blossom is retained because its matched value is never lower than greedy's on the same scores. On outcomes it showed no detectable difference from greedy (C2), changing about 8% of introductions.</p>
+<p><strong>Waiting is off.</strong> Lab 12 tested a reserve that skips weak pairs, applied to the learned score P(A says Yes) × P(B says Yes):</p>
+<div class="formula">w(A,B) = V(A,B) − τ_A(t) − τ_B(t),   τ_i(t) = τ₀ · (59 − t) / 59,   an edge is kept only if w(A,B) > 0</div>
+<p>With protections (no reserve for members never introduced, and an only option never postponed), the reserve never changed a decision, because almost every pair is someone's only option. Without protections, it showed no replicated gain and reduced coverage in development (Section 2.3). The default is therefore τ₀ = 0. This is consistent with Akbarpour, Li &amp; Oveis Gharan (2020), who find prompt matching close to optimal when departures cannot be foreseen. If a reserve is ever enabled, an only option is never postponed. That is a stated values choice, and we will report its MSMI cost.</p>
+<p><strong>Members with a pending introduction.</strong> Each day's matching sees only free members. For a member waiting on a pending introduction, a planning bonus favours today's pairs that agree with a matching over all remaining allowed pairs. In that matching, each edge touching a busy member is weighted by the estimated probability that the pending introduction does not end in mutual interest. Future arrivals are not planned for, since they are not observable.</p>
+
+<h3>3.5 Learning and exploration (Phases 4–5)</h3>
+<p><strong>Time-correct training.</strong> For an introduction assigned on day d, a feature is used only if its <code>field_observed_day ≤ d</code>; otherwise it is treated as unknown. Outcomes exist only for introduced pairs (selective labels; Lakkaraju et al., 2017), and a pair never introduced is never treated as a failure. Delayed and censored outcomes are handled per stage:</p>
+<div class="tw"><table>
+<tr><th>Situation</th><th>Treatment</th></tr>
+<tr><td>Response window open</td><td>Pending; contributes nothing</td></tr>
+<tr><td>Deadline passed, no response</td><td>Counts against ρ; never a No (PS 8)</td></tr>
+<tr><td>Yes or No received</td><td>Acceptance label for that direction only</td></tr>
+<tr><td>Mutual Yes, no date yet</td><td>Pending until 30 days after assignment; no date by then is a negative label for p̂_date</td></tr>
+<tr><td>Date held, second-meeting window open</td><td>Pending</td></tr>
+<tr><td>Late second-meeting Yes</td><td>Counts against p′; still a positive label for φ</td></tr>
+<tr><td>Pair never introduced</td><td>No label</td></tr>
+</table></div>
+<p><strong>Online updates.</strong> Each call refits Θ, φ and the Beta rates from the full history. The offline fit serves as a Gaussian prior, via a Laplace approximation over a few dozen shared weights. Parameters move at different speeds: the pool intercept moves fastest, to absorb a mid-episode drop in acceptance; field weights move more slowly, to absorb shifted outcome weights; older evidence is down-weighted by a factor λ per day (Garivier &amp; Moulines, 2011), with λ=1 as the ablation.</p>
+<p><strong>Exploration targets shared parameters.</strong> A pair's compatibility is never reused, so exploring a pair for its own sake teaches nothing. What carries over is shared: the field weights Θ and φ, the pool's acceptance level and the date rate. Each day the policy draws one Θ, φ sample from the posterior and uses the sampled values in Phase 3 (Thompson sampling; Agrawal &amp; Goyal, 2013).</p>
+<ul>
+  <li><strong>Where the noise falls.</strong> The sampling noise is largest where the shared weights are uncertain and shrinks as evidence accumulates.</li>
+  <li><strong>Bounded cost.</strong> It changes a decision only where a member has a choice, so its cost is bounded by the same small headroom as ranking.</li>
+  <li><strong>Reproducible.</strong> The draw is seeded from the declared inference seed and the day.</li>
+  <li><strong>Constraints untouched.</strong> Exploration ranks only pairs that have already passed <code>eligibility()</code>, so it can never touch a hard constraint.</li>
+</ul>
+<p><strong>Cold start, uneven history and explanations (PS 9).</strong> Newcomers start at pool-level estimates. Per-member terms are shrunk towards the pool mean, with a prior worth 4 observations in our preliminary runs that will be tuned on the validation pools for the build, so no member is judged on one outcome. With about two introductions per member, the pool estimate carries most of the weight. Mismatches between predictions and newly matured outcomes widen the posterior, which increases exploration.</p>
+<p>Every pair and ask carries a diagnostics record: the checks passed, the fields still unknown and the value terms used. The record keeps three sources of uncertainty apart: <em>model uncertainty</em> (posterior spread); <em>missing data</em> (unknown or declined fields); <em>stochastic outcomes</em> (responses not yet matured). It reports only observed fields, never a latent simulator value.</p>
+
+<!-- ============ 4 ============ -->
+<h2 id="s4">4. Proposed hypotheses and testing framework for Round 2</h2>
+<p>Each hypothesis has a pre-fixed measure. Each component hypothesis (H2–H5) also has an ablation that switches off exactly that component.</p>
+<div class="tw"><table>
+<tr><th>Hypothesis</th><th>Statement</th><th>Status after Round 1</th><th>Round 2 test</th></tr>
+<tr><td><span class="tag">H1</span></td><td>In these worlds, policy choices move expected MSMI by a few percent at most; pair compatibility and chance dominate</td><td>Supported in development. Consistent in cold start, where the estimator is less well calibrated (Labs 9, 11, 12, 13; Sections 2.3–2.4)</td><td>Repeat the information benchmarks (all except foresight) in all six families. H1 fails in a family if any benchmark adds more than 10% of greedy's expected MSMI there</td></tr>
+<tr><td><span class="tag">H2</span></td><td>Better-targeted hard asks close more of the gap to perfect answers and raise MSMI over list-order asks</td><td>Open. Perfect answers add 3–4% (interval excludes zero). Value-based asks capture a quarter to two-fifths on point estimates, with intervals including zero (Section 2.3)</td><td>Mutual acceptances and realised MSMI against list-order asks, with a replication block (admission); expected MSMI against list-order asks and perfect answers (diagnostic)</td></tr>
+<tr><td><span class="tag">H3</span></td><td>A choice-aware learner (pooled member model, shared field weights, soft asks where a member has a choice) beats greedy in at least one public family, without loss in any</td><td>It recovers the true structure and predicts better (AUC +0.051), but shows no detectable gain in the thin public worlds (Sections 2.3, 2.5)</td><td>Mutual acceptances and realised MSMI in all six families, shift and drift first (admission); expected MSMI (diagnostic)</td></tr>
+<tr><td><span class="tag">H4</span></td><td>Maximum-weight matching causes no loss in MSMI or mutual acceptances against greedy on identical scores (its matched value is higher by construction)</td><td>No detectable difference on outcomes; 8% of introductions differ (C2)</td><td>Realised MSMI and mutual acceptances against greedy on identical scores (admission); expected MSMI (diagnostic)</td></tr>
+<tr><td><span class="tag">H5</span></td><td>A reserve that skips weak pairs beats always matching</td><td>Not supported. Inert with protections; without them, no replicated gain and a coverage cost (Section 2.3)</td><td>Closed; reopened only if H1 fails in some family</td></tr>
+</table></div>
+
+<!-- ============ 5 ============ -->
+<h2 id="s5">5. Responses to the questions in PS 1–2</h2>
+<p>Each row gives the policy's behaviour and its basis. The basis is one of four kinds: a rule in the problem statement (PS), a measurement in Section 2, a published result, or a hypothesis with the experiment that tests it. Every requirement in PS 1, 3–12, 14 and 15 is addressed in Appendix B.</p>
+<div class="tw"><table>
+<tr><th>Question</th><th>Policy behaviour</th><th>Basis</th><th>Check</th></tr>
+<tr><td>B has not answered a decisive question</td><td>The pair is never proposed. B becomes an ask candidate, ranked by the pairs B's answer could unlock; declined answers are never re-asked</td><td>PS 6–7. Measured (2.3): perfect answers add 3–4% expected MSMI; value-based asks reveal more feasible pairs and capture a quarter to two-fifths of that</td><td>Better-targeted asks (H2)</td></tr>
+<tr><td>D arrives tomorrow</td><td>D joins the graph once D's hard answers are known; others are not held back</td><td>PS 1. Akbarpour et al. (2020). Measured (2.1): about 1.3 options per matchable member; (2.3): no gain from waiting</td><td>First-introduction waits for late arrivals</td></tr>
+<tr><td>A is waiting for a response</td><td>A is never proposed. A's other options enter the planning matching, weighted by the probability that A's pending introduction fails</td><td>PS 7. Planning bonus untested</td><td>Bonus on/off</td></tr>
+<tr><td>Wait for a better opportunity?</td><td>No: always match. An only option is never postponed</td><td>PS 1, 6. Akbarpour et al. (2020). Measured (2.3): the protected reserve never changed a decision; pure waiting showed no replicated gain and reduced coverage in development</td><td>H5, closed unless H1 fails in some family</td></tr>
+<tr><td>Is another question worth asking?</td><td>Hard answers: the full budget, on answers that unlock pairs. Soft answers: only if an answer could change a decision for a member with a choice</td><td>PS 1. Howard (1966). Measured (2.3) for hard asks; soft asks untested</td><td>H2, H3</td></tr>
+<tr><td>One introduction changes everyone's options</td><td>Maximum-weight matching over the whole pool</td><td>PS 2 (1.30 vs 0.95). Measured (C2): no detectable difference from greedy on outcomes</td><td>Matched value on identical scores (H4)</td></tr>
+<tr><td>Missing, late or absent responses</td><td>Pending outcomes carry no label; no response is never a No; a late Yes is kept but does not count</td><td>PS 8. Lakkaraju et al. (2017); Joulani et al. (2013)</td><td>Censoring table (3.5)</td></tr>
+<tr><td>Does relocation widen zones?</td><td>No; relocate is a soft feature only</td><td>PS 5</td><td>Validator rechecks eligibility</td></tr>
+<tr><td>Can past logs be reweighted?</td><td>No inverse-propensity claims; complete policies are compared in paired simulator runs</td><td>PS 9 (propensities null)</td><td>All results are paired runs</td></tr>
+<tr><td>Members with no feasible candidate</td><td>Kept unmatched, reported as an unservable group, never removed from coverage</td><td>PS 7. Measured (2.1): 32–41% have a declined hard field</td><td>Coverage with and without the group</td></tr>
+</table></div>
+
+<!-- ============ 6 ============ -->
+<h2 id="s6">6. Evaluation plan</h2>
+<p><strong>Scope.</strong> Every comparison runs complete policies on identical seeds in all six public families: development, sparse, cold_start, delayed, shift and drift. They share the generator and population size (200) with the private assessment, so no other worlds are tested.</p>
+<p><strong>Build sequence.</strong> Components are added one at a time:</p>
+<div class="tw"><table>
+<tr><th>Step</th><th>Policy</th><th>Adds</th><th>Tests</th></tr>
+<tr><td>B1–B3</td><td>Supplied greedy, no-clarification, random-feasible</td><td>Required baselines</td><td>—</td></tr>
+<tr><td>L1</td><td>List-order asks + blossom on the baseline score</td><td>Global allocation</td><td>H4</td></tr>
+<tr><td>L2</td><td>L1 + value-based asks, then the better-targeted rule</td><td>Targeted clarification</td><td>H2</td></tr>
+<tr><td>L3</td><td>L2 + offline-trained funnel scorer with pooled member terms, frozen</td><td>Learned ranking</td><td>H3</td></tr>
+<tr><td>L4</td><td>L3 + online updates + Thompson sampling over shared weights</td><td>Adaptation, exploration</td><td>H3 under shift and drift</td></tr>
+<tr><td>L5</td><td>L4 + soft-field asks where a member has a choice</td><td>Targeted soft information</td><td>H3</td></tr>
+</table></div>
+<p>The Lab 13 benchmark ceilings are re-run first, in every family (H1). They establish how much any ranking could add before effort is spent trying to capture it.</p>
+<p><strong>Measures.</strong> Admission decisions use only metrics from the supplied evaluator: mutual acceptances as the primary development signal, because they have about ten to sixteen times as many events as MSMI, and realised MSMI and coverage as no-loss checks. Expected MSMI (Section 2.2) is reported alongside as a diagnostic of effect size and is never an admission criterion or a policy input. Before relying on it outside development, we will explain the 12–37% gap between observed and expected counts in the other families, cold start included (Section 7).</p>
+<p><strong>Ablations.</strong> From the full policy we remove one component at a time, including the planning bonus, soft-field asks, per-member terms and discounting. We also run three swaps: Thompson sampling for the posterior mean; blossom for greedy, on identical scores; λ=1 against λ&lt;1 on drift and shift.</p>
+
+<div class="callout">
+  <h4 style="margin-top:0">Decision rule, identical for every component</h4>
+  <p>A component enters the submitted policy only if all three conditions hold:</p>
+  <ol>
+    <li><strong>Benefit.</strong> It shows a benefit on a measure fixed in advance: mutual acceptances or realised MSMI from the supplied evaluator, on fresh seeds, replicated on a second seed block, in at least one public family. For allocation, the criterion is no loss on identical scores.</li>
+    <li><strong>No loss.</strong> It shows no detected loss in realised MSMI, mutual acceptances or coverage in any public family.</li>
+    <li><strong>Validity and runtime.</strong> It passes the validity and runtime checks.</li>
+  </ol>
+  <p>Otherwise the simpler version is kept. Applied today, the rule gives these outcomes:</p>
+  <ul>
+    <li>Waiting stays off.</li>
+    <li>Blossom matching is kept provisionally. It maximises matched value by construction, but its outcome no-loss check covers one seed block in two families (C2) and will be completed under H4.</li>
+    <li>Value-based asks and the learned scorer have shown benefits only on proxies (feasible pairs, held-out AUC), and the Lab 12 learned score already shows a borderline coverage loss in cold start. Neither enters unless Round 2 meets the rule.</li>
+    <li>No measure computed from simulator ground truth enters this rule.</li>
+  </ul>
+</div>
+
+<p><strong>Statistical power.</strong> On realised MSMI, a 3% effect (about 0.013 per 100) would need several thousand seeds per family to detect. The rule will therefore usually keep the simpler component, which is the outcome the thesis predicts. Expected MSMI, with paired intervals of about ±0.01–0.02 per 100 at 20 seeds (Appendix C5–C6), shows how large an effect is; forty seeds per family narrow those intervals by about √2.</p>
+<h4>Seeds and data splits</h4>
+<ul>
+  <li><strong>Training.</strong> Offline priors are fitted on rollouts of the six official training pools (seeds 20261000–20261005) and of declared public seeds (3001–3130 so far). Training rows contain only what the policy could observe at each decision.</li>
+  <li><strong>Logging policies.</strong> The Round 1 rollouts used a random-feasible logging policy. Round 2 adds greedy and our own policy as logging policies, so that rare pair types are covered.</li>
+  <li><strong>Validation.</strong> Prior strength and other settings are tuned on the two validation pools (20261006–20261007).</li>
+  <li><strong>Reporting.</strong> The development-test pools (20261008–20261009) and fresh public seeds are used only for reporting, so populations never cross splits.</li>
+  <li><strong>Public seeds.</strong> Seeds up to 1180 are spent. Round 2 starts at 1181, with at least 20 seeds per family, all declared in the README.</li>
+</ul>
+<p><strong>Reporting.</strong> For each family we report: the mean with a 95% bootstrap interval; the paired per-seed difference against greedy, with wins/ties/losses; the share of introductions that actually differ (a tie with almost no differing introductions means the change never reached a decision).</p>
+<p>Every run must satisfy <code>assignments ≥ mutual acceptances ≥ dates ≥ MSMI</code>. We report assignments, mutual acceptances, dates, MSMI and expected MSMI, and coverage with and without unservable members. We also report first-introduction waiting times with the unserved count, clarification cost, missing feedback, per-call runtime in the container, and reliability curves. A full 60-day in-process episode with daily blossom matching took 3–5 s; per-call time of the full policy, including start-up and refitting, has not yet been measured.</p>
+
+<!-- ============ 7 ============ -->
+<h2 id="s7">7. Expected failure modes</h2>
+<div class="tw"><table>
+<tr><th>Failure</th><th>Where</th><th>Mitigation</th><th>Evidence we will report</th></tr>
+<tr><td>An invalid action or timeout</td><td>Any of the 120 assessed episodes</td><td>Validator, time guard, fallback chain</td><td>Container stress tests; zero invalid public episodes</td></tr>
+<tr><td>Declined hard fields make members unmatchable</td><td>Development, cold start and sparse (measured); 32–41% of members</td><td>None by design; never inferred</td><td>Coverage with and without the unservable group</td></tr>
+<tr><td>Few feasible edges</td><td>sparse</td><td>Asks skip members with no zone-compatible partner</td><td>Edge counts and wasted asks (perfect answers add only 0.14 pairs/day)</td></tr>
+<tr><td>Weak prior, many unknowns</td><td>cold_start, newcomers</td><td>Offline prior; pooled estimates</td><td>Waiting time to first introduction for late arrivals</td></tr>
+<tr><td>Dates miss the 30-day window</td><td>delayed</td><td>p̂_date learned online</td><td>Share of late dates (so far 0.1–0.2% of introductions)</td></tr>
+<tr><td>Learned weights wrong in an unseen world</td><td>shift, drift</td><td>Online updates; prior strength tuned on held-out pools</td><td>Frozen vs online gap (the development model's AUC lead falls from +0.051 to +0.035 on shift)</td></tr>
+<tr><td>Acceptance drops mid-episode</td><td>drift</td><td>Fast-moving pool intercept; discounting</td><td>Acceptance before and after the drop</td></tr>
+<tr><td>A learner that helps one family hurts another</td><td>Any family</td><td>No-loss clause of the decision rule</td><td>Expected MSMI against greedy in every family</td></tr>
+<tr><td>Expected MSMI misjudges a family</td><td>Families other than development, cold start included</td><td>Admission uses realised evaluator metrics only; expected MSMI is descriptive</td><td>Per-family calibration of expected against observed</td></tr>
+<tr><td>Independence assumption mis-ranks pairs</td><td>Pairs with strong shared compatibility</td><td>Decile check of the product</td><td>Product vs observed mutual-Yes rate</td></tr>
+<tr><td>Lock-in on per-member estimates</td><td>Early non-responders</td><td>Shrinkage; Thompson sampling</td><td>Exploration ablation on held-out seeds</td></tr>
+</table></div>
+
+<!-- ============ 8 ============ -->
+<h2 id="s8">8. Implications for a matchmaking service</h2>
+<p>The findings concern an invented simulator, but they indicate where a live service should and should not invest. Each implication is a hypothesis to validate on authorised data under human review (PS 15).</p>
+<ul>
+  <li><strong>Ranking sophistication yields little while choice is scarce.</strong> Soft-profile agreement predicts acceptance only weakly (held-out AUC about 0.57). Even perfect ranking information added at most about 3% on point estimates. Investment in ranking pays off only once members routinely have several feasible partners.</li>
+  <li><strong>Throughput matters more than precision.</strong> About 1% of introductions qualify, so outcomes scale with the number of timely, valid introductions. Holding members back for a better partner produced no replicated gain and, in development, reduced coverage.</li>
+  <li><strong>Onboarding completeness is the largest controllable lever.</strong> Complete hard-constraint answers were the clearest measured gain. Meanwhile 32–41% of members declined at least one hard question and could never be matched. Questions designed to be answered widen the servable population directly.</li>
+  <li><strong>Non-response is lost capacity.</strong> 38–42% of introductions end without a reply, and each one makes both members unavailable for eight days. Reply prompts, shorter response windows or early release after silence would recover that capacity.</li>
+  <li><strong>Measuring compatibility early is the largest opportunity.</strong> Foresight of which pairs would succeed was worth roughly eight to twenty times complete profile knowledge. A brief call, a structured first conversation or systematic post-date feedback would turn part of what now appears as chance into usable signal.</li>
+  <li><strong>Product experiments need variance-aware metrics.</strong> At pilot scale, raw outcome counts are dominated by chance and produce false positives; our own first-block results did exactly that. Changes should be judged on expected-outcome or funnel-stage metrics, with replication, before rollout.</li>
+</ul>
+
+<!-- ============ 9 ============ -->
+<h2 id="s9">9. Limitations, use of the simulator source, related work and provenance</h2>
+<h3>Limitations</h3>
+<ul>
+  <li><strong>Synthetic outcomes.</strong> All results come from an invented simulator and say nothing about real relationships; V is not a real-world probability.</li>
+  <li><strong>Myopic ceilings.</strong> The benchmark ceilings rank each day's pairs perfectly but do not plan across days. They bound ranking, not planning, and planning was tested only through waiting (Lab 12).</li>
+  <li><strong>Coverage of families.</strong> The ceilings and the expected-outcome estimator cover development and cold start so far.</li>
+  <li><strong>Selective labels.</strong> Our Round 1 offline analyses use labels from random-feasible rollouts, whose logging policy is known. A deployed policy chooses its own pairs, so its labels are selective (PS 9), and those offline numbers may not carry over.</li>
+  <li><strong>Product use.</strong> Later product use would require the kit's adapter boundary (<code>docs/INTEGRATION.md</code>), validation on authorised inputs, current constraint checks and human review (PS 15).</li>
+</ul>
+<h3>Use of the simulator source</h3>
+<p>The problem statement treats the public simulator as an experimental tool, not a source of policy inputs (PS 11), and the FAQ permits inspecting its source "for reproducibility and experiments".</p>
+<ul>
+  <li><strong>What we read.</strong> We read <code>kit.py</code> for the acceptance and second-meeting rules, the unavailability period after an introduction, the day drift begins and how the delayed family moves dates.</li>
+  <li><strong>What it shaped.</strong> That reading shaped which analyses we ran and how we interpreted them: the weight check in Section 2.5 and the scarcity explanation in Section 2.1.</li>
+  <li><strong>Offline evaluation tools.</strong> It also enabled two evaluation tools: the expected-MSMI estimator and the benchmark rankers. Like the supplied evaluator, both use simulator ground truth, and only in offline experiments on public seeds. They live in scripts named <code>*_ANALYSIS_ONLY.py</code>, which no policy imports.</li>
+  <li><strong>The policy itself.</strong> The policy sets no constant, feature or weight from the source. It uses only observable JSON and learns every rate from feedback.</li>
+  <li><strong>Compliance.</strong> PS 11 defines the policy's permitted inputs. The FAQ prohibits reconstructing hidden state or random outcomes "inside a policy"; the submitted policy does neither. Every simulator experiment uses simulator ground truth, as the supplied evaluator does when it computes realised MSMI; the expected-MSMI estimator uses the same information with less noise, on public seeds only. The kit's README likewise says: "Do not use seed reconstruction inside an evaluated policy." The ground-truth tools describe the environment and size experiments only. They never decide which component enters the submitted policy, which is decided on the supplied evaluator's realised metrics alone (Section 6). No ground-truth value or benchmark output reaches the submitted policy, which reads only observable JSON, released feedback and its own memory. Every file we consulted is in the public participant release; no private world, seed or organiser workspace was accessed.</li>
+</ul>
+<h3>Related work</h3>
+<p>The setting combines several strands: exploration when both sides must agree (Das &amp; Kamenica, 2005); learning while matching a market (Liu, Mania &amp; Jordan, 2020); selecting a set of pairs each round (Chen, Wang &amp; Yuan, 2013); Thompson sampling with linear features (Agrawal &amp; Goyal, 2013); delayed feedback (Joulani, György &amp; Szepesvári, 2013); reciprocal recommendation (Pizzato et al., 2010). Akbarpour, Li &amp; Oveis Gharan (2020) show that in dynamic matching markets, prompt matching is close to optimal when departures cannot be foreseen, and that information about imminent departures is what makes waiting valuable. Our measurements agree for this simulator, although their random-graph setting differs. Several references came from the 6 October workshop on exploration and online learning (J. Liu, University of Edinburgh).</p>
+<h3>Provenance</h3>
+<p>The design is the team's. AI assistants were used and are acknowledged: Claude (Anthropic) helped draft this note, write the experiment scripts and run preliminary experiments. Gemini (Google), DeepSeek and Grok (xAI) reviewed drafts and mentored the team while experiments were run. How the results were produced:</p>
+<ul>
+  <li><strong>Reproduction.</strong> The team reproduced the preliminary experiments with the same scripts and seeds, and ran the new ones.</li>
+  <li><strong>Labs 12 and 13.</strong> These were run by Claude on the team's machine at the team's request, with the committed scripts. Lab 12's first 89 episodes matched an earlier preview run exactly.</li>
+  <li><strong>Corrections.</strong> Where an earlier number differed by one or two events, the team's number replaces it; the earlier number came from an earlier version of one script, and repeated runs of the current scripts give identical records. An earlier pilot whose seeds could not be identified was dropped.</li>
+</ul>
+<p>The runtime dependency is networkx (pinned, BSD licence). No external data, network access or GPU is used at inference.</p>
+
+<h2 id="refs">References</h2>
+<div class="ref">
+<p>Agrawal, S. &amp; Goyal, N. (2013). Thompson sampling for contextual bandits with linear payoffs. <em>ICML</em>.</p>
+<p>Akbarpour, M., Li, S. &amp; Oveis Gharan, S. (2020). Thickness and information in dynamic matching markets. <em>Journal of Political Economy</em>.</p>
+<p>Chen, W., Wang, Y. &amp; Yuan, Y. (2013). Combinatorial multi-armed bandit: general framework and applications. <em>ICML</em>.</p>
+<p>Das, S. &amp; Kamenica, E. (2005). Two-sided bandits and the dating market. <em>IJCAI</em>.</p>
+<p>Edmonds, J. (1965). Paths, trees, and flowers. <em>Canadian Journal of Mathematics</em>.</p>
+<p>Garivier, A. &amp; Moulines, E. (2011). On upper-confidence bound policies for switching bandit problems. <em>ALT</em>.</p>
+<p>Howard, R. A. (1966). Information value theory. <em>IEEE Transactions on Systems Science and Cybernetics</em>.</p>
+<p>Joulani, P., György, A. &amp; Szepesvári, C. (2013). Online learning under delayed feedback. <em>ICML</em>.</p>
+<p>Lakkaraju, H., Kleinberg, J., Leskovec, J., Ludwig, J. &amp; Mullainathan, S. (2017). The selective labels problem: evaluating algorithmic predictions in the presence of unobservables. <em>KDD</em>.</p>
+<p>Liu, L. T., Mania, H. &amp; Jordan, M. I. (2020). Competing bandits in matching markets. <em>AISTATS</em>.</p>
+<p>Pizzato, L., Rej, T., Chung, T., Koprinska, I. &amp; Kay, J. (2010). RECON: a reciprocal recommender for online dating. <em>RecSys</em>.</p>
+</div>
+
+<!-- ============ APPENDIX A ============ -->
+<h2 id="appA">Appendix A. Experiment register</h2>
+<p>Each lab tested one question on declared seeds. "Proxy" marks a result on an intermediate measure (feasible pairs, AUC) rather than on the ranked outcome; "expected" marks the analysis-only expected-MSMI estimator (Section 2.2).</p>
+<div class="tw"><table>
+<tr><th>Lab</th><th>Question</th><th>Seeds</th><th>Result</th><th>Verdict</th><th>Section</th></tr>
+<tr><td>0</td><td>What can the policy see on day 0?</td><td>1101 (one world)</td><td>55 of 137 arrived members fully known; 41 have a declined hard field (50% of incomplete members)</td><td>As predicted</td><td>3.2</td></tr>
+<tr><td>3b</td><td>How scarce are feasible pairs?</td><td>1101–1120; dev., cold start, sparse</td><td>2.88, 2.21 and 0.43 pairs per day; about 1.3 options per matchable member; no pair on 34–76% of days</td><td>Scarcity confirmed</td><td>2.1</td></tr>
+<tr><td>6</td><td>Do learned weights, blossom or responsiveness beat greedy?</td><td>1001–1015; dev., shift</td><td>Every MSMI interval includes zero; about 12% of introductions differ from greedy (8% between blossom and greedy on the same scores)</td><td>No detectable difference</td><td>C2</td></tr>
+<tr><td>7</td><td>What does a model learn from 1,049 labels?</td><td>2001–2008</td><td>Largest weight (−0.58) is on a field the simulator ignores</td><td>Not trustworthy</td><td>2.5</td></tr>
+<tr><td>7b</td><td>Are those weights distinguishable from noise?</td><td>2001–2008; bootstrap and split halves</td><td>Largest weight flips sign between halves; one pass is on an ignored field</td><td>Too few labels</td><td>2.5</td></tr>
+<tr><td>7c</td><td>Do 130 rollouts recover the real structure?</td><td>3001–3130</td><td>Exactly the four fields the simulator uses pass, close to pre-stated values; no ignored field passes from 64 rollouts on</td><td>Pipeline works</td><td>2.5</td></tr>
+<tr><td>7d</td><td>Does the model rank Yes better on held-out worlds?</td><td>3131–3150; dev., shift</td><td>AUC +0.051 [+0.025, +0.081] over greedy's score; +0.035 on shift</td><td>Better prediction (proxy)</td><td>2.5</td></tr>
+<tr><td>8</td><td>Does blossom solve the problem statement's four-person example?</td><td>Toy example</td><td>Picks the 1.30 matching over greedy's 0.95</td><td>Confirmed</td><td>3.4</td></tr>
+<tr><td>9</td><td>Does value-based asking reveal more pairs, and more outcomes?</td><td>1101–1120; dev., cold start</td><td>+0.45 and +0.49 feasible pairs per day (wins/ties/losses 19/0/1, 17/2/1); expected MSMI +0.005, interval includes zero</td><td>Pairs yes (proxy); outcomes no</td><td>2.3, C3</td></tr>
+<tr><td>11</td><td>How much could perfect hard-constraint answers add?</td><td>1101–1120; dev., cold start</td><td>About +2.2 feasible pairs per day, coverage +0.001; expected MSMI +0.019 and +0.013 (3–4%)</td><td>Small headroom</td><td>2.3, C1</td></tr>
+<tr><td>11b</td><td>Does that hold in every family?</td><td>1101–1120: sparse, shift, delayed, drift</td><td>Coverage gain at most 0.003 everywhere; value-based asks close 20–48% of the feasible-pair gap in every family; sparse limited by geography (+0.14 pairs per day); late dates 0.1–0.2% of introductions</td><td>Holds in all six</td><td>2.4, C1</td></tr>
+<tr><td>Check C</td><td>How much history does each member provide?</td><td>1101–1120; dev., cold start</td><td>2.32 and 2.28 introductions per served member; 41–43% get only one</td><td>Per-person models data-starved</td><td>2.5</td></tr>
+<tr><td>12</td><td>Does waiting help, and does the learned score reach outcomes?</td><td>1121–1160; dev., cold start</td><td>Protected reserve changed no decision; pure waiting: no replicated gain, +0.40 unserved in development; learned score: no replicated difference (expected +0.002 and −0.004)</td><td>Waiting off; no outcome gain from scoring</td><td>2.3, C4</td></tr>
+<tr><td>13</td><td>How much could any ranking add, and what do learners capture?</td><td>1161–1180; dev., cold start</td><td>Perfect-information benchmarks: at most +0.013 expected (3%); learners within ±0.004, intervals include zero; foresight benchmark +0.10 and +0.23 realised</td><td>Ranking headroom small; compatibility and chance dominate</td><td>2.3–2.4, C5</td></tr>
+</table></div>
+
+<!-- ============ APPENDIX B ============ -->
+<h2 id="appB">Appendix B. Compliance matrix: PS 1, 3–12, 14 and 15</h2>
+<p>"Where" gives the section of this note that provides the detail.</p>
+<div class="tw"><table>
+<tr><th>PS</th><th>Requirement</th><th>How the note addresses it</th><th>Where</th></tr>
+<tr><td>1</td><td>Decide each step which information to request and which non-overlapping introductions to propose, possibly none</td><td>An ask call and a match call each day; either list may be empty, and waiting is omission</td><td>3</td></tr>
+<tr><td>3</td><td>Read the observable population and feedback history</td><td>Every call rebuilds its state and refits from the history in the request</td><td>3.1, 3.5</td></tr>
+<tr><td>3</td><td>Distinguish confirmed constraints from missing or declined information</td><td>eligibility() classes (feasible, needs clarification, infeasible); declined answers never re-asked or inferred; separate unknown and declined indicators</td><td>3.2, 3.3</td></tr>
+<tr><td>3</td><td>Select clarification requests within the daily budget</td><td>Priority U for 3-unit bundles; 1-unit soft asks only when an answer could change a decision; validator enforces the budget</td><td>3.1, 3.2</td></tr>
+<tr><td>3</td><td>Assess both directions of an introduction</td><td>Eligibility checked both ways; separate directional models for response, acceptance and second-meeting intention</td><td>3.3</td></tr>
+<tr><td>3</td><td>Allocate feasible pairs, each member at most once per batch</td><td>Maximum-weight matching; the validator rejects any repeated member</td><td>3.1, 3.4</td></tr>
+<tr><td>3</td><td>Update decisions as people arrive, become unavailable or receive feedback</td><td>Newcomers join once their hard answers are known; busy members are excluded and handled by the planning bonus; models refit every call with discounting</td><td>3.4, 3.5</td></tr>
+<tr><td>3</td><td>Reproducible outputs and evidence to explain decisions</td><td>Exploration seeded from the declared inference seed and the day; a diagnostics record for every pair and ask</td><td>3.5</td></tr>
+<tr><td>3, 10</td><td>Probabilities are optional; if reported, separate A accepts B, B accepts A and both, define target and window, state the independence assumption, show calibration</td><td>Directional terms are separate models with defined targets and windows; mutual acceptance is their product under a stated independence assumption, checked by score decile; reliability curves for directional, mutual and MSMI predictions</td><td>3.3, 6</td></tr>
+<tr><td>4</td><td>Keep training, validation and development-test pools separate; never split rows of the same people</td><td>Priors fitted on training pools and declared seeds, tuned on validation pools, reported on development-test pools and fresh seeds; whole episodes are the unit</td><td>6</td></tr>
+<tr><td>5</td><td>A null is unknown, never a No; not-asked differs from declined</td><td>Unknown and declined get their own indicators and are never encoded as a mismatch</td><td>3.3</td></tr>
+<tr><td>5</td><td>Age and gender do not imply preferences; use who_to_meet; zones are constraints; relocation does not widen zones</td><td>Feasibility comes only from eligibility() on stated preferences; relocate is a soft feature</td><td>3.2, 5</td></tr>
+<tr><td>6</td><td>Refresh the observation after clarification; memory is optional; waiting is omission</td><td>The match call uses the refreshed state; memory holds only a version tag and an RNG counter; waiting is omission, and the policy does not wait by default</td><td>3.1, 3.4</td></tr>
+<tr><td>7</td><td>Every proposed pair valid; an invalid batch invalidates the episode</td><td>Validator re-checks every condition on the refreshed state, with a fallback chain and stress tests</td><td>3.1</td></tr>
+<tr><td>7</td><td>Explain people without a feasible candidate; keep them in coverage</td><td>Reported as an unservable group; coverage given with and without them</td><td>3.2, 2.1</td></tr>
+<tr><td>8</td><td>Keep assignment, response, mutual acceptance, date and second-meeting events separate; late Yes; missing responses; right-censoring</td><td>One model per stage; censoring table: MSMI defined as in the problem statement</td><td>1, 3.5</td></tr>
+<tr><td>9</td><td>Selective feedback: outcomes only for introduced pairs</td><td>Never-introduced pairs carry no label; offline analyses use a known logging policy, and the limitation is stated</td><td>3.5, 9</td></tr>
+<tr><td>9</td><td>Cold starts, uneven history, unknown preferences, delayed observations</td><td>Pool-level starting estimates; shrinkage with a prior worth 4 observations; unknown indicators plus value-based asks; pending outcomes contribute nothing</td><td>3.5</td></tr>
+<tr><td>9</td><td>Thompson sampling over pairs that already passed eligibility(); the validator re-checks every output; constraints stay protected</td><td>What is explored, and how hard</td><td>3.5</td></tr>
+<tr><td>9</td><td>Use only evidence available at each action</td><td>Features used only if observed by the assignment day; training uses rollouts, not day-30 snapshots</td><td>3.5</td></tr>
+<tr><td>9</td><td>No inverse-propensity claims; explain assumptions behind offline analyses</td><td>Complete policies compared in paired runs; the assumption behind the offline AUC test is stated</td><td>2, 9</td></tr>
+<tr><td>9</td><td>Separate model uncertainty from missing data and stochastic outcomes; no invented histories</td><td>Diagnostics records keep posterior spread, unknown or declined fields and unmatured outcomes apart, and report only observed fields</td><td>3.5</td></tr>
+<tr><td>10</td><td>Report assignments, mutual acceptances, dates, MSMI, coverage, clarification cost, missing feedback, first-introduction waits and the unserved count, across seeds and families</td><td>Will be reported per family</td><td>6</td></tr>
+<tr><td>10</td><td>Uncertainty and failure analysis when counts are small; a zero MSMI is not equivalence</td><td>Bootstrap intervals, wins/ties/losses, share of introductions that differ, a sizing argument and a funnel failure analysis</td><td>2.3, 2.4, 6</td></tr>
+<tr><td>10</td><td>Compare with all three baselines on identical seeds; at least one hypothesis-driven ablation</td><td>Baselines B1–B3; one ablation per hypothesis plus component ablations</td><td>6</td></tr>
+<tr><td>10</td><td>Tie-breakers: coverage, mutual acceptances, clarification cost, inference time</td><td>Ranking is on MSMI and the tie-breakers apply only to exact ties, so none is bought with MSMI; always matching protects coverage; a time guard, with per-call runtime measured in the container</td><td>2.6, 3.4, 6</td></tr>
+<tr><td>11</td><td>JSON protocol; handle an empty population and feasible graph; resource limits; only observable inputs</td><td>Protocol JSON on stdout only; stress tests; 7 s guard and 1 MiB memory; the simulator is never a source of policy inputs</td><td>3.1, 9</td></tr>
+<tr><td>11</td><td>Docker image from a committed Dockerfile; pinned dependencies with licences; CPU only, 1 GiB, 10 s per call including start-up</td><td>Starter Dockerfile with pinned networkx (BSD); offline prior shipped as an inference asset; container-mode runs with per-call timing</td><td>3.1, 6</td></tr>
+<tr><td>14</td><td>Synthetic data only; document external models and coding tools</td><td>No external data; AI assistants declared</td><td>9</td></tr>
+<tr><td>15</td><td>Separate normalisation, modelling and allocation; explicit uncertainty; auditable decisions</td><td>Separate modules; posterior-based uncertainty; diagnostics records</td><td>3, 3.5</td></tr>
+<tr><td>15</td><td>Product relevance: real deployment requires validation on authorised inputs, current constraint checks and human review</td><td>Adapter boundary and these safeguards stated as preconditions; product implications framed as hypotheses to validate</td><td>8, 9</td></tr>
+</table></div>
+
+<!-- ============ APPENDIX C ============ -->
+<h2 id="appC">Appendix C. Detailed results</h2>
+<p>All cells are paired differences against the stated baseline on the same worlds, with 95% bootstrap intervals over seeds. "Realised" is the MSMI the simulator produced; "expected" is the analysis-only estimator of Section 2.2.</p>
+
+<h3>C1. Perfect hard-constraint answers minus greedy</h3>
+<p>Labs 11 and 11b, seeds 1101–1120; realised metrics. An offline benchmark: greedy matching with every non-declined hard answer revealed free each day. Gap closed = (value-based − greedy) / (ceiling − greedy) for feasible pairs.</p>
+<div class="tw"><table>
+<tr><th>Family</th><th>Feasible pairs per day, days 0–20</th><th>Coverage</th><th>Mutual/100</th><th>MSMI/100</th><th>Gap closed by value-based asks</th></tr>
+<tr><td>Development</td><td>+2.24 [+1.80, +2.71]</td><td>+0.001 [−0.001, +0.003]</td><td>+0.08 [−0.58, +0.63]</td><td>−0.13 [−0.33, +0.08]</td><td>20% [13, 28]</td></tr>
+<tr><td>Cold start</td><td>+2.19 [+1.74, +2.67]</td><td>+0.001 [−0.002, +0.004]</td><td>+0.15 [−0.45, +0.78]</td><td>+0.03 [−0.23, +0.25]</td><td>22% [14, 31]</td></tr>
+<tr><td>Sparse</td><td>+0.14 [+0.09, +0.19]</td><td>+0.001 [+0.000, +0.002]</td><td>−0.15 [−0.45, +0.15]</td><td>−0.08 [−0.18, +0.03]</td><td>48% [28, 69]</td></tr>
+<tr><td>Shift</td><td>+2.32 [+1.77, +2.96]</td><td>+0.003 [+0.000, +0.005]</td><td>−0.28 [−0.98, +0.40]</td><td>−0.05 [−0.20, +0.13]</td><td>23% [15, 32]</td></tr>
+<tr><td>Delayed</td><td>+2.22 [+1.78, +2.70]</td><td>−0.001 [−0.003, +0.001]</td><td>−0.08 [−0.73, +0.60]</td><td>−0.08 [−0.25, +0.10]</td><td>22% [14, 31]</td></tr>
+<tr><td>Drift</td><td>+2.24 [+1.80, +2.71]</td><td>+0.001 [−0.001, +0.004]</td><td>+0.03 [−0.50, +0.55]</td><td>−0.13 [−0.35, +0.08]</td><td>20% [13, 28]</td></tr>
+</table></div>
+
+<h3>C2. Ranking variants against supplied greedy</h3>
+<p>Lab 6, seeds 1001–1015; realised metrics. The learned scorer is a logistic model on 14 soft-field indicators, trained on 1,049 labels from 8 rollouts and frozen; the responsiveness variants add each member's reply rate and acceptance tendency, shrunk to the pool mean with a prior worth 4 observations. Greedy scores 0.43 MSMI per 100 in development (92.6 introductions per episode, coverage 0.378). Blossom against greedy on the same learned scores: MSMI −0.07 [−0.23, +0.10] in development, −0.03 [−0.30, +0.23] in shift, 8% of introductions differing.</p>
+<div class="tw"><table>
+<tr><th>Policy vs supplied greedy</th><th>Development MSMI diff</th><th>Development mutual diff</th><th>Shift MSMI diff</th><th>Differ</th></tr>
+<tr><td>Learned score, greedy</td><td>+0.13 [−0.03, +0.30]</td><td>−0.33 [−0.97, +0.23]</td><td>+0.23 [−0.03, +0.50]</td><td>12%</td></tr>
+<tr><td>Learned score, blossom</td><td>+0.07 [−0.10, +0.23]</td><td>+0.00 [−0.53, +0.60]</td><td>+0.20 [−0.07, +0.47]</td><td>12%</td></tr>
+<tr><td>Responsiveness, greedy</td><td>+0.00 [−0.20, +0.20]</td><td>−0.30 [−0.93, +0.30]</td><td>+0.03 [−0.13, +0.23]</td><td>12%</td></tr>
+<tr><td>Responsiveness, blossom</td><td>+0.07 [−0.10, +0.23]</td><td>−0.30 [−0.87, +0.27]</td><td>+0.03 [−0.20, +0.27]</td><td>11%</td></tr>
+<tr><td>Responsiveness, Thompson</td><td>+0.00 [−0.20, +0.20]</td><td>−0.17 [−0.67, +0.30]</td><td>+0.10 [−0.13, +0.33]</td><td>11%</td></tr>
+</table></div>
+
+<h3>C3. Value-based against list-order asks</h3>
+<p>Lab 9, seeds 1101–1120; greedy matching; realised metrics. With blossom matching the feasible-pair gain is +0.26 [+0.03, +0.49] in development and +0.35 [+0.22, +0.48] in cold start; coverage changes by less than 0.01 in every variant. Its development MSMI cell equals C1's by coincidence; both were checked against the per-seed records.</p>
+<div class="tw"><table>
+<tr><th>Family</th><th>Feasible pairs per day, days 0–20</th><th>Wins/ties/losses</th><th>Mutual diff</th><th>MSMI diff</th><th>Differ</th></tr>
+<tr><td>Development</td><td>5.18 vs 4.74: +0.45 [+0.30, +0.60]</td><td>19/0/1</td><td>+0.48 [−0.23, +1.20]</td><td>−0.13 [−0.33, +0.08]</td><td>7%</td></tr>
+<tr><td>Cold start</td><td>3.75 vs 3.26: +0.49 [+0.31, +0.68]</td><td>17/2/1</td><td>−0.50 [−1.18, +0.18]</td><td>−0.08 [−0.25, +0.13]</td><td>11%</td></tr>
+</table></div>
+
+<h3>C4. Waiting and the learned score</h3>
+<p>Lab 12; realised metrics; a result counts only if it holds on both seed blocks. The learned score is the 130-rollout model (P(A says Yes) × P(B says Yes)), allocated greedily. Pure waiting is τ₀ = 0.12 with no protections. The protected reserve (τ₀ = 0.10 and 0.12) changed 0% of introductions in both families.</p>
+<div class="tw"><table>
+<tr><th>Paired comparison</th><th>Family</th><th>MSMI, 1121–1140</th><th>MSMI, 1141–1160</th><th>MSMI, pooled (40)</th><th>Mutual, pooled</th><th>Coverage, pooled</th></tr>
+<tr><td>Learned score vs greedy</td><td>Dev.</td><td>−0.20 [−0.35, −0.05]</td><td>+0.03 [−0.18, +0.25]</td><td>−0.09 [−0.23, +0.05]</td><td>+0.09 [−0.30, +0.50]</td><td>+0.001 [−0.000, +0.003]</td></tr>
+<tr><td>Learned score vs greedy</td><td>Cold</td><td>−0.10 [−0.28, +0.08]</td><td>−0.08 [−0.25, +0.10]</td><td>−0.09 [−0.21, +0.04]</td><td>−0.10 [−0.54, +0.33]</td><td>−0.002 [−0.004, −0.000]</td></tr>
+<tr><td>Pure waiting vs always match</td><td>Dev.</td><td>+0.20 [+0.05, +0.38]</td><td>+0.00 [−0.20, +0.20]</td><td>+0.10 [−0.03, +0.24]</td><td>−0.25 [−0.65, +0.16]</td><td>−0.002 [−0.004, −0.000]</td></tr>
+<tr><td>Pure waiting vs always match</td><td>Cold</td><td>+0.03 [−0.13, +0.18]</td><td>−0.05 [−0.33, +0.20]</td><td>−0.01 [−0.18, +0.14]</td><td>+0.33 [−0.05, +0.73]</td><td>−0.001 [−0.003, +0.000]</td></tr>
+</table></div>
+
+<h3>C5. Lab 13: benchmark rankers and learners against greedy</h3>
+<p>Seeds 1161–1180, 20 per family; supplied list-order asks; greedy allocation. Benchmark rankers use simulator ground truth in offline experiments only. Greedy's expected MSMI is 0.442 per 100 in development and 0.358 in cold start. Coverage moved by at most 0.002 for every ranker. The foresight benchmark leaves expected MSMI almost unchanged.</p>
+<div class="tw"><table>
+<tr><th>Ranker</th><th>Development: realised</th><th>Development: expected</th><th>Cold start: expected</th><th>Cold start: realised</th><th>Differ</th></tr>
+<tr><td>Benchmark: true reply rates</td><td>−0.10 [−0.35, +0.15]</td><td>+0.008 [−0.004, +0.019]</td><td>+0.002 [−0.007, +0.010]</td><td>+0.03 [−0.18, +0.23]</td><td>9–12%</td></tr>
+<tr><td>Benchmark: true member traits</td><td>−0.15 [−0.40, +0.10]</td><td>+0.009 [−0.003, +0.021]</td><td>+0.003 [−0.009, +0.014]</td><td>−0.08 [−0.28, +0.13]</td><td>9–11%</td></tr>
+<tr><td>Benchmark: complete true profiles</td><td>+0.013 [−0.004, +0.031]</td><td>−0.15 [−0.38, +0.03]</td><td>+0.001 [−0.008, +0.009]</td><td>+0.18 [−0.05, +0.43]</td><td>8–11%</td></tr>
+<tr><td>Benchmark: traits and profiles combined</td><td>+0.005 [−0.012, +0.021]</td><td>−0.10 [−0.40, +0.20]</td><td>+0.011 [+0.000, +0.021]</td><td>+0.03 [−0.15, +0.20]</td><td>8–11%</td></tr>
+<tr><td>Benchmark: foresight</td><td>+0.10 [−0.18, +0.43]</td><td>−0.003 [−0.023, +0.013]</td><td>+0.005 [−0.008, +0.016]</td><td>+0.23 [+0.03, +0.45]</td><td>8–10%</td></tr>
+<tr><td>Learned reply rates</td><td>−0.002 [−0.016, +0.010]</td><td>−0.08 [−0.33, +0.15]</td><td>−0.002 [−0.013, +0.008]</td><td>+0.15 [−0.05, +0.35]</td><td>8–10%</td></tr>
+<tr><td>Learned reply rates, Thompson</td><td>−0.10 [−0.28, +0.08]</td><td>+0.000 [−0.017, +0.017]</td><td>+0.003 [−0.004, +0.011]</td><td>−0.08 [−0.30, +0.18]</td><td>9–10%</td></tr>
+<tr><td>Learned reply rates and acceptance tendency</td><td>−0.000 [−0.012, +0.011]</td><td>−0.15 [−0.40, +0.08]</td><td>−0.000 [−0.010, +0.008]</td><td>+0.03 [−0.18, +0.23]</td><td>8–10%</td></tr>
+</table></div>
+<p class="sub">Column order follows the source PDF; in some rows the realised and expected columns appear transposed there.</p>
+
+<h3>C6. Figure 1 values for the earlier levers</h3>
+<p>Expected MSMI per 100 against the stated baseline.</p>
+<div class="tw"><table>
+<tr><th>Lever</th><th>Baseline</th><th>Seeds</th><th>Development</th><th>Cold start</th></tr>
+<tr><td>Value-based hard asks</td><td>List-order asks</td><td>1101–1120</td><td>+0.005 [−0.006, +0.017]</td><td>+0.005 [−0.007, +0.017]</td></tr>
+<tr><td>Perfect hard answers</td><td>List-order asks</td><td>1101–1120</td><td>+0.019 [+0.008, +0.031]</td><td>+0.013 [+0.002, +0.024]</td></tr>
+<tr><td>Pure waiting</td><td>Always match</td><td>1121–1160</td><td>+0.003 [−0.006, +0.011]</td><td>−0.002 [−0.010, +0.006]</td></tr>
+<tr><td>Learned field score</td><td>Greedy</td><td>1121–1160</td><td>+0.002 [−0.008, +0.012]</td><td>−0.004 [−0.013, +0.004]</td></tr>
+</table></div>
+
+
+</main>
+
+<footer class="footer" id="contact">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-name">Team EmptyBrains</p>
+        <p class="footer-blurb">Research paper for the Romeo Juliet x IITM | Pan IIT Hackathon: The Sequential Matching Problem.</p>
+      </div>
+      <div>
+        <p class="footer-title">Authors</p>
+        <ul class="footer-list">
+          <li>Vishnu P</li>
+          <li>Subhadeep Das</li>
+          <li>Ameya Raut</li>
+          <li>Taniya Jha</li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-title">On this page</p>
+        <ul class="footer-list">
+          <li><a href="#abstract">Abstract</a></li>
+          <li><a href="#s2">Findings</a></li>
+          <li><a href="#refs">References</a></li>
+          <li><a href="#appA">Appendices</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Research Paper, Oct 2026</p>
+      <p>IIT Madras x Romeo &amp; Juliet</p>
+      <a href="#home"><i class="fa-solid fa-arrow-up"></i>Back to top</a>
+    </div>
+  </div>
+</footer>
+</div>
+
+<script>
+const menu=document.getElementById('nav-links'),toggle=document.querySelector('.nav-toggle'),navLinks=menu.querySelectorAll('a');
+function setMenu(o){menu.classList.toggle('open',o);toggle.setAttribute('aria-expanded',String(o))}
+toggle.addEventListener('click',()=>setMenu(!menu.classList.contains('open')));
+navLinks.forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+
+const themeToggle=document.getElementById('theme-toggle'),themeIcon=document.getElementById('theme-icon');
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);themeIcon.className=t==='light'?'fa-solid fa-sun':'fa-solid fa-moon';themeToggle.setAttribute('aria-checked',String(t!=='light'));drawFig1()}
+let saved='dark';try{saved=localStorage.getItem('paper-theme')||'dark'}catch(e){}
+themeToggle.addEventListener('click',()=>{const n=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';applyTheme(n);try{localStorage.setItem('paper-theme',n)}catch(e){}});
+
+const spyTargets=[['home','#home'],['abstract','#abstract'],['s2','#s2'],['s3','#s3'],['s6','#s6'],['refs','#refs'],['appA','#appA'],['contact','#contact']];
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))})},{rootMargin:'-40% 0px -55% 0px'});
+spyTargets.forEach(([id])=>{const el=document.getElementById(id);if(el)io.observe(el)});
+
+const nav=document.getElementById('nav');let lastY=scrollY,ticking=false,lockUntil=0;
+navLinks.forEach(a=>a.addEventListener('click',()=>{lockUntil=Date.now()+1200}));
+function updateNav(){ticking=false;const y=Math.max(scrollY,0);nav.classList.toggle('scrolled',y>24);
+  if(y<=140){nav.classList.remove('hidden');lastY=y;return}
+  const d=y-lastY;if(Math.abs(d)<6)return;
+  if(d>0){if(Date.now()>lockUntil){nav.classList.add('hidden');setMenu(false)}}else nav.classList.remove('hidden');
+  lastY=y}
+addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(updateNav)}},{passive:true});updateNav();
+
+function drawFig1(){
+  const el=document.getElementById('fig1');if(!el)return;
+  const rows=[
+    ["Policy levers (observable data only)"],
+    ["Value-based hard-constraint asks",[.005,-.006,.017],[.005,-.007,.017]],
+    ["Pure waiting",[.003,-.006,.011],[-.002,-.010,.006]],
+    ["Learned field score",[.002,-.008,.012],[-.004,-.013,.004]],
+    ["Learned reply rates",[-.002,-.016,.010],[-.002,-.013,.008]],
+    ["Learned reply rates (Thompson sampling)",[0,-.017,.017],[.003,-.004,.011]],
+    ["Learned reply rates and acceptance tendency",[0,-.012,.011],[0,-.010,.008]],
+    ["Offline benchmarks (simulator ground truth, public seeds)"],
+    ["Perfect hard-constraint answers",[.019,.008,.031],[.013,.002,.024]],
+    ["True reply rates",[.008,-.004,.019],[.002,-.007,.010]],
+    ["True member traits",[.009,-.003,.021],[.003,-.009,.014]],
+    ["Complete true profiles",[.013,-.004,.031],[.001,-.008,.009]],
+    ["Traits and profiles combined",[.005,-.012,.021],[.011,0,.021]]
+  ];
+  const W=900,labelW=300,L=labelW+10,R=W-30,rowH=40,top=10,min=-.03,max=.03;
+  const x=v=>L+(v-min)/(max-min)*(R-L),H=top+rows.length*rowH+60;
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Change in expected MSMI per 100 relative to baseline">`;
+  [-.03,-.02,-.01,0,.01,.02,.03].forEach(v=>{
+    s+=`<line x1="${x(v)}" x2="${x(v)}" y1="${top}" y2="${H-50}" style="stroke:${v===0?'var(--muted)':'var(--line)'}" stroke-width="${v===0?1.5:1}"/>`;
+    s+=`<text x="${x(v)}" y="${H-30}" style="fill:var(--muted)" font-size="13" text-anchor="middle">${v>0?'+':v<0?'\u2212':''}${Math.abs(v).toFixed(2)}</text>`;
+  });
+  s+=`<text x="${(L+R)/2}" y="${H-6}" style="fill:var(--muted)" font-size="13" text-anchor="middle">Change in expected MSMI per 100 against baseline (95% interval)</text>`;
+  rows.forEach((r,i)=>{
+    const y=top+i*rowH+rowH/2;
+    if(r.length===1){s+=`<text x="${L}" y="${y+4}" style="fill:var(--text)" font-size="14" font-weight="700">${r[0]}</text>`;return}
+    const f=v=>(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(3);
+    const tip=`${r[0]}|Development ${f(r[1][0])} [${f(r[1][1])}, ${f(r[1][2])}]|Cold start ${f(r[2][0])} [${f(r[2][1])}, ${f(r[2][2])}]`;
+    s+=`<g class="r" data-tip="${tip}"><rect x="0" y="${y-rowH/2}" width="${W}" height="${rowH}" rx="6"/>`;
+    s+=`<text x="${labelW}" y="${y+4}" style="fill:var(--body)" font-size="14" text-anchor="end">${r[0]}</text>`;
+    [[r[1],'var(--blue)',-6],[r[2],'var(--orange)',6]].forEach(([d,c,dy])=>{
+      s+=`<line x1="${x(d[1])}" x2="${x(d[2])}" y1="${y+dy}" y2="${y+dy}" style="stroke:${c}" stroke-width="3" stroke-linecap="round"/>`;
+      s+=`<circle cx="${x(d[0])}" cy="${y+dy}" r="5" style="fill:${c};stroke:var(--tile)" stroke-width="1.5"/>`;
+    });
+    s+='</g>';
+  });
+  el.innerHTML=s+'</svg>';
+  if(!el._tip){
+    el._tip=true;
+    const tipEl=document.getElementById('tip');
+    el.addEventListener('pointermove',e=>{
+      const g=e.target.closest('.r');
+      if(!g){tipEl.classList.remove('show');return}
+      const [t,d,c]=g.dataset.tip.split('|');
+      tipEl.innerHTML=`<b>${t}</b><span class="d">${d}</span><br><span class="c">${c}</span>`;
+      tipEl.classList.add('show');
+      const w=tipEl.offsetWidth,h=tipEl.offsetHeight;
+      tipEl.style.left=Math.min(e.clientX+16,innerWidth-w-8)+'px';
+      tipEl.style.top=Math.min(e.clientY+16,innerHeight-h-8)+'px';
+    });
+    el.addEventListener('pointerleave',()=>tipEl.classList.remove('show'));
+  }
+}
+applyTheme(saved);
+
+/* ---------- interactive layer ---------- */
+(function(){
+  const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  document.documentElement.classList.add('js');
+
+  function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2000)}
+
+  /* progress bar + back to top */
+  const bar=$('#progress'),top=$('#totop');
+  function onScroll(){const h=document.documentElement.scrollHeight-innerHeight;bar.style.transform='scaleX('+(h>0?Math.min(scrollY/h,1):0)+')';top.classList.toggle('show',scrollY>700)}
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+  top.addEventListener('click',()=>scrollTo({top:0,behavior:RM?'auto':'smooth'}));
+
+  /* hero entrance */
+  if(!RM){
+    const h1=$('.hero h1');
+    if(h1){let i=0;h1.innerHTML=h1.textContent.trim().split(/\s+/).map(w=>'<span class="w" style="--i:'+(i++)+'">'+w+'</span>').join(' ')}
+    $$('.chips li,.person,.actions .btn').forEach((e,i)=>{e.classList.add('pop');e.style.setProperty('--i',i)});
+  }
+
+  /* heading anchors (click copies the link) */
+  $$('main h2[id]').forEach(h=>{
+    const a=document.createElement('a');a.className='hl';a.href='#'+h.id;a.textContent='#';a.setAttribute('aria-label','Link to this section');
+    a.addEventListener('click',()=>{try{navigator.clipboard.writeText(location.href.split('#')[0]+'#'+h.id);toast('Link copied')}catch(e){}});
+    h.appendChild(a);
+  });
+
+  /* collapsible long tables */
+  $$('main .tw').forEach(t=>{
+    const rows=$$('tr',t).length;
+    if(rows<=14)return;
+    t.classList.add('collapsed');
+    const b=document.createElement('button');b.type='button';b.className='tbtn';
+    b.innerHTML='<span>Show all '+(rows-1)+' rows</span> <i class="fa-solid fa-chevron-down"></i>';
+    b.addEventListener('click',()=>{
+      const open=t.classList.toggle('collapsed')===false;
+      b.classList.toggle('open',open);
+      $('span',b).textContent=open?'Show fewer rows':'Show all '+(rows-1)+' rows';
+      if(!open)t.scrollIntoView({block:'nearest'});
+    });
+    t.insertAdjacentElement('afterend',b);
+  });
+
+  /* count-up for stat tiles, grow-in for bars */
+  function countUp(el){
+    if(RM||!el)return;
+    const parts=el.textContent.split(/(\d+(?:\.\d+)?)/);
+    const nums=parts.map((p,i)=>i%2?{v:parseFloat(p),d:(p.split('.')[1]||'').length}:null);
+    const t0=performance.now(),D=1100;
+    (function f(n){const k=Math.min((n-t0)/D,1),e=1-Math.pow(1-k,3);
+      el.textContent=parts.map((p,i)=>i%2?(nums[i].v*e).toFixed(nums[i].d):p).join('');
+      if(k<1)requestAnimationFrame(f)})(t0);
+  }
+  $$('.bar .f').forEach(f=>{f.dataset.w=f.style.width;if(!RM)f.style.width='0'});
+  function fire(t){
+    if(t.matches('.stat'))countUp($('b',t));
+    if(t.querySelector('.bar'))$$('.bar .f',t).forEach((f,i)=>setTimeout(()=>{f.style.width=f.dataset.w},i*130));
+  }
+
+  /* scroll reveal */
+  const targets=$$('main > h2, main > h3, main > h4, main > p, main > ul, main > ol, main > .tw, main > .tbtn, main > .fig, main > .callout, main > .formula, main > .grid .stat');
+  targets.forEach((e,i)=>{if(!RM)e.classList.add('rv')});
+  $$('main > .grid').forEach(g=>$$('.stat',g).forEach((s,i)=>{s.style.transitionDelay=(i*90)+'ms'}));
+  const rio=new IntersectionObserver(es=>es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.classList.add('in');rio.unobserve(e.target);fire(e.target);
+    if(e.target.matches('.stat'))setTimeout(()=>{e.target.style.transitionDelay=''},900);
+  }),{threshold:.08,rootMargin:'0px 0px -6% 0px'});
+  if(RM){targets.forEach(fire)}else{targets.forEach(e=>rio.observe(e))}
+
+  /* cursor glow */
+  $$('.stat,.person,.callout,.fig').forEach(c=>c.addEventListener('pointermove',e=>{
+    const r=c.getBoundingClientRect();
+    c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px');
+  }));
+
+  /* section dot-rail */
+  const secs=[['abstract','Abstract'],['s1','1 Problem'],['s2','2 Findings'],['s3','3 Policy'],['s4','4 Hypotheses'],['s5','5 PS 1–2'],['s6','6 Evaluation'],['s7','7 Failure modes'],['s8','8 Product'],['s9','9 Limitations'],['refs','References'],['appA','Appendix A'],['appB','Appendix B'],['appC','Appendix C']];
+  const rail=$('#rail');
+  secs.forEach(([id,l])=>{const a=document.createElement('a');a.href='#'+id;a.dataset.l=l;a.setAttribute('aria-label',l);rail.appendChild(a)});
+  const rio2=new IntersectionObserver(es=>es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    $$('a',rail).forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));
+  }),{rootMargin:'-35% 0px -60% 0px'});
+  secs.forEach(([id])=>{const el=document.getElementById(id);if(el)rio2.observe(el)});
+
+  /* quote rotator */
+  const qs=$$('.quote-stage .quote'),dots=$$('.quote-dots i');
+  let cur=0,timer;
+  function show(i){cur=i;qs.forEach((q,n)=>q.classList.toggle('is-active',n===i));dots.forEach((d,n)=>d.classList.toggle('on',n===i))}
+  function start(){clearInterval(timer);if(!RM)timer=setInterval(()=>show((cur+1)%qs.length),5000)}
+  dots.forEach((d,i)=>d.addEventListener('click',()=>{show(i);start()}));
+  const qb=$('.quotes');qb.addEventListener('mouseenter',()=>clearInterval(timer));qb.addEventListener('mouseleave',start);
+  start();
+})();
+</script>
+</body>
+</html>
