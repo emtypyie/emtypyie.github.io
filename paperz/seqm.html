@@ -101,7 +101,7 @@ h3{margin:2.6rem 0 .8rem;font-size:1.25rem;font-weight:600;color:var(--text)}
 h4{margin:1.7rem 0 .4rem;font-size:1.05rem;font-weight:600;color:var(--text)}
 p{margin:0 0 1.1rem;font-size:1.05rem;color:var(--body)}
 a{color:var(--accent)}
-:root[data-theme="light"] a{text-decoration:underline}
+:root[data-theme="light"] main p a,:root[data-theme="light"] main li a,:root[data-theme="light"] main td a{text-decoration:underline}
 strong{color:var(--text);font-weight:600}
 ul,ol{padding-left:1.4rem;margin:0 0 1.1rem;font-size:1.05rem}
 li{margin:.35rem 0}
@@ -142,7 +142,8 @@ svg text{font-family:Inter,sans-serif}
 
 /* footer */
 .footer{margin-top:auto;margin-left:-1.25rem;margin-right:-1.25rem;width:calc(100% + 2.5rem);background-color:var(--card);transition:background-color .25s ease}
-.footer-inner{max-width:55rem;margin:0 auto;padding:2.5rem 1.25rem 1.5rem;border-top:1px solid var(--line)}
+.footer-inner{max-width:none;margin:0;padding:2.5rem 2.5rem 1.5rem;border-top:1px solid var(--line)}
+@media (max-width:640px){.footer-inner{padding:2rem 1.25rem 1.25rem}}
 .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:2rem}
 .footer-name{margin:0 0 .5rem;font-size:1.15rem;font-weight:800;color:var(--text)}
 .footer-blurb{margin:0 0 .8rem;font-size:.9rem;line-height:1.7;color:var(--muted);max-width:32ch}
@@ -159,6 +160,19 @@ svg text{font-family:Inter,sans-serif}
 .footer-bottom p{margin:0;font-size:.82rem;color:var(--muted)}
 .footer-bottom a{font-size:.82rem;color:var(--muted)}
 .footer-bottom a i{margin-right:.4rem}
+.footer-btn{display:inline-flex;align-items:center;gap:.55rem;font:inherit;font-size:.9rem;font-weight:600;color:var(--text);background:var(--tile);border:1px solid var(--line);border-radius:999px;padding:.6rem 1.1rem;cursor:pointer;transition:border-color .2s ease,color .2s ease,transform .2s ease}
+.footer-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.footer-bottom a:hover{color:var(--accent)}
+.footer-grid{grid-template-columns:1.3fr 1.5fr 1fr;align-items:start}
+.footer-name,.footer-title{font-size:1.15rem;font-weight:800;line-height:1.3;margin:0 0 .9rem;color:var(--text)}
+.footer-list.two{grid-template-columns:repeat(2,max-content);gap:.55rem 2.5rem}
+.footer-list.two a{display:inline-block;position:relative;line-height:1.5}
+.footer-list.two a::after{content:"";position:absolute;left:0;bottom:-.1rem;height:2px;width:0;background:var(--accent);transition:width .25s ease}
+.footer-list.two a:hover::after{width:100%}
+.footer-bottom{padding-right:4.5rem}
+.rail{transition:opacity .25s ease}
+.rail.hide{opacity:0;pointer-events:none}
+@media (max-width:640px){.footer-bottom{padding-right:0}.footer-grid{grid-template-columns:1fr}}
 
 a:focus-visible,button:focus-visible{outline:2px solid var(--text);outline-offset:3px;border-radius:4px}
 
@@ -174,6 +188,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--text);outline-offse
 @media (max-width:720px){.hero{--avatar:6.6rem}.profile-avatar{border-width:3px}.bar{grid-template-columns:1fr}}
 @media (max-width:640px){
   body{padding:0 .75rem}
+  .footer{margin-left:-.75rem;margin-right:-.75rem;width:calc(100% + 1.5rem)}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
   :root{--shell-w:100%;--shell-pad:1.25rem}
   .footer-grid{grid-template-columns:1fr;gap:1.6rem}
   h2{margin-top:3.5rem}
@@ -903,23 +919,24 @@ button.btn{border:0;font-family:inherit;cursor:pointer}
   <div class="footer-inner">
     <div class="footer-grid">
       <div>
-        <p class="footer-name">Team EmptyBrains</p>
+        <p class="footer-name">EMTYPYIE.IN | EmptyBrains</p>
         <p class="footer-blurb">Research Paper for Romeo Juliet X IITM | Pan IIT Hackathon &middot; Sequential Matching Problem.</p>
       </div>
       <div>
-        <p class="footer-title">Team</p>
-        <ul class="footer-list">
-          <li><a href="#team" data-team>Meet the team</a></li>
-        </ul>
-      </div>
-      <div>
         <p class="footer-title">On this page</p>
-        <ul class="footer-list">
+        <ul class="footer-list two">
           <li><a href="#abstract">Abstract</a></li>
           <li><a href="#s2">Findings</a></li>
+          <li><a href="#s3">Policy design</a></li>
+          <li><a href="#s6">Evaluation plan</a></li>
           <li><a href="#refs">References</a></li>
           <li><a href="#appA">Appendices</a></li>
         </ul>
+      </div>
+      <div>
+        <p class="footer-title">Team</p>
+        <p class="footer-blurb">The four of us behind this paper.</p>
+        <button class="footer-btn" type="button" data-team><i class="fa-solid fa-users"></i> Meet the team</button>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1098,6 +1115,10 @@ applyTheme(saved);
     $$('a',rail).forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));
   }),{rootMargin:'-35% 0px -60% 0px'});
   secs.forEach(([id])=>{const el=document.getElementById(id);if(el)rio2.observe(el)});
+
+  /* hide the dot-rail while the footer is on screen */
+  const foot=$('#contact');
+  if(foot)new IntersectionObserver(es=>es.forEach(e=>$('#rail').classList.toggle('hide',e.isIntersecting))).observe(foot);
 
   /* team modal */
   const modal=$('#team-modal');let lastFocus=null;
