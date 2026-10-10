@@ -256,6 +256,24 @@ h2 .hl:hover{opacity:1}
 .quote-stage .quote.is-active{opacity:1;transform:none}
 .quote-dots i{cursor:pointer;transition:width .3s ease,background-color .3s ease}
 .quote-dots{gap:.5rem}
+
+/* team modal */
+button.btn{border:0;font-family:inherit;cursor:pointer}
+.modal-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{position:relative;width:100%;max-width:34rem;max-height:100%;overflow-y:auto;padding:2rem 1.75rem 1.75rem;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:.9rem;box-shadow:0 24px 60px rgba(0,0,0,.5);transform:translateY(1.2rem) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.modal-overlay.open .modal{transform:none}
+.modal h2{margin:0 2.5rem .3rem 0;font-size:1.4rem}
+.modal-sub{margin:0 0 1.3rem;font-size:.9rem;color:var(--muted)}
+.modal-close{position:absolute;top:.8rem;right:1rem;width:2rem;height:2rem;font-size:1.5rem;line-height:1;color:var(--muted);background:none;border:0;border-radius:50%;cursor:pointer;transition:color .2s ease,background-color .2s ease}
+.modal-close:hover{color:var(--text);background:var(--tile)}
+.team{display:grid;gap:.7rem}
+.person{display:flex;align-items:center;gap:1rem;background:var(--tile);border:1px solid var(--line);border-radius:.85rem;padding:.9rem 1.1rem;font-size:.85rem;color:var(--muted);line-height:1.5;transition:border-color .2s ease,transform .2s ease}
+.person:hover{border-color:var(--accent);transform:translateX(3px)}
+.person b{display:block;color:var(--text);font-size:1rem;font-weight:600}
+.person a{display:block;color:var(--body);text-decoration:none;word-break:break-all;transition:color .2s ease}
+.person a:hover{color:var(--accent)}
+.person .av{flex-shrink:0;width:2.8rem;height:2.8rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:#17141c;background:var(--purple)}
 </style>
 </head>
 <body>
@@ -265,6 +283,20 @@ h2 .hl:hover{opacity:1}
 <button id="totop" type="button" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="tip" aria-hidden="true"></div>
+
+<div class="modal-overlay" id="team-modal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="team-title">
+    <button class="modal-close" type="button" id="team-close" aria-label="Close">&times;</button>
+    <h2 id="team-title">Meet the team</h2>
+    <p class="modal-sub">Team EmptyBrains &middot; Romeo Juliet x IITM | Pan IIT Hackathon</p>
+    <div class="team">
+      <div class="person"><span class="av">V</span><div><b>Vishnu P</b><a href="mailto:26f2001878@ds.study.iitm.ac.in">26f2001878@ds.study.iitm.ac.in</a></div></div>
+      <div class="person"><span class="av">S</span><div><b>Subhadeep Das</b><a href="mailto:26f2300048@ae.study.iitm.ac.in">26f2300048@ae.study.iitm.ac.in</a><a href="mailto:me@emtypyie.in">me@emtypyie.in</a></div></div>
+      <div class="person"><span class="av">A</span><div><b>Ameya Raut</b><a href="mailto:26f2001863@ds.study.iitm.ac.in">26f2001863@ds.study.iitm.ac.in</a></div></div>
+      <div class="person"><span class="av">T</span><div><b>Taniya Jha</b><a href="mailto:taniyajhaadc@gmail.com">taniyajhaadc@gmail.com</a></div></div>
+    </div>
+  </div>
+</div>
 
 <header class="nav" id="nav">
   <div class="nav-inner">
@@ -278,7 +310,7 @@ h2 .hl:hover{opacity:1}
         <li><a href="#s6">Evaluation</a></li>
         <li><a href="#refs">References</a></li>
         <li><a href="#appA">Appendix</a></li>
-        <li><a href="#contact">Team</a></li>
+        <li><a href="#team" data-team>Team</a></li>
       </ul>
       <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><i class="fa-solid fa-bars"></i></button>
       <button class="theme-switch" id="theme-toggle" type="button" role="switch" aria-checked="true" aria-label="Dark mode"><span class="theme-knob"><i class="fa-solid fa-moon" id="theme-icon"></i></span></button>
@@ -292,22 +324,16 @@ h2 .hl:hover{opacity:1}
 <section class="hero" id="home">
   <p class="location" style="margin-top:3.2rem">Research Paper &nbsp;|&nbsp; Oct 2026 &nbsp;|&nbsp; Team EmptyBrains</p>
   <h1>Sequential Matching and Information Acquisition for Reciprocal Introductions Under Incomplete Information and Dynamic Constraints</h1>
-  <span class="bio-sub">Research Paper for Romeo Juliet X IITM | Pan IIT Hackathon (IIT Madras x Romeo &amp; Juliet: The Sequential Matching Problem)</span>
+  <span class="bio-sub">Research Paper for Romeo Juliet X IITM | Pan IIT Hackathon &nbsp;&middot;&nbsp; Sequential Matching Problem</span>
 
   <ul class="chips">
     <li>Sequential Matching</li><li>Information Acquisition</li><li>Reciprocal Introductions</li><li>Dynamic Constraints</li><li>Incomplete Information</li>
   </ul>
 
-  <div class="team">
-    <div class="person"><b>Vishnu P</b>26f2001878@ds.study.iitm.ac.in</div>
-    <div class="person"><b>Subhadeep Das</b>26f2300048@ae.study.iitm.ac.in<br>me@emtypyie.in</div>
-    <div class="person"><b>Ameya Raut</b>26f2001863@ds.study.iitm.ac.in</div>
-    <div class="person"><b>Taniya Jha</b>taniyajhaadc@gmail.com</div>
-  </div>
-
   <div class="actions">
     <a class="btn" href="#abstract"><i class="fa-solid fa-file-lines"></i> Abstract</a>
     <a class="btn" href="#refs"><i class="fa-solid fa-book"></i> References</a>
+    <button class="btn" type="button" data-team><i class="fa-solid fa-users"></i> Meet the team</button>
   </div>
 
   <div class="pill-links">
@@ -877,15 +903,12 @@ h2 .hl:hover{opacity:1}
     <div class="footer-grid">
       <div>
         <p class="footer-name">Team EmptyBrains</p>
-        <p class="footer-blurb">Research paper for the Romeo Juliet x IITM | Pan IIT Hackathon: The Sequential Matching Problem.</p>
+        <p class="footer-blurb">Research Paper for Romeo Juliet X IITM | Pan IIT Hackathon &middot; Sequential Matching Problem.</p>
       </div>
       <div>
-        <p class="footer-title">Authors</p>
+        <p class="footer-title">Team</p>
         <ul class="footer-list">
-          <li>Vishnu P</li>
-          <li>Subhadeep Das</li>
-          <li>Ameya Raut</li>
-          <li>Taniya Jha</li>
+          <li><a href="#team" data-team>Meet the team</a></li>
         </ul>
       </div>
       <div>
@@ -1006,7 +1029,7 @@ applyTheme(saved);
   if(!RM){
     const h1=$('.hero h1');
     if(h1){let i=0;h1.innerHTML=h1.textContent.trim().split(/\s+/).map(w=>'<span class="w" style="--i:'+(i++)+'">'+w+'</span>').join(' ')}
-    $$('.chips li,.person,.actions .btn').forEach((e,i)=>{e.classList.add('pop');e.style.setProperty('--i',i)});
+    $$('.chips li,.actions .btn').forEach((e,i)=>{e.classList.add('pop');e.style.setProperty('--i',i)});
   }
 
   /* heading anchors (click copies the link) */
@@ -1074,6 +1097,15 @@ applyTheme(saved);
     $$('a',rail).forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));
   }),{rootMargin:'-35% 0px -60% 0px'});
   secs.forEach(([id])=>{const el=document.getElementById(id);if(el)rio2.observe(el)});
+
+  /* team modal */
+  const modal=$('#team-modal');let lastFocus=null;
+  function openTeam(){lastFocus=document.activeElement;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>$('#team-close').focus(),50)}
+  function closeTeam(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
+  $$('[data-team]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();openTeam()}));
+  $('#team-close').addEventListener('click',closeTeam);
+  modal.addEventListener('click',e=>{if(e.target===modal)closeTeam()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeTeam()});
 
   /* quote rotator */
   const qs=$$('.quote-stage .quote'),dots=$$('.quote-dots i');
